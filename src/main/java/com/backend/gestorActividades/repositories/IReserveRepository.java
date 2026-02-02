@@ -9,5 +9,4 @@ import java.util.ArrayList;
 
 @Repository
 public interface IReserveRepository extends MongoRepository<Reserve, Long> {
-    ArrayList<Reserve> findByUserId(Long id);
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
@@ -20,25 +20,25 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/api/user")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
 
-    @PostMapping
+    @PostMapping("/api/user")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
         User savedUser = userService.saveUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
-    @PutMapping("/{id}/deactivate")
+    @PutMapping("/api/user/{id}")
     public ResponseEntity<User> deactivateUser(@PathVariable Long id) {
         return userService.deactivateUser(id)
                 .map(ResponseEntity::ok)// 200 OK
                 .orElse(ResponseEntity.notFound().build()); // 404 Not Found
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/user/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         boolean deleted = userService.deleteUser(id);
         return deleted

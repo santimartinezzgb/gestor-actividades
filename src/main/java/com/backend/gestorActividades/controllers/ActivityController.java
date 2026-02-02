@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/activity")
+@RequestMapping("/api/activity")
 public class ActivityController {
 
     private final ActivityService activityService;
@@ -22,7 +22,7 @@ public class ActivityController {
         this.activityService = activityService;
     }
 
-    @GetMapping
+    @GetMapping("/api/activities")
     public ResponseEntity<ArrayList<Activity>> getActivities() {
         return ResponseEntity.ok(activityService.getActivities());
     }

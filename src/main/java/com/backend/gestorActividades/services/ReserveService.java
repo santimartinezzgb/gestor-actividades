@@ -29,7 +29,7 @@ public class ReserveService {
 
         // DATA VALIDATIONS
         // Check if the activity has available capacity
-        if(reserve.getActivity().getCapacity() >= activityRepository.getCapacity()) {
+        if(reserve.getActivity().getCapacity() >= activityRepository.findByCapacity(reserve.getActivity().getCapacity()).size()) {
             throw new IllegalArgumentException("The activity is full. Cannot create reserve.");
         }
         // Check that the activity can still be booked (at least 15 minutes before it starts)
