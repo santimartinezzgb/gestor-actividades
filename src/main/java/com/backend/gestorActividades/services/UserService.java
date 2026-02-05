@@ -22,7 +22,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public boolean deleteUser(Long id) {
+    public boolean deleteUser(String id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
             return true;
@@ -30,7 +30,7 @@ public class UserService {
         return false;
     }
 
-    public Optional<User> deactivateUser(Long id) {
+    public Optional<User> deactivateUser(String id) {
         return userRepository.findById(id)
                 .map(user -> {
                     user.setActive(false);

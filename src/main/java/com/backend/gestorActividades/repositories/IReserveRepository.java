@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 
 @Repository
-public interface IReserveRepository extends MongoRepository<Reserve, Long> {
+public interface IReserveRepository extends MongoRepository<Reserve, String> {
 }

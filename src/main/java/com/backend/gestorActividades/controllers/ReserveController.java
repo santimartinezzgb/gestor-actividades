@@ -12,39 +12,39 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/reserve")
+@RequestMapping("/reserve")
 public class ReserveController {
 
     @Autowired
     private ReserveService reserveService;
 
     // GET
-    @GetMapping("/api/reserves")
+    @GetMapping("/getReserves")
     public ResponseEntity<List<Reserve>> getReserves() {
         return ResponseEntity.ok(reserveService.getReserves());
     }
-    @GetMapping("/api/reserves/{id}")
-    public Reserve getReserveById(@PathVariable Long id) {
+    @GetMapping("/getReserveById/{id}")
+    public Reserve getReserveById(@PathVariable String id) {
         return reserveService.getReserveById(id);
     }
 
     // POST
-    @PostMapping("/api/reserves")
+    @PostMapping("/postReserve")
     public ResponseEntity<Reserve> createReserve(@RequestBody Reserve reserve) {
         Reserve savedReserve = reserveService.createReserve(reserve);
         return  ResponseEntity.status(HttpStatus.CREATED).body(savedReserve);
     }
 
     // PUT
-    @PutMapping("/api/reserves/{id}")
-    public ResponseEntity<Reserve> updateReserve(@PathVariable Long id, @RequestBody Reserve reserve) {
+    @PutMapping("/putReserve/{id}")
+    public ResponseEntity<Reserve> updateReserve(@PathVariable String id, @RequestBody Reserve reserve) {
         Reserve updatedReserve = reserveService.updateReserve(id, reserve);
         return ResponseEntity.ok(updatedReserve);
     }
 
     // DELETE
-    @DeleteMapping("/api/reserves/{id}")
-    public ResponseEntity<Void> deleteReserve(@PathVariable Long id) {
+    @DeleteMapping("/deleteReserve/{id}")
+    public ResponseEntity<Void> deleteReserve(@PathVariable String id) {
         reserveService.deleteReserve(id);
         return ResponseEntity.noContent().build();
     }

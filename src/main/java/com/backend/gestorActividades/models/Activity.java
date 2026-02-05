@@ -2,6 +2,7 @@ package com.backend.gestorActividades.models;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
 @Document(collection = "activities")
@@ -10,7 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Activity {
-    private Long id;
+    @Id
+    private String id;
     private String name;
     private String description;
     private LocalDateTime date;

@@ -1,4 +1,3 @@
-
 package com.backend.gestorActividades.services;
 
 import com.backend.gestorActividades.models.Reserve;
@@ -48,11 +47,11 @@ public class ReserveService {
     public ArrayList<Reserve> getReserves() {
         return (ArrayList<Reserve>) reserveRepository.findAll();
     }
-    public Reserve getReserveById(Long id) {
+    public Reserve getReserveById(String id) {
         return reserveRepository.findById(id).orElse(null);
     }
 
-    public Reserve updateReserve(Long id, Reserve reserve) {
+    public Reserve updateReserve(String id, Reserve reserve) {
         Optional<Reserve> existingReserve = reserveRepository.findById(id);
         if (existingReserve.isPresent()) {
             Reserve updatedReserve = existingReserve.get();
@@ -64,7 +63,7 @@ public class ReserveService {
         }
     }
 
-    public void deleteReserve(Long id) {
+    public void deleteReserve(String id) {
         Optional<Reserve> removedReserve = reserveRepository.findById(id);
         removedReserve.ifPresent(reserveRepository::delete);
     }

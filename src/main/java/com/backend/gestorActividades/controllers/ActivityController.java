@@ -22,7 +22,7 @@ public class ActivityController {
         this.activityService = activityService;
     }
 
-    @GetMapping("/getAcivities")
+    @GetMapping("/getActivities")
     public ResponseEntity<ArrayList<Activity>> getActivities() {
         return ResponseEntity.ok(activityService.getActivities());
     }
