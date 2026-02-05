@@ -1,5 +1,6 @@
 package com.backend.gestorActividades.services;
 
+import com.backend.gestorActividades.models.Activity;
 import com.backend.gestorActividades.models.Reserve;
 import com.backend.gestorActividades.repositories.IActivityRepository;
 import com.backend.gestorActividades.repositories.IReserveRepository;
@@ -20,26 +21,36 @@ public class ReserveService {
     IActivityRepository activityRepository; // Datos base de una actividad
 
     public Reserve createReserve(Reserve reserve) {
-        // VARIABLES
-        LocalDateTime activityDate = reserve.getActivity().getDate();
-        LocalDateTime now = LocalDateTime.now();
-        Duration difference = Duration.between(now, activityDate);
-        int minutesLimit = 15;
+        // 1. Validar que los datos mínimos vienen en la petición
+        if (reserve.getActivity() == null || reserve.getUser() == null) {
+            throw new IllegalArgumentException("Datos de actividad o usuario faltantes.");
+        }
 
-        // DATA VALIDATIONS
-        // Check if the activity has available capacity
-        if(reserve.getActivity().getCapacity() >= activityRepository.findByCapacity(reserve.getActivity().getCapacity()).size()) {
-            throw new IllegalArgumentException("The activity is full. Cannot create reserve.");
+        // 2. Obtener la actividad real de la DB (para asegurar capacidad y fecha real)
+        Activity activity = activityRepository.findById(reserve.getActivity().getId())
+                .orElseThrow(() -> new IllegalArgumentException("La actividad no existe."));
+
+        // 3. Validaciones de tiempo
+        LocalDateTime now = LocalDateTime.now();
+        Duration difference = Duration.between(now, activity.getDate());
+        if (difference.toMinutes() <= 15) {
+            throw new IllegalArgumentException("No se puede reservar con menos de 15 minutos de antelación.");
         }
-        // Check that the activity can still be booked (at least 15 minutes before it starts)
-        if(difference.toMinutes() <= minutesLimit) {
-            throw new IllegalArgumentException("The activity cannot be booked less than 15 minutes before it starts.");
+
+        // 4. Validar duplicados (Usuario ya tiene esta actividad)
+        if (reserveRepository.existsByUserIdAndActivityId(reserve.getUser().getId(), activity.getId())) {
+            throw new IllegalArgumentException("El usuario ya tiene una reserva para esta actividad.");
         }
-        // Check that the user does not have another reservation for the same activity
-        ArrayList<Reserve> existingReserves = getReserves();
-        if(existingReserves.contains(reserve)){
-            throw new IllegalArgumentException("The user already has a reservation for this activity.");
+
+        // 5. Validar capacidad
+        long totalReserves = reserveRepository.countByActivityId(activity.getId());
+        if (totalReserves >= activity.getCapacity()) {
+            throw new IllegalArgumentException("La actividad está llena.");
         }
+
+        // 6. Configuración final antes de guardar
+        reserve.setActivity(activity); // Asignamos el objeto completo de la DB
+        reserve.setReservedAt(now);
 
         return reserveRepository.save(reserve);
     }

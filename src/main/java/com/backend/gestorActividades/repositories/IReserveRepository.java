@@ -9,4 +9,8 @@ import java.util.ArrayList;
 
 @Repository
 public interface IReserveRepository extends MongoRepository<Reserve, String> {
+    long countByActivityId(String activityId);
+
+    // Verify reserves duplicates for the same user and activity
+    boolean existsByUserIdAndActivityId(String userId, String activityId);
 }
