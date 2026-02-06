@@ -1,0 +1,8 @@
+Paquete,Propósito
+controller,Gestiona las peticiones HTTP (Endpoints). Es el punto de entrada de la API.
+service,Contiene la lógica de negocio. Aquí es donde se procesan los datos.
+repository,Interfaces que interactúan con la base de datos (usando Spring Data JPA).
+model o entity,Representan las tablas de la base de datos o los objetos de datos del sistema.
+dto,(Data Transfer Objects) Objetos usados para enviar/recibir datos sin exponer la entidad completa.
+config,"Clases de configuración técnica (Seguridad, CORS, Beans personalizados)."
+exception,Manejadores globales de errores y excepciones personalizadas.
