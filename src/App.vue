@@ -1,20 +1,27 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-import WelcomeItem from './components/WelcomeItem.vue';
+  import Login from './components/Login.vue'
+  import MainImage from './components/MainImage.vue'
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="Mensaje desde componente Hello world" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-    <WelcomeItem title="Get Started" description="Edit src/App.vue to modify this page." />
-  </main>
+  <div class="app">
+    <Login />
+    <MainImage />
+  </div>
 </template>
 
-<style scoped></style>
+<style>
+body {
+  background-color: #565656;
+  height: 100vh;
+  margin: 0;
+}
+.app {
+  background-color: aqua;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 2rem;
+}
+</style>
