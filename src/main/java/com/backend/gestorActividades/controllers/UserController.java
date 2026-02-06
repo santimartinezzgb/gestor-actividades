@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -23,6 +23,13 @@ public class UserController {
     @GetMapping("/getUsers")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
+    }
+
+    @GetMapping("/getUserByUsername/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        return userService.getUserByUsername(username)
+                .map(ResponseEntity::ok) // 200 OK
+                .orElse(ResponseEntity.notFound().build()); // 404 Not Found
     }
 
     @PostMapping("/postUser")

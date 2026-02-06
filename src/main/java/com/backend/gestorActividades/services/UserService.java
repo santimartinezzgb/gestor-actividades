@@ -18,6 +18,10 @@ public class UserService {
         return (ArrayList<User>) userRepository.findAll();
     }
 
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public User saveUser(User user) {
         return userRepository.save(user);
     }
