@@ -1,6 +1,5 @@
 // main.js de Electron para cargar la app Vite/Vue
 import { app, BrowserWindow } from 'electron';
-import path from 'path';
 
 function createWindow() {
     const win = new BrowserWindow({
