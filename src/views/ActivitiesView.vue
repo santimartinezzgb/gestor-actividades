@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h1>Extra Screen 1</h1>
+        <h1>Activities</h1>
         <p>This screen is ready for future activity management features.</p>
         <button @click="$router.push('/home')">Back to Home</button>
     </main>

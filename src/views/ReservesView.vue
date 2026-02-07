@@ -1,6 +1,6 @@
 <template>
     <main>
-        <h1>Extra Screen 2</h1>
+        <h1>Reserves</h1>
         <p>This screen is ready for future reservation features.</p>
         <button @click="$router.push('/home')">Back to Home</button>
     </main>

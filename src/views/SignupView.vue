@@ -1,22 +1,36 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { signup as signupService } from '../services/authService';
 const router = useRouter();
 const styleBorder = '2px solid #F7B176';
 
 const user = ref({
     username: '',
-    email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    rol: 'USER',
+    isActive: true
 });
 
 const signup = async () => {
-    console.log('Signup attempt:', user.value);
-    // Logic for registration would go here
-    alert('Signup successful (mocked)! Please login.');
-    router.push('/login');
+    if (user.value.password !== user.value.confirmPassword) {
+        alert('Las contraseñas no coinciden');
+        return;
+    }
+    const userToSend = {
+        username: user.value.username,
+        password: user.value.password,
+        rol: 'USER',
+        isActive: true
+    };
+    try {
+        await signupService(userToSend);
+        alert('Registro exitoso. Por favor inicia sesión.');
+        router.push('/login');
+    } catch (error) {
+        alert(error.message || 'Error al registrar usuario');
+    }
 };
 
 const goToLogin = () => {
@@ -42,7 +56,6 @@ const goToLogin = () => {
             
             <section class="inputs">
                 <input v-model="user.username" class="datos" type="text" placeholder="Username">
-                <input v-model="user.email" class="datos" type="email" placeholder="Email">
                 <input v-model="user.password" class="datos" type="password" placeholder="Password">
                 <input v-model="user.confirmPassword" class="datos" type="password" placeholder="Confirm Password">
             </section>
