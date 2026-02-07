@@ -22,12 +22,12 @@ Proyecto backend para una aplicación de gestión de actividades, construido con
 La aplicación sigue el patrón clásico MVC + servicios con repositorios que usan Spring Data.
 
 ## Flujo de autenticación (actualizado)
-1. El usuario hace login a través de `/api/v1/auth/login` (controlador de autenticación).
+1. El usuario hace login a través de `/api/auth/login` (controlador de autenticación).
 2. `AuthService` valida credenciales y devuelve información básica del usuario (username y rol). No se generan ni se validan tokens JWT.
 3. La protección de endpoints está controlada por `SecurityConfig` y `UserDetailsServiceImpl`.
 
 ## Endpoints principales (resumen)
-- `/api/v1/auth/**` - endpoints de autenticación (login, register) — permitidos sin token.
+- `/api/auth/**` - endpoints de autenticación (login, register) — permitidos sin token.
 - Resto de endpoints: requieren autenticación de Spring Security (configurada en `SecurityConfig`).
 
 Para detalles exactos de parámetros y modelos consultar los controladores en `src/main/java/com/backend/gestorActividades/controllers`.

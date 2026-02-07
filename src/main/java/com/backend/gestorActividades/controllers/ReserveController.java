@@ -2,14 +2,14 @@ package com.backend.gestorActividades.controllers;
 
 import com.backend.gestorActividades.models.Reserve;
 import com.backend.gestorActividades.services.ReserveService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/reserves") // Versiona tu API
+@RequestMapping("/api/reserves") // Remove version prefix
 public class ReserveController {
 
     private final ReserveService reserveService;

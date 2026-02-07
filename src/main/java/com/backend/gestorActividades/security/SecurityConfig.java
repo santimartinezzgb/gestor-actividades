@@ -20,7 +20,7 @@ import java.util.List;
 public class SecurityConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -30,10 +30,9 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Habilitamos CORS
                 .csrf(AbstractHttpConfigurer::disable) // Deshabilitamos CSRF (común en APIs REST)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll() // Permitir acceso a login/registro
+                        .requestMatchers("/api/auth/**").permitAll() // Permitir acceso a login/registro
                         .anyRequest().authenticated() // El resto requiere autenticación
                 );
-
 
         return http.build();
     }
@@ -41,7 +40,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // Origen del frontend (Vite)
+        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // Origen del frontend (Vite en este caso)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
