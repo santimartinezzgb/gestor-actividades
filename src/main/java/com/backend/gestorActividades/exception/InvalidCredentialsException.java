@@ -1,7 +1,7 @@
 package com.backend.gestorActividades.exception;
 
 /**
- * Excepción personalizada para indicar que las credenciales proporcionadas son inválidas.
+ * Exception to indicate that the provided credentials for authentication are invalid.
  */
 
 public class InvalidCredentialsException extends RuntimeException {

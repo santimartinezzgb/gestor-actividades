@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
 /**
- * Maneja excepciones globalmente para toda la aplicación.
- * Captura errores específicos y devuelve respuestas estructuradas con detalles.
+ * Handle global exceptions for the application and return structured error responses.
+ * This class uses @RestControllerAdvice to intercept exceptions thrown by controllers
  */
 
 @RestControllerAdvice
@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(CancelacionNoPermitidaException.class)
-    public ResponseEntity<ErrorResponse> handleCancelation(CancelacionNoPermitidaException ex) {
+    @ExceptionHandler(CancellationNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleCancelation(CancellationNotAllowedException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "CANCELACION_NEGADA",

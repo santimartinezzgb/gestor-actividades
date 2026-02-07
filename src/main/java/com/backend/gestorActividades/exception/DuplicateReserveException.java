@@ -1,7 +1,7 @@
 package com.backend.gestorActividades.exception;
 
 /**
- * Excepción personalizada para indicar que se ha intentado realizar una reserva duplicada para la misma actividad y usuario.
+ * Exception to indicate that a duplicate reservation has been attempted for the same user and activity.
  */
 
 public class DuplicateReserveException extends RuntimeException {
