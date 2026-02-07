@@ -9,35 +9,38 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
 /**
- * Handle global exceptions for the application and return structured error responses.
- * This class uses @RestControllerAdvice to intercept exceptions thrown by controllers
+ * HANDLER GLOBAL DE EXCEPTIONS TO RETURN CUSTOM ERROR RESPONSES
+ * CATCH ALL EXCEPTIONS AND MAP THEM TO HTTP STATUS CODES AND CUSTOM ERROR MESSAGES
  */
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // DUPLICATE RESERVATION
     @ExceptionHandler(DuplicateReserveException.class)
     public ResponseEntity<ErrorResponse> handleDuplicate(DuplicateReserveException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
-                "RESERVA_DUPLICADA",
+                "DUPLICATE_RESERVATION",
                 ex.getMessage(),
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
+    // CANCELATION NOT ALLOWED
     @ExceptionHandler(CancellationNotAllowedException.class)
     public ResponseEntity<ErrorResponse> handleCancelation(CancellationNotAllowedException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "CANCELACION_NEGADA",
+                "DONT_PERMIT_CANCEL",
                 ex.getMessage(),
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    // INVALID CREDENTIALS
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleAuthError(InvalidCredentialsException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -47,5 +50,53 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    // INVALID STATE FOR OPERATION
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "INVALID_STATE",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // CATCH ALL OTHER UNHANDLED EXCEPTIONS
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "INTERNAL_ERROR",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // INVALID ARGUMENTS
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "INVALID_DATA",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // ACCESS DENIED
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(Exception ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                "DENIED_ACCESS",
+                "You don't have permission to access this resource.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 }

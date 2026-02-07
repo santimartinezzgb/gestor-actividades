@@ -2,58 +2,41 @@ package com.backend.gestorActividades.services;
 
 import com.backend.gestorActividades.dto.AuthResponse;
 import com.backend.gestorActividades.dto.LoginRequest;
-import com.backend.gestorActividades.exception.DuplicateUserException;
-import com.backend.gestorActividades.exception.InvalidCredentialsException;
 import com.backend.gestorActividades.models.User;
-import com.backend.gestorActividades.models.enums.RolUser;
-import com.backend.gestorActividades.repositories.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder; // ENCODE PASSWORDS
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
-    public AuthService(UserRepository userRepository,
-                       BCryptPasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthService(AuthenticationManager authenticationManager, UserService userService) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
-    // USER REGISTRATION
-    public User register(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new DuplicateUserException("Username already exists");
-        }
-
-        // PASSWORD ENCODING
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // DEFALUT VALUES (ACTIVE, CREATED_AT, ROL)
-        user.setActive(true);
-        user.setCreatedAt(LocalDateTime.now());
-        if (user.getRol() == null) {
-            user.setRol(RolUser.USER);
-        }
-
-        return userRepository.save(user);
-    }
-
-    // USER LOGIN
     public AuthResponse login(LoginRequest request) {
-        User user = userRepository.findByUsername(request.username())
-                .orElseThrow(() -> new InvalidCredentialsException("User or password incorrect"));
+        // 1. Spring Security intenta autenticar (usa tu UserDetailsServiceImpl internamente)
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
 
-        // CHECK PASSWORD
-        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new InvalidCredentialsException("User or password incorrect");
-        }
+        // 2. Si no lanza excepción, el login es correcto. Obtenemos el rol.
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("ROLE_USER");
 
-        // RETURN USERNAME AND ROL
-        return new AuthResponse(user.getUsername(), user.getRol());
+        return new AuthResponse(request.getUsername(), role, "¡Bienvenido de nuevo!");
+    }
+
+    public User register(User user) {
+        // Reutilizamos tu UserService que ya tiene las validaciones y el BCrypt
+        return userService.saveUser(user);
     }
 }

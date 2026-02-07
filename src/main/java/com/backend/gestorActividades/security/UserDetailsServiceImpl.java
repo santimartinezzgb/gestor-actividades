@@ -29,26 +29,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findAll().stream()
-                .filter(u -> username.equals(u.getUsername()))
-                .findFirst();
+        // 1. Buscamos directamente en la DB (mucho más rápido)
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        // 2. Simplificamos la asignación de roles
+        String roleName = (user.getRol() == RolUser.ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(roleName));
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (user.getRol() == RolUser.ADMIN) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        } else {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        }
-
+        // 3. Construimos el objeto User de Spring Security
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
-                .password(user.getPassword() == null ? "" : user.getPassword())
+                .password(user.getPassword())
                 .authorities(authorities)
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(false)
                 .disabled(!user.isActive())
                 .build();
     }

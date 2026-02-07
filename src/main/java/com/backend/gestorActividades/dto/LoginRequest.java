@@ -1,10 +1,13 @@
 package com.backend.gestorActividades.dto;
 
+import lombok.Data;
+
 /**
- * DTO para representar la solicitud de inicio de sesión.
- *
- * @param username El nombre de usuario del usuario que intenta iniciar sesión.
- * @param password La contraseña del usuario que intenta iniciar sesión.
+ * DTO TO LOGIN REQUEST
  */
 
-public record LoginRequest(String username, String password) {}
+@Data
+public class LoginRequest {
+    private String username;
+    private String password;
+}

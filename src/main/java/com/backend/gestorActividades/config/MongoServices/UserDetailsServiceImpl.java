@@ -26,9 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        // Mapeamos el rol del usuario de tu modelo a SimpleGrantedAuthority
-        // Si tu modelo User tiene un campo 'role', úsalo aquí.
-        // Si no, dejamos "ROLE_USER" por defecto.
+
         String role = user.getRol() != null ? user.getRol().name() : "USER";
 
         return org.springframework.security.core.userdetails.User.builder()
