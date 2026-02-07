@@ -10,7 +10,8 @@ function createWindow() {
             contextIsolation: false
         }
     });
-    win.loadURL('http://localhost:5173'); // Puerto por defecto de Vite
+    win.maximize(); // Maximiza la ventana para que ocupe todo el monitor
+    win.loadURL('http://localhost:5173');
 }
 
 app.whenReady().then(() => {

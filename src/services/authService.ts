@@ -1,11 +1,10 @@
-const API_URL = 'http://localhost:8080/api/v1/auth';
+const API_URL = 'http://localhost:8080/api/auth';
 
 
-// Función para comprobar conexión con el backend
+// CHECK CONNECTION WITH THE BACKEND
 export async function pingBackend() {
     try {
-        // Hacemos una petición a un login parcial o simplemente al base path
-        // Si el backend responde (aunque sea con error de método), está vivo.
+        // TRY TO CONNECT TO THE BACKEND
         const res = await fetch(API_URL + '/login', { method: 'OPTIONS' });
         return true;
     } catch {
@@ -13,14 +12,14 @@ export async function pingBackend() {
     }
 }
 
-// Servicio de autenticación para manejar la lógica de login
+// LOGIN SERVICE TO HANDLE THE LOGIN LOGIC
 export async function login(
     credentials: {
         username: string;
         password: string;
         remember?: boolean
     }) {
-    try {
+    try { // TRY TO CONNECT TO THE BACKEND
         const respuesta = await fetch(API_URL + '/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -28,8 +27,11 @@ export async function login(
         });
 
         if (respuesta.ok) {
-            return await respuesta.json();
+            console.log("Login ok: ", respuesta);
+            return await respuesta.json(); // RETURN THE RESPONSE FROM THE BACKEND
+
         } else {
+            console.log("Login fail: ", respuesta);
             const errorData = await respuesta.json();
             throw new Error(errorData.message || 'Incorrect credentials');
         }
