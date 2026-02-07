@@ -1,11 +1,13 @@
-const API_URL = 'http://localhost:8080/';
+const API_URL = 'http://localhost:8080/api/v1/auth';
 
 
 // Función para comprobar conexión con el backend
 export async function pingBackend() {
     try {
-        const res = await fetch(API_URL, { method: 'GET' });
-        return res.ok;
+        // Hacemos una petición a un login parcial o simplemente al base path
+        // Si el backend responde (aunque sea con error de método), está vivo.
+        const res = await fetch(API_URL + '/login', { method: 'OPTIONS' });
+        return true;
     } catch {
         return false;
     }
@@ -19,7 +21,7 @@ export async function login(
         remember?: boolean
     }) {
     try {
-        const respuesta = await fetch(API_URL, {
+        const respuesta = await fetch(API_URL + '/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(credentials)
@@ -35,3 +37,4 @@ export async function login(
         throw new Error('Could not connect to the server. Is Spring Boot running?');
     }
 }
+
