@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
-    // En un proyecto real, aquí inyectarías BCryptPasswordEncoder y JwtService
+    // En un proyecto real, aquí inyectarías BCryptPasswordEncoder
 
     public AuthService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -28,10 +28,8 @@ public class AuthService {
             throw new InvalidCredentialsException("Usuario o contraseña incorrectos");
         }
 
-        // 3. Generar Token (Simulado por ahora)
-        String fakeToken = "jwt-token-generado-para-" + user.getUsername();
-
-        return new AuthResponse(fakeToken, user.getUsername(), user.getRol());
+        // Ya no devolvemos token JWT; devolvemos datos del usuario
+        return new AuthResponse(user.getUsername(), user.getRol());
     }
 
     public User register(User user) {
