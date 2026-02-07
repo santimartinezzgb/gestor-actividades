@@ -2,7 +2,6 @@ package com.backend.gestorActividades.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,16 +13,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean // PASSWORD ENCODER
+    @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // BCrypt to encrypt passwords securely
+        return new BCryptPasswordEncoder();
     }
 
-    @Bean // ALL SECURITY CONFIGURATION
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // HTTP SECURITY CONFIGURATION
         http
-                .csrf(AbstractHttpConfigurer::disable); // Unavailable to testing ( ENABLE IN PRODUCTION )
+                .csrf(AbstractHttpConfigurer::disable) // Deshabilitamos CSRF (común en APIs REST)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/auth/**").permitAll() // Permitir acceso a login/registro
+                        .anyRequest().authenticated() // El resto requiere autenticación
+                );
+
+
         return http.build();
     }
 }

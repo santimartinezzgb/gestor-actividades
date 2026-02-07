@@ -12,20 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/activities")
+@RequestMapping("/api/v1/activities") // Mantenemos consistencia con la versión
 public class ActivityController {
 
     private final ActivityService activityService;
 
-    @Autowired
+    // @Autowired es opcional en constructores únicos en versiones modernas de Spring,
+    // pero dejarlo o quitarlo es cuestión de estilo.
     public ActivityController(ActivityService activityService) {
         this.activityService = activityService;
     }
 
-    @GetMapping("/getActivities")
-    public ResponseEntity<ArrayList<Activity>> getActivities() {
+    @GetMapping
+    public ResponseEntity<List<Activity>> getAll() {
+        // Usamos List en lugar de ArrayList para mayor flexibilidad (abstracción)
         return ResponseEntity.ok(activityService.getActivities());
     }
-
-
 }

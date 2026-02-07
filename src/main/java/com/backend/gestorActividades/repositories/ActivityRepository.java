@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IActivityRepository extends MongoRepository<Activity, String> {
+public interface ActivityRepository extends MongoRepository<Activity, String> {
     List<Activity> findByCapacity(int capacity);
 }

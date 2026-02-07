@@ -1,7 +1,7 @@
 package com.backend.gestorActividades.services;
 
 import com.backend.gestorActividades.models.User;
-import com.backend.gestorActividades.repositories.IUserRepository;
+import com.backend.gestorActividades.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    IUserRepository userRepository;
+    UserRepository userRepository;
 
     public ArrayList<User> getUsers() {
         return (ArrayList<User>) userRepository.findAll();

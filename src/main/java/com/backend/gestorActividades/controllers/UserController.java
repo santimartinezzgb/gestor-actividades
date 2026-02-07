@@ -10,48 +10,45 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/getUsers")
-    public ResponseEntity<List<User>> getUsers() {
+    @GetMapping
+    public ResponseEntity<List<User>> getAll() {
         return ResponseEntity.ok(userService.getUsers());
     }
 
-    @GetMapping("/getUserByUsername/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+    // Usar {id} es más estándar para obtener recursos individuales
+    @GetMapping("/{username}")
+    public ResponseEntity<User> getByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
-                .map(ResponseEntity::ok) // 200 OK
-                .orElse(ResponseEntity.notFound().build()); // 404 Not Found
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/postUser")
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
-        User savedUser = userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    @PostMapping
+    public ResponseEntity<User> create(@RequestBody User user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(user));
     }
 
-    @PutMapping("/putUser/{id}")
-    public ResponseEntity<User> deactivateUser(@PathVariable String id) {
+    // Si la acción es desactivar, la URL puede reflejarlo o usar un PATCH
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<User> deactivate(@PathVariable String id) {
         return userService.deactivateUser(id)
-                .map(ResponseEntity::ok)// 200 OK
-                .orElse(ResponseEntity.notFound().build()); // 404 Not Found
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        boolean deleted = userService.deleteUser(id);
-        return deleted
-                ? ResponseEntity.noContent().build() // 204 Checked
-                : ResponseEntity.notFound().build(); // 404 Not Found
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        return userService.deleteUser(id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 }
