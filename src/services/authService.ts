@@ -1,6 +1,6 @@
 // CONFIGURATION
-const methodLogin_API = 'login'; // ENDPOINT FOR USER LOGIN FROM THE BACKEND
-const methodRegister_API = 'register'; // ENDPOINT FOR USER REGISTRATION FROM THE BACKEND
+const methodLogin_API = '/login'; // ENDPOINT FOR USER LOGIN FROM THE BACKEND
+const methodRegister_API = '/register'; // ENDPOINT FOR USER REGISTRATION FROM THE BACKEND
 
 // SIGNUP SERVICE TO HANDLE USER REGISTRATION
 export async function signup(user: {

@@ -1,4 +1,3 @@
-// main.js de Electron para cargar la app Vite/Vue
 import { app, BrowserWindow } from 'electron';
 
 function createWindow() {
@@ -10,7 +9,7 @@ function createWindow() {
             contextIsolation: false
         }
     });
-    win.maximize(); // Maximiza la ventana para que ocupe todo el monitor
+    win.maximize(); // WINDOW STARTS MAXIMIZED
     win.loadURL('http://localhost:5173');
 }
 

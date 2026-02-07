@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { login as loginService, pingBackend } from '../services/authService';
+import { login as loginService } from '../services/authService';
 
 const router = useRouter();
 const styleBorder = '2px solid #F7B176';
