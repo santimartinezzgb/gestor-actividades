@@ -1,9 +1,11 @@
 <script setup>
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { signup as signupService } from '../services/authService';
 const router = useRouter();
 const styleBorder = '2px solid #F7B176';
+const activeView = ref('signup');
 
 const user = ref({
     username: '',
@@ -34,36 +36,39 @@ const signup = async () => {
 };
 
 const goToLogin = () => {
+    activeView.value = 'login';
     router.push('/login');
 };
 </script>
 
 <template>
+
     <main>
+        <div class="sectionTitle">
+            <h1>MyFitness</h1>
+            <p>Track your activities with ease</p>
+        </div>
         <div id="signup">
             <section class="options">
-                <button class="btn_signin" @click="goToLogin">Sign in</button>
+                <button
+                    class="btn_signin"
+                    :style="{ borderBottom: activeView === 'login' ? styleBorder : 'none' }"
+                    @click="goToLogin"
+                >Login</button>
                 <button
                     class="btn_signup"
-                    :style="{ borderBottom: styleBorder }"
+                    :style="{ borderBottom: activeView === 'signup' ? styleBorder : 'none' }"
                 >Sign up</button>
             </section>
 
-            <section class="sectionTitle">
-                <h1>Join Us</h1>
-                <p>Create your account today</p>
-            </section>
-            
             <section class="inputs">
-                <input v-model="user.username" class="datos" type="text" placeholder="Username">
-                <input v-model="user.password" class="datos" type="password" placeholder="Password">
-                <input v-model="user.confirmPassword" class="datos" type="password" placeholder="Confirm Password">
+                <input v-model="user.username" class="data" type="text" placeholder="Username">
+                <input v-model="user.password" class="data" type="password" placeholder="Password">
+                <input v-model="user.confirmPassword" class="data" type="password" placeholder="Confirm Password">
             </section>
-            
+
             <button id="btn_signup" class="btn_enter" @click="signup">Register</button>
         </div>
-
-        <img src="../assets/main-image.svg" alt="Fitness image" class="image" />
     </main>
 </template>
 
@@ -71,47 +76,47 @@ const goToLogin = () => {
     main {
         display: flex;
         flex-direction: row;
-        width: 100vw;
-        height: 100vh;
-        background-color: #565656;
-        padding-left: 10vw;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 60vh;
+        gap: 25rem;
     }
     #signup {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: flex-start;
-        gap: 1.5rem;
-        width: 40%;
+        align-items: flex-end;
+        gap: 2rem;
+        width: 100%;
     }
-    .options {
+   .options {
         display: flex;
-        justify-content: space-between;
-        width: 50%;
+        justify-content: space-evenly;
+        width: 100%;
         gap: 2rem;
         margin-bottom: 2rem;
     }
     .btn_signin, .btn_signup {
         padding: 0.3rem;
-        font-size: 1rem;
+        font-size: 1.2rem;
         font-weight: 500;
         background-color: transparent;
         color: #FFFFFF;
         cursor: pointer;
         border: none;
     }
+    .btn_signin {
+        border-bottom: 2px solid transparent;
+    }
     .btn_signin:hover, .btn_signup:hover {
         font-weight: bold;
     }
-    .image {
-        width: 50%;
-        object-fit: contain;
-    }
     .sectionTitle {
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
     }
     h1 {
-        font-size: 5rem;
+        font-size: 6rem;
         font-weight: 700;
         color: #FFFFFF;
         margin: 0;
@@ -126,13 +131,13 @@ const goToLogin = () => {
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        width: 80%;
+        width: 100%;
     }
-    .inputs .datos {
+    .inputs .data {
         padding: 1rem;
         font-size: 1.5rem;
         width: 100%;
-        height: 50px;
+        height: 60px;
         border-radius: 0.3rem;
         color: #FFFFFF;
         border: none;

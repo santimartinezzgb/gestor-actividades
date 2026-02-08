@@ -43,27 +43,27 @@ onMounted(async () => {
 
 <template>
     <main>
+
+        <div class="sectionTitle">
+            <h1>MyFitness</h1>
+            <p>Track your activities with ease</p>
+        </div>
+
         <div id="login">
             <section class="options">
                 <button
                     class="btn_signin"
                     :style="{ borderBottom: changeMode === 'signin' ? styleBorder : 'none' }"
                     @click="changeMode = 'signin'"
-                >Sign in</button>
+                >Login</button>
                 <button
                     class="btn_signup"
                     @click="goToSignup"
                 >Sign up</button>
             </section>
-
-            <section class="sectionTitle">
-                <h1>MyFitness</h1>
-                <p>Track your activities with ease</p>
-            </section>
-            
             <section class="inputs">
-                <input v-model="credentials.username" class="datos" type="text" placeholder="Username">
-                <input v-model="credentials.password" class="datos" type="password" placeholder="Password">
+                <input v-model="credentials.username" class="data" type="text" placeholder="Username">
+                <input v-model="credentials.password" class="data" type="password" placeholder="Password">
 
                 <section class="sectionRemember">
                     <input type="checkbox" id="remember" v-model="credentials.remember">
@@ -73,8 +73,7 @@ onMounted(async () => {
             
             <button id="btn_enter" class="btn_enter" @click="login">Enter</button>
         </div>
-
-        <img src="../assets/main-image.svg" alt="Fitness image" class="image" />
+            
     </main>
 </template>
 
@@ -82,29 +81,30 @@ onMounted(async () => {
     main {
         display: flex;
         flex-direction: row;
-        width: 100vw;
-        height: 100vh;
-        background-color: #565656;
-        padding-left: 10vw;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 60vh;
+        gap: 25rem;
     }
     #login {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: flex-start;
+        align-items: flex-end;
         gap: 2rem;
-        width: 40%;
+        width: 100%;
     }
     .options {
         display: flex;
-        justify-content: space-between;
-        width: 50%;
+        justify-content: space-evenly;
+        width: 100%;
         gap: 2rem;
         margin-bottom: 2rem;
     }
     .btn_signin, .btn_signup {
         padding: 0.3rem;
-        font-size: 1rem;
+        font-size: 1.2rem;
         font-weight: 500;
         background-color: transparent;
         color: #FFFFFF;
@@ -117,15 +117,11 @@ onMounted(async () => {
     .btn_signin:hover, .btn_signup:hover {
         font-weight: bold;
     }
-    .image {
-        width: 50%;
-        object-fit: contain;
-    }
     .sectionTitle {
         margin-bottom: 2rem;
     }
     h1 {
-        font-size: 5rem;
+        font-size: 6rem;
         font-weight: 700;
         color: #FFFFFF;
         margin: 0;
@@ -139,6 +135,7 @@ onMounted(async () => {
     .sectionRemember {
         display: flex;
         align-items: center;
+        justify-content: flex-end;
         gap: 0.5rem;
         margin: 1rem 0;
     }
@@ -155,9 +152,9 @@ onMounted(async () => {
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        width: 80%;
+        width: 100%;
     }
-    .inputs .datos {
+    .inputs .data {
         padding: 1rem;
         font-size: 1.5rem;
         width: 100%;
