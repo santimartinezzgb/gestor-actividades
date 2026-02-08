@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implementación personalizada de UserDetailsService para cargar los detalles del usuario desde la base de datos.
+ * LOAD USER DETAILS FOR AUTHENTICATION FROM DATABASE
  */
 
 @Service
@@ -27,17 +27,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    // CALLED BY SPRING SECURITY TO LOAD USER DETAILS DURING AUTHENTICATION
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 1. Buscamos directamente en la DB (mucho más rápido)
+
+        // 1. SEARCH FOR THE USER IN THE DATABASE
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        // 2. Simplificamos la asignación de roles
+        // 2. SIMPLIFY THE ROLE TO A SINGLE ROLE (ADMIN OR USER) FOR SPRING SECURITY
         String roleName = (user.getRol() == RolUser.ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(roleName));
 
-        // 3. Construimos el objeto User de Spring Security
+        // 3. BUILD THE OBJECT USER THAT SPRING SECURITY USES FOR AUTHENTICATION
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())

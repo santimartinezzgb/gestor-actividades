@@ -20,23 +20,25 @@ public class AuthService {
         this.userService = userService;
     }
 
+    // AUTHENTICATE USER AND RETURN ROLE
     public AuthResponse login(LoginRequest request) {
-        // 1. Spring Security intenta autenticar (usa tu UserDetailsServiceImpl internamente)
+        // SPRING SECURITY TRY TO AUTHENTICATE THE USER WITH THE PROVIDED CREDENTIALS
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
-        // 2. Si no lanza excepción, el login es correcto. Obtenemos el rol.
+        // IF NOT, THROW AN EXCEPTION (HANDLED BY SPRING SECURITY)
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElse("ROLE_USER");
 
-        return new AuthResponse(request.getUsername(), role, "¡Bienvenido de nuevo!");
+        // RETURN THE AUTH RESPONSE WITH THE USERNAME, ROLE AND A WELCOME MESSAGE
+        return new AuthResponse(request.getUsername(), role, "¡WELCOME!");
     }
 
+    // SAVE NEW USER ( REGISTRATION )
     public User register(User user) {
-        // Reutilizamos tu UserService que ya tiene las validaciones y el BCrypt
         return userService.saveUser(user);
     }
 }

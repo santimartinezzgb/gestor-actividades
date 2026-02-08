@@ -25,14 +25,14 @@ public class ValidationUtil {
     // VALIDATE FIELD NOT EMPTY (STRING)
     public static void validateStringNotEmpty(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("El campo " + fieldName + " no puede estar vacío.");
+            throw new IllegalArgumentException("The field " + fieldName + " cannot be empty.");
         }
     }
 
     // VALIDATE MINIMUM LENGTH OF A STRING
     public static void validateMinLength(String value, int min, String fieldName) {
         if (value != null && value.length() < min) {
-            throw new IllegalArgumentException(fieldName + " debe tener al menos " + min + " caracteres.");
+            throw new IllegalArgumentException(fieldName + " must be at least " + min + " characters long.");
         }
     }
 }
