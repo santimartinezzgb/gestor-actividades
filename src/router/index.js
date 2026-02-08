@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import LoginView from '../views/LoginView.vue';
 import SignupView from '../views/SignupView.vue';
-import HomeView from '../views/HomeView.vue';
+import HomeView from '../views/UserView.vue';
 import Extra1View from '../views/ActivitiesView.vue';
 import Extra2View from '../views/ReservesView.vue';
 

@@ -20,6 +20,14 @@ const login = async () => {
     try {
         const data = await loginService(credentials);
         console.log('Success:', data);
+        // Guardar token según remember
+        if (data && data.token) {
+            if (credentials.remember) {
+                localStorage.setItem('token', data.token);
+            } else {
+                sessionStorage.setItem('token', data.token);
+            }
+        }
         // Navigate to Home upon success
         router.push('/home');
     } catch (error) {
