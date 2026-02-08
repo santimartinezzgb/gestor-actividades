@@ -19,7 +19,7 @@ const goToExtra2 = () => router.push('/extra2');
     <main :class="{ 'with-reservations': showReservations, 'with-sidebar': showSidebar }">
 
         <button class="btn-myreserves" @click="showReservations = true">
-            View Reserves
+            View my reserves
         </button>
         <button class="btn-showsidebar" v-if="!showSidebar" @click="showSidebar = true">
             &#9776;
@@ -41,7 +41,7 @@ const goToExtra2 = () => router.push('/extra2');
         <div v-if="showReservations" class="overlay overlay-reserves" @click="showReservations = false"></div>
         <section class="content">
             <div class="userCard">
-                <h2>username</h2>
+                <h2>RESERVE YOUR CLASS</h2>
             </div>
             <button class="newActivity">
                 <h2>¡ NEW ACTIVITY !</h2>
@@ -273,15 +273,22 @@ const goToExtra2 = () => router.push('/extra2');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         width: 40%;
-        height: 20vh;
+        height: 10vh;
         padding: 2rem;
         border-radius: 1rem;
         text-align: left;
         cursor: pointer;
+        transition: all 0.3s ease;
+        border: transparent;
     }
     .userCard:hover {
-        border: 2px solid #F7B176;
+        transform: translateY(-3px);
         color: #F7B176;
 
         padding: 1.9rem;
@@ -292,12 +299,13 @@ const goToExtra2 = () => router.push('/extra2');
         font-weight: 500;
     }
 
+
+    /* NEW ACTIVITY */
     .newActivity {
-        background: linear-gradient(270deg, #F7B176, #ff6b6b, #6bf5ff, #F7B176);
+        background: linear-gradient(270deg, #a3744e, #ac4949, #3b898f, #976d4a);
         background-size: 400% 400%;
         animation: newActivityGlow 8s ease infinite;
         
-        /* Layout */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -323,7 +331,7 @@ const goToExtra2 = () => router.push('/extra2');
         100% { background-position: 0% 50%; }
     }
     .newActivity h2 {
-        font-size: 2rem;
+        font-size: 2.5rem;
         margin: 0;
         font-weight: bold;
         color: white;
@@ -332,7 +340,7 @@ const goToExtra2 = () => router.push('/extra2');
     .newActivity p {
         font-size: 2rem;
         margin: 0;
-        font-weight: 500;
+        font-weight: 600;
         color: white;
     }
     .newActivity strong {
