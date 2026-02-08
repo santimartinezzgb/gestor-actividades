@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/activities")
+@RequestMapping("/activities")
 public class ActivityController {
 
     // SERVICE TO HANDLE EACH ACTIVITY

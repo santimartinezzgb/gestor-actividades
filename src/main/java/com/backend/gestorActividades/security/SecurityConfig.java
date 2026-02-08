@@ -47,8 +47,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // 1. ALLOW LOGIN AND REGISTRATION ENDPOINTS TO EVERYONE
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/activities/**").permitAll()
 
                         // 2. ALLOW SEE ACTIVITIES TO EVERYONE
                         .requestMatchers(HttpMethod.GET, "/api/activities/**").permitAll()
