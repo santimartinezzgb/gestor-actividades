@@ -40,9 +40,9 @@ const goToExtra2 = () => router.push('/extra2');
         <!-- Overlay para reservas -->
         <div v-if="showReservations" class="overlay overlay-reserves" @click="showReservations = false"></div>
         <section class="content">
-            <div class="userCard">
-                <h2>RESERVE YOUR CLASS</h2>
-            </div>
+            <button class="userCard" @click="goToExtra1">
+                <h2>MY PROFILE</h2>
+            </button>
             <button class="newActivity">
                 <h2>¡ NEW ACTIVITY !</h2>
                 <p> BODY PUMP already unable this week</p>
@@ -274,6 +274,7 @@ const goToExtra2 = () => router.push('/extra2');
         background-position: center;
         background-repeat: no-repeat;
 
+        color: white;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -296,7 +297,7 @@ const goToExtra2 = () => router.push('/extra2');
     .userCard h2 {
         font-size: 2rem;
         margin: 0;
-        font-weight: 500;
+        font-weight: 700;
     }
 
 
