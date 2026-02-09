@@ -1,11 +1,12 @@
 <script setup>
-
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { signup as signupService } from '../services/authService';
+import { signupUser } from '../services/authService';
+
 const router = useRouter();
 const styleBorder = '2px solid #F7B176';
 const activeView = ref('signup');
+const errorMessage = ref(''); // TO DISPLAY LOGIN ERRORS
 
 const user = ref({
     username: '',
@@ -17,7 +18,8 @@ const user = ref({
 
 const signup = async () => {
     if (user.value.password !== user.value.confirmPassword) {
-        alert('Las contraseñas no coinciden');
+        errorMessage.value = "Passwords do not match";
+        alert('Passwords do not match');
         return;
     }
     const userToSend = {
@@ -27,11 +29,12 @@ const signup = async () => {
         isActive: true
     };
     try {
-        await signupService(userToSend);
-        alert('Registro exitoso. Por favor inicia sesión.');
+        await signupUser(userToSend);
+        alert('Signup successful!');
         router.push('/login');
     } catch (error) {
-        alert(error.message || 'Error al registrar usuario');
+        errorMessage.value = "Error during signup: " + error.message;
+        alert("Error during signup: " + error.message);
     }
 };
 
@@ -95,7 +98,6 @@ const goToLogin = () => {
         justify-content: space-evenly;
         width: 100%;
         gap: 2rem;
-        margin-bottom: 2rem;
     }
     .btn_signin, .btn_signup {
         padding: 0.3rem;
@@ -105,12 +107,10 @@ const goToLogin = () => {
         color: #FFFFFF;
         cursor: pointer;
         border: none;
-    }
-    .btn_signin {
-        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
     }
     .btn_signin:hover, .btn_signup:hover {
-        font-weight: bold;
+        transform: translateY(-5px);
     }
     .sectionTitle {
         margin-bottom: 2rem;
@@ -130,6 +130,8 @@ const goToLogin = () => {
     .inputs {
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
         gap: 1rem;
         width: 100%;
     }
@@ -140,9 +142,19 @@ const goToLogin = () => {
         height: 60px;
         border-radius: 0.3rem;
         color: #FFFFFF;
-        border: none;
         background-color: #828282;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-left: #F7B176 4px none;
+    }
+
+    .inputs .data::placeholder {
+        color: #FFFFFF;
+        opacity: 0.5;
+    }
+    .inputs .data:focus {
+        padding: 0.9rem;
+        outline: none;
+        border-left: #F7B176 4px solid;
     }
     .btn_enter {
         padding: 0.7rem;

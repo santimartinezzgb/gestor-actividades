@@ -1,87 +1,62 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { login as loginService } from '../services/authService';
+import { login } from '@/services/authService';
 
-const router = useRouter();
 const styleBorder = '2px solid #F7B176';
-const changeMode = ref('signin');
-const credentials = {
+const router = useRouter(); // TO NAVIGATE BETWEEN VIEWS
+const errorMessage = ref(''); // TO DISPLAY LOGIN ERRORS
+const credentials = reactive({ // TO BIND LOGIN FORM FIELDS
     username: '',
     password: '',
     remember: false
-};
+});
 
-const login = async () => {
+// LOGIN HANDLER
+const handleLogin = async () => {
     if (!credentials.username || !credentials.password) {
-        console.error('Please enter both username and password.');
+        // TO DISPLAY ERROR IF FIELDS ARE EMPTY
+        errorMessage.value = "Please fill in all fields";
+        alert("Please fill in all fields");
         return;
     }
+
     try {
-        const data = await loginService(credentials);
-        console.log('Success:', data);
-        // Guardar token según remember
-        if (data && data.token) {
-            if (credentials.remember) {
-                localStorage.setItem('token', data.token);
-            } else {
-                sessionStorage.setItem('token', data.token);
-            }
-        }
-        // Navigate to Home upon success
+        await login(credentials); // CALL LOGIN SERVICE from authService
         router.push('/home');
     } catch (error) {
-        console.error('Error:', error);
+        errorMessage.value = error.message; // TO DISPLAY ERROR MESSAGE FROM SERVICE
     }
 };
 
-const goToSignup = () => {
-    router.push('/signup');
-};
-
-onMounted(async () => {
-    const connected = await pingBackend();
-    if (!connected) {
-        console.error('Unable to connect to the backend');
-    } else {
-        console.log('Backend connection successful.');
-    }
-});
+// NAVIGATE TO SIGNUP VIEW
+const goToSignup = () => router.push('/signup');
 </script>
 
 <template>
     <main>
-
         <div class="sectionTitle">
             <h1>MyFitness</h1>
             <p>Track your activities with ease</p>
         </div>
 
         <div id="login">
-            <section class="options">
-                <button
-                    class="btn_signin"
-                    :style="{ borderBottom: changeMode === 'signin' ? styleBorder : 'none' }"
-                    @click="changeMode = 'signin'"
-                >Login</button>
-                <button
-                    class="btn_signup"
-                    @click="goToSignup"
-                >Sign up</button>
-            </section>
-            <section class="inputs">
-                <input v-model="credentials.username" class="data" type="text" placeholder="Username">
-                <input v-model="credentials.password" class="data" type="password" placeholder="Password">
-
-                <section class="sectionRemember">
-                    <input type="checkbox" id="remember" v-model="credentials.remember">
-                    <label for="remember">Remember me</label>
+            <form @submit.prevent="handleLogin" style="width:100%">
+                <section class="options">
+                    <button type="button" class="btn_signin" :style="{ borderBottom: styleBorder }">Login</button>
+                    <button type="button" class="btn_signup" @click="goToSignup">Sign up</button>
                 </section>
-            </section>
-            
-            <button id="btn_enter" class="btn_enter" @click="login">Enter</button>
+
+                <section class="inputs">
+                    <input v-model="credentials.username" class="data" type="text" placeholder="Username">
+                    <input v-model="credentials.password" class="data" type="password" placeholder="Password">
+                    
+                    <p v-if="errorMessage" style="color: #ff6b6b; font-size: 0.9rem;">{{ errorMessage }}</p>
+
+                    <button class="btn_enter" type="submit">Enter</button>
+                </section>
+            </form>
         </div>
-            
     </main>
 </template>
 
@@ -118,12 +93,10 @@ onMounted(async () => {
         color: #FFFFFF;
         cursor: pointer;
         border: none;
-    }
-    .btn_signin {
-        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
     }
     .btn_signin:hover, .btn_signup:hover {
-        font-weight: bold;
+        transform: translateY(-5px);
     }
     .sectionTitle {
         margin-bottom: 2rem;
@@ -159,6 +132,8 @@ onMounted(async () => {
     .inputs {
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
         gap: 1rem;
         width: 100%;
     }
@@ -169,10 +144,21 @@ onMounted(async () => {
         height: 60px;
         border-radius: 0.3rem;
         color: #FFFFFF;
-        border: none;
         background-color: #828282;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-left: #F7B176 4px none;
     }
+
+    .inputs .data::placeholder {
+        color: #FFFFFF;
+        opacity: 0.5;
+    }
+    .inputs .data:focus {
+        padding: 0.9rem;
+        outline: none;
+        border-left: #F7B176 4px solid;
+    }
+
     .btn_enter {
         padding: 0.7rem;
         font-weight: 600;
@@ -183,8 +169,11 @@ onMounted(async () => {
         border: none;
         border-radius: 0.3rem;
         cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
     }
     .btn_enter:hover {
         opacity: 0.9;
+        transform: translateY(5px);
     }
 </style>
