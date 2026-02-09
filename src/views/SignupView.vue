@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { signupUser } from '../services/authService';
+import { signup as signupService } from '../services/authService';
 
 const router = useRouter();
 const styleBorder = '2px solid #F7B176';
 const activeView = ref('signup');
-const errorMessage = ref(''); // TO DISPLAY LOGIN ERRORS
+const errorMessage = ref(''); // TO DISPLAY LOGIN ERRORS.
 
 const user = ref({
     username: '',
@@ -29,12 +29,11 @@ const signup = async () => {
         isActive: true
     };
     try {
-        await signupUser(userToSend);
-        alert('Signup successful!');
+        await signupService(userToSend);
+        alert('Registration successful! Please log in.');
         router.push('/login');
     } catch (error) {
-        errorMessage.value = "Error during signup: " + error.message;
-        alert("Error during signup: " + error.message);
+        alert(error.message || 'Registration failed. Please try again.');
     }
 };
 

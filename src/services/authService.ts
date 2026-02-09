@@ -22,7 +22,7 @@ export async function signup(user: {
             throw new Error(errorData.message || 'Error during registration');
         }
     } catch (error) {
-        throw new Error('Could not connect to the server. Is Spring Boot running?');
+        throw new Error('Could not connect to the server. Is backend running?');
     }
 }
 const API_URL = 'http://localhost:8080/api/auth';
@@ -52,7 +52,7 @@ export async function login(
             throw new Error(errorData.message || 'Incorrect credentials');
         }
     } catch (error) {
-        throw new Error('Could not connect to the server. Is Spring Boot running?');
+        throw new Error('Could not connect to the server. Is backend running?');
     }
 }
 
