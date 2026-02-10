@@ -1,7 +1,6 @@
 package com.backend.gestorActividades.security;
 
 import com.backend.gestorActividades.models.User;
-import com.backend.gestorActividades.models.enums.RolUser;
 import com.backend.gestorActividades.repositories.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collections;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -22,17 +21,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Buscamos al usuario en MongoDB
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        // SURE THAT USER IS NOT NULL, THEN CHECK ROLE
-        String roleName = (user.getRol() == RolUser.ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
+        // IMPORTANTE: Spring Security necesita el prefijo ROLE_ para los authorities
+        // Usamos user.getRol().name() para que sea dinámico según tu Enum
+        String roleWithPrefix = "ROLE_" + user.getRol().name();
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
-                .password(user.getPassword())
-                .authorities(List.of(new SimpleGrantedAuthority(roleName)))
-                .disabled(!user.isActive())
+                .password(user.getPassword()) // Este debe ser el hash de BCrypt almacenado en la DB
+                .authorities(Collections.singletonList(new SimpleGrantedAuthority(roleWithPrefix)))
+                .accountExpired(false)
+                .credentialsExpired(false)
+                .accountLocked(false)
                 .build();
     }
 }

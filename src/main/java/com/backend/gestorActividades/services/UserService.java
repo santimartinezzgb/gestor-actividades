@@ -1,6 +1,7 @@
 package com.backend.gestorActividades.services;
 
 import com.backend.gestorActividades.models.User;
+import com.backend.gestorActividades.models.enums.RolUser;
 import com.backend.gestorActividades.repositories.UserRepository;
 import com.backend.gestorActividades.util.ValidationUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,35 +37,19 @@ public class UserService {
 
     // SAVE OR UPDATE USER
     public User saveUser(User user) {
-
-        // BEFORE PROCESSING, VALIDATE USERNAME AND PASSWORD ARE NOT EMPTY
         ValidationUtil.validateStringNotEmpty(user.getUsername(), "Username");
         ValidationUtil.validateStringNotEmpty(user.getPassword(), "Password");
-        ValidationUtil.validateMinLength(user.getPassword(),8,"Password");
 
-        if (user.getId() == null) { // NEW USER
-
-            // ENCODE PASSWORD AND SET USER ACTIVE TO TRUE
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getId() == null) { // Nuevo usuario
+            // Solo encriptamos si no está ya encriptada (BCrypt empieza por $2a$)
+            if (!user.getPassword().startsWith("$2a$")) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
             user.setActive(true);
-
-        } else { // EXISTING USER -> UPDATE
-
-            // CHECK IF THE PASSWORD HAS CHANGED
-            userRepository.findById(user.getId()).ifPresent(existingUser -> {
-
-                // COMPARE THE RAW PASSWORD WITH THE EXISTING HASH
-                boolean isSamePassword = passwordEncoder.matches(user.getPassword(), existingUser.getPassword());
-
-                if (!isSamePassword) { // ENCODE THE NEW PASSWORD
-                    user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-                } else {// KEEP THE EXISTING HASH IF THE PASSWORD HASN'T CHANGED
-                    user.setPassword(existingUser.getPassword());
-                }
-            });
+            if (user.getRol() == null) user.setRol(RolUser.USER); // Rol por defecto
+        } else {
+            // Lógica de actualización si fuera necesaria
         }
-        // SAVE THE USER TO THE DATABASE
         return userRepository.save(user);
     }
 

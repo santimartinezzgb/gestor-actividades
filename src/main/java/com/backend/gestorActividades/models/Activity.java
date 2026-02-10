@@ -16,7 +16,6 @@ public class Activity {
     private String name;
     private String description;
 
-    // Es recomendable inicializar valores por defecto para evitar Nulls en la DB
     private LocalDateTime date;
     private int capacity;
     private boolean isActive = true;

@@ -1,15 +1,16 @@
 package com.backend.gestorActividades.security;
 
-import com.backend.gestorActividades.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -28,16 +29,22 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    // BEAN is a method that produces a bean to be managed by the Spring container.
-
-    // PASSWORD ENCODER CONFIG TO USE BCRYPT FOR PASSWORD HASHING
-    // This bean will be used by Spring Security to hash passwords
-    //when users register and to verify passwords during login.
-
-    // BCrypt is a strong hashing algorithm
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean
@@ -45,48 +52,43 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1. ALLOW LOGIN AND REGISTRATION ENDPOINTS TO EVERYONE
+                        // 1. Autenticación y Registro de usuarios
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+
+                        // 2. CRUD de Actividades
+                        // Permitimos verlas a todo el mundo
                         .requestMatchers(HttpMethod.GET, "/activities/**").permitAll()
+                        // Permitimos Crear, Editar y Eliminar (Solo ADMIN si ya tienes roles configurados,
+                        // o permitAll() si estás probando todavía)
+                        .requestMatchers(HttpMethod.POST, "/activities/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/activities/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/activities/**").permitAll()
 
-                        // 2. ALLOW SEE ACTIVITIES TO EVERYONE
-                        .requestMatchers(HttpMethod.GET, "/api/activities/**").permitAll()
+                        // 3. Gestión de usuarios (Solo ADMIN)
+                        .requestMatchers("/users/**").hasRole("ADMIN")
 
-                        // 3. ONLY ADMIN CAN MANAGE USERS
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")
-
-                        // 4. THE REST OF THE ENDPOINTS REQUIRE AUTHENTICATION
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults()); // USE BASIC AUTHENTICATION FOR SIMPLICITY
+                .authenticationProvider(authenticationProvider())
+                .httpBasic(Customizer.withDefaults());
 
-        return http.build(); // RETURN THE CONFIGURED SECURITY FILTER CHAIN
+        return http.build();
     }
 
-    // AuthenticationManager CONFIG TO USE BCRYPT AND USERDETAILS SERVICE
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
-        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder);
-        return authBuilder.build();
-    }
-
-    // CORS CONFIG TO ALLOW FRONTEND ACCESS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // FRONTEND URL
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // METHODS ALLOWED
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // HEADERS ALLOWED
-        configuration.setAllowCredentials(true); // ALLOW CREDENTIALS
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        configuration.setAllowCredentials(true);
 
-        // REGISTER CORS CONFIG FOR ALL PATHS.
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // APPLY CORS CONFIG TO ALL PATHS
-        return source; // RETURN CORS CONFIG SOURCE
+        // Aplicar esta configuración a todas las rutas, incluyendo /activities
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
