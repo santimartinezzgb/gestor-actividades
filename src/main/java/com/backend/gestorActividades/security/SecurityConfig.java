@@ -1,6 +1,6 @@
 package com.backend.gestorActividades.security;
 
-import com.backend.gestorActividades.config.MongoServices.UserDetailsServiceImpl;
+import com.backend.gestorActividades.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -67,11 +67,11 @@ public class SecurityConfig {
 
     // AuthenticationManager CONFIG TO USE BCRYPT AND USERDETAILS SERVICE
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
         AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authBuilder
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(bCryptPasswordEncoder);
         return authBuilder.build();
     }
 

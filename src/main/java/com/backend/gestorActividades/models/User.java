@@ -14,13 +14,15 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     private String id;
+    private String name;
+    private String surname;
     private String username;
     private String password;
     private RolUser rol;
 
-    @CreatedDate // Se asigna automáticamente al insertar
+    @CreatedDate // AUTOMATICALLY DATA WHEN THE DOCUMENT IS CREATED
     @ReadOnlyProperty
     private LocalDateTime createdAt;
 
-    private boolean isActive = true; // Valor por defecto más sencillo
+    private boolean isActive = true; // DEFAULT TRUE
 }

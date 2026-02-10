@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Data
 public class UserDTO {
     private String id;
+    private String name;
+    private String surname;
     private String username;
     private RolUser rol;
     private LocalDateTime createdAt;

@@ -25,6 +25,8 @@ public class UserController {
     private UserDTO convertToDTO(User user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setSurname(user.getSurname());
         dto.setUsername(user.getUsername());
         dto.setRol(user.getRol());
         dto.setCreatedAt(user.getCreatedAt());
@@ -41,7 +43,7 @@ public class UserController {
                 .map(this::convertToDTO).toList());
     }
 
-    // GET USER BY USERNAME ( Using DTO )
+    // GET USER BY ID ( Using DTO )
     @GetMapping("/username/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         return userService.getUserById(id)
@@ -53,6 +55,15 @@ public class UserController {
                 .map(ResponseEntity::ok)
 
                 // IF THE USER IS NOT FOUND, RETURN 404 NOT FOUND
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // GET USER BY USERNAME ( Using DTO )
+    @GetMapping("/{username}")
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+        return userService.getUserByUsername(username)
+                .map(this::convertToDTO)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
