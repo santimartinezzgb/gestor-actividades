@@ -1,4 +1,5 @@
 // CONFIGURATION
+const API_URL = 'http://localhost:8080/api/auth';
 const methodLogin_API = '/login'; // ENDPOINT FOR USER LOGIN FROM THE BACKEND
 const methodRegister_API = '/register'; // ENDPOINT FOR USER REGISTRATION FROM THE BACKEND
 
@@ -25,7 +26,6 @@ export async function signup(user: {
         throw new Error('Could not connect to the server. Is backend running?');
     }
 }
-const API_URL = 'http://localhost:8080/api/auth';
 
 
 // LOGIN SERVICE TO HANDLE THE LOGIN LOGIC

@@ -4,12 +4,14 @@ import SignupView from '../views/SignupView.vue';
 import HomeView from '../views/UserView.vue';
 import Extra1View from '../views/ActivitiesView.vue';
 import Extra2View from '../views/ReservesView.vue';
+import AdminView from '@/views/AdminView.vue';
 
 const routes = [
     { path: '/', redirect: '/login' },
     { path: '/login', name: 'login', component: LoginView },
     { path: '/signup', name: 'signup', component: SignupView },
     { path: '/home', name: 'home', component: HomeView },
+    { path: '/admin', name: 'admin', component: AdminView },
     { path: '/extra1', name: 'extra1', component: Extra1View },
     { path: '/extra2', name: 'extra2', component: Extra2View },
 ];

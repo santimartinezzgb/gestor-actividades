@@ -15,17 +15,25 @@ const credentials = reactive({ // TO BIND LOGIN FORM FIELDS
 // LOGIN HANDLER
 const handleLogin = async () => {
     if (!credentials.username || !credentials.password) {
-        // TO DISPLAY ERROR IF FIELDS ARE EMPTY
-        errorMessage.value = "Please fill in all fields";
-        alert("Please fill in all fields");
+        errorMessage.value = "Por favor, completa todos los campos";
         return;
     }
 
     try {
-        await login(credentials); // CALL LOGIN SERVICE from authService
-        router.push('/home');
+        const data = await login(credentials); 
+        
+        // El rol viene limpio gracias al refactor del back (ej: "ADMIN")
+        console.log("Login exitoso. Rol:", data.role);
+
+        // Lógica de redirección
+        if (data.role === 'ADMIN') {
+            router.push('/admin'); 
+        } else {
+            router.push('/home');
+        }
+
     } catch (error) {
-        errorMessage.value = error.message; // TO DISPLAY ERROR MESSAGE FROM SERVICE
+        errorMessage.value = "Usuario o contraseña incorrectos";
     }
 };
 
