@@ -4,7 +4,7 @@ import { Dimensions, ImageBackground, StyleSheet, Text, TextInput, TouchableOpac
 
 const { width, height } = Dimensions.get('window');
 
-export const Init = () => {
+export const Signup = () => {
     const router = useRouter();
     const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password'>(null);
     return (
@@ -35,14 +35,25 @@ export const Init = () => {
                     onFocus={() => setFocusedInput('password')}
                     onBlur={() => setFocusedInput(null)}
                 />
+
+                <TextInput
+                    placeholder="Confirm password"
+                    secureTextEntry
+                    style={[
+                        styles.input,
+                        focusedInput === 'password' && styles.inputFocused
+                    ]}
+                    onFocus={() => setFocusedInput('password')}
+                    onBlur={() => setFocusedInput(null)}
+                />
             </View>
 
             <View style={styles.containerButtons}>
-                <TouchableOpacity style={styles.contenedorLogin}>
-                    <Text style={styles.btnLogin}>Login</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contenedorSignUp} onPress={() => router.push('/(tabs)/signup')}>
+                <TouchableOpacity style={styles.contenedorSignUp}>
                     <Text style={styles.btnSignUp}>Sign Up</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.contenedorLogin}>
+                    <Text style={styles.btnLogin} onPress={() => router.push('/(tabs)')}>Login</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>
@@ -99,7 +110,7 @@ const styles = StyleSheet.create({
     },
 
     /* Login */
-    contenedorLogin: {
+    contenedorSignUp: {
         backgroundColor: '#F7B176',
         width: '30%',
         height: 50,
@@ -108,7 +119,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 40,
     },
-    btnLogin: {
+    btnSignUp: {
         width: '70%',
         height: 25,
         fontSize: 20,
@@ -118,7 +129,7 @@ const styles = StyleSheet.create({
     },
 
     /* Sign Up */
-    contenedorSignUp: {
+    contenedorLogin: {
         width: '30%',
         height: 60,
         display: 'flex',
@@ -126,7 +137,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 40,
     },
-    btnSignUp: {
+    btnLogin: {
         width: '70%',
         height: 60,
         fontSize: 16,
