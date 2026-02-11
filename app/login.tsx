@@ -1,8 +1,8 @@
-import { Init } from '../../components/Init';
+import { Login } from '../components/Login';
 
 export default function HomeScreen() {
   return (
-    <Init />
+    <Login />
   );
 }
 

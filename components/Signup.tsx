@@ -53,7 +53,7 @@ export const Signup = () => {
                     <Text style={styles.btnSignUp}>Sign Up</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contenedorLogin}>
-                    <Text style={styles.btnLogin} onPress={() => router.push('/(tabs)')}>Login</Text>
+                    <Text style={styles.btnLogin} onPress={() => router.push('/login')}>Login</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>

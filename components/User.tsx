@@ -4,7 +4,7 @@ import { Dimensions, ImageBackground, StyleSheet, Text, TextInput, TouchableOpac
 
 const { width, height } = Dimensions.get('window');
 
-export const Signup = () => {
+export const User = () => {
     const router = useRouter();
     const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password'>(null);
     return (
@@ -53,7 +53,7 @@ export const Signup = () => {
                     <Text style={styles.btnSignUp}>Sign Up</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contenedorLogin}>
-                    <Text style={styles.btnLogin} onPress={() => router.push('/(tabs)')}>Login</Text>
+                    <Text style={styles.btnLogin} onPress={() => router.push('/login')}>Login</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>

@@ -1,10 +1,10 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-export const Init = () => {
+export const Login = () => {
     const router = useRouter();
     const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password'>(null);
     return (
@@ -13,36 +13,11 @@ export const Init = () => {
             resizeMode="cover"
             resizeMethod="scale"
         >
-            <Text style={styles.title}>MyFitness</Text>
-
-            <View style={styles.containerInputs}>
-                <TextInput
-                    placeholder="Username"
-                    style={[
-                        styles.input,
-                        focusedInput === 'username' && styles.inputFocused
-                    ]}
-                    onFocus={() => setFocusedInput('username')}
-                    onBlur={() => setFocusedInput(null)}
-                />
-                <TextInput
-                    placeholder="Password"
-                    secureTextEntry
-                    style={[
-                        styles.input,
-                        focusedInput === 'password' && styles.inputFocused
-                    ]}
-                    onFocus={() => setFocusedInput('password')}
-                    onBlur={() => setFocusedInput(null)}
-                />
-            </View>
+            <Text style={styles.title}>USER SCREEN</Text>
 
             <View style={styles.containerButtons}>
-                <TouchableOpacity style={styles.contenedorLogin}>
-                    <Text style={styles.btnLogin}>Login</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contenedorSignUp} onPress={() => router.push('/(tabs)/signup')}>
-                    <Text style={styles.btnSignUp}>Sign Up</Text>
+                <TouchableOpacity style={styles.contenedorLogin} onPress={() => router.push('/signup')}>
+                    <Text style={styles.btnLogin}>Salir</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>
