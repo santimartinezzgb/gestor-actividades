@@ -24,8 +24,7 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
             String role = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
@@ -33,7 +32,9 @@ public class AuthService {
                     .findFirst()
                     .orElse("USER");
 
-            return new AuthResponse(request.getUsername(), role, "¡WELCOME!");
+            User user = userService.getUserByUsername(request.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found after authentication"));
+            return new AuthResponse(user.getId(), request.getUsername(), role, "¡WELCOME!");
 
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Credenciales incorrectas");
