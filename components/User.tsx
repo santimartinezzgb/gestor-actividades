@@ -1,25 +1,48 @@
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
 export const User = () => {
     const router = useRouter();
-    const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password'>(null);
+
+    const sections = [
+        { id: 'profile', title: 'My Profile', icon: 'account-circle', route: '/user/profile' },
+        { id: 'reserves', title: 'My Reserves', icon: 'book-clock', route: '/user/reserves' },
+        { id: 'activities', title: 'Activities', icon: 'calendar-search', route: '/user/activities' },
+    ];
+
     return (
         <ImageBackground
             style={styles.container}
             resizeMode="cover"
-            resizeMethod="scale"
         >
-            <Text style={styles.title}>USER</Text>
+            <View style={styles.overlay}>
+                <Text style={styles.headerTitle}>MY DASHBOARD</Text>
 
+                <View style={styles.panelOptions}>
+                    {sections.map((section) => (
+                        <TouchableOpacity
+                            key={section.id}
+                            style={styles.card}
+                            onPress={() => router.push(section.route as any)}
+                        >
+                            <View style={styles.iconCircle}>
+                                <MaterialCommunityIcons name={section.icon as any} size={32} color="#F7B176" />
+                            </View>
+                            <Text style={styles.cardTitle}>{section.title}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
 
-
-            <View style={styles.containerButtons}>
-                <TouchableOpacity style={styles.contenedorLogin} onPress={() => router.replace('/login')}>
-                    <Text style={styles.btnLogin}>Logout</Text>
+                <TouchableOpacity
+                    style={styles.logoutButton}
+                    onPress={() => router.replace('/login')}
+                >
+                    <MaterialCommunityIcons name="logout" size={20} color="#ff6b6b" />
+                    <Text style={styles.logoutText}>Logout</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>
@@ -29,86 +52,72 @@ export const User = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 54,
         width: width,
         height: height,
+        backgroundColor: '#121212',
+    },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        paddingHorizontal: 20,
+        paddingTop: 80,
         alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#222',
-        paddingTop: 60,
     },
-    logo: {
-        width: 64,
-        height: 64,
-        marginBottom: 24,
-    },
-    title: {
-        fontSize: 52,
+    headerTitle: {
+        fontSize: 32,
         fontWeight: 'bold',
         color: '#ffffff',
+        marginBottom: 60,
+        letterSpacing: 2,
     },
-    containerInputs: {
+    panelOptions: {
         width: '100%',
-        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
         alignItems: 'center',
+        gap: 20,
     },
-    input: {
-        width: '70%',
+    card: {
+        width: '45%',
+        aspectRatio: 1,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+    },
+    iconCircle: {
+        width: 60,
         height: 60,
-        backgroundColor: '#828282',
-        borderRadius: 40,
-        paddingHorizontal: 12,
+        borderRadius: 30,
+        backgroundColor: 'rgba(247, 177, 118, 0.15)',
+        justifyContent: 'center',
+        alignItems: 'center',
         marginBottom: 12,
-        borderLeftWidth: 8,
-        borderLeftColor: 'transparent',
     },
-    inputFocused: {
-        borderLeftColor: '#F7B176',
-    },
-
-
-    /* BUTTONS */
-    containerButtons: {
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 26,
-    },
-
-    /* Login */
-    contenedorSignUp: {
-        backgroundColor: '#F7B176',
-        width: '30%',
-        height: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 40,
-    },
-    btnSignUp: {
-        width: '70%',
-        height: 25,
-        fontSize: 20,
-        textAlign: 'center',
-        color: '#222',
-        fontWeight: 'bold',
-    },
-
-    /* Sign Up */
-    contenedorLogin: {
-        width: '30%',
-        height: 60,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 40,
-    },
-    btnLogin: {
-        width: '70%',
-        height: 60,
-        fontSize: 16,
-        textAlign: 'center',
+    cardTitle: {
+        fontSize: 14,
+        fontWeight: '600',
         color: '#ffffff',
+        textAlign: 'center',
+    },
+    logoutButton: {
+        position: 'absolute',
+        bottom: 50,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 25,
+        borderWidth: 1,
+        borderColor: '#ff6b6b',
+    },
+    logoutText: {
+        fontSize: 16,
+        color: '#ff6b6b',
         fontWeight: 'bold',
     },
 });

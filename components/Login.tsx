@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Dimensions, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { login } from '../services/authService';
+import { userSession } from './ActivitiesUser';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,6 +27,10 @@ export const Login = () => {
             const response = await login(username, password);
             console.log('Login success:', response);
 
+            // Save session info
+            userSession.userId = response.userId;
+            userSession.username = response.username;
+
             if (response.role && response.role.toUpperCase() === 'ADMIN') {
                 router.push('/admin');
             } else {
@@ -44,7 +49,7 @@ export const Login = () => {
             resizeMode="cover"
             resizeMethod="scale"
         >
-            <Text style={styles.title}>LOGIN</Text>
+            <Text style={styles.title}>My Fitness</Text>
 
             <View style={styles.containerInputs}>
                 {error && <Text style={styles.errorText}>{error}</Text>}

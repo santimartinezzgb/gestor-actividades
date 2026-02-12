@@ -49,7 +49,7 @@ export const Signup = () => {
             resizeMode="cover"
             resizeMethod="scale"
         >
-            <Text style={styles.title}>SIGNUP</Text>
+            <Text style={styles.title}>My Fitness</Text>
 
             <View style={styles.containerInputs}>
                 {error && <Text style={styles.errorText}>{error}</Text>}
