@@ -18,8 +18,8 @@ export const User = () => {
 
 
             <View style={styles.containerButtons}>
-                <TouchableOpacity style={styles.contenedorLogin} onPress={() => router.push('/login')}>
-                    <Text style={styles.btnLogin}>Salir</Text>
+                <TouchableOpacity style={styles.contenedorLogin} onPress={() => router.replace('/login')}>
+                    <Text style={styles.btnLogin}>Logout</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>

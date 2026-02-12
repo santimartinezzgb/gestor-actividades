@@ -1,12 +1,43 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Dimensions, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { login } from '../services/authService';
 
 const { width, height } = Dimensions.get('window');
 
 export const Login = () => {
     const router = useRouter();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password'>(null);
+
+    const handleLogin = async () => {
+        if (!username || !password) {
+            setError('Please fill in all fields');
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await login(username, password);
+            console.log('Login success:', response);
+
+            if (response.role && response.role.toUpperCase() === 'ADMIN') {
+                router.push('/admin');
+            } else {
+                router.push('/user');
+            }
+        } catch (err: any) {
+            setError(err.message || 'Error logging in');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <ImageBackground
             style={styles.container}
@@ -16,8 +47,11 @@ export const Login = () => {
             <Text style={styles.title}>LOGIN</Text>
 
             <View style={styles.containerInputs}>
+                {error && <Text style={styles.errorText}>{error}</Text>}
                 <TextInput
                     placeholder="Username"
+                    value={username}
+                    onChangeText={setUsername}
                     style={[
                         styles.input,
                         focusedInput === 'username' && styles.inputFocused
@@ -27,6 +61,8 @@ export const Login = () => {
                 />
                 <TextInput
                     placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
                     secureTextEntry
                     style={[
                         styles.input,
@@ -39,11 +75,15 @@ export const Login = () => {
 
 
             <View style={styles.containerButtons}>
-                <TouchableOpacity style={styles.contenedorLogin}>
-                    <Text style={styles.btnLogin} onPress={() => router.push('/user')}>Login</Text>
+                <TouchableOpacity
+                    style={[styles.contenedorLogin, loading && { opacity: 0.7 }]}
+                    onPress={handleLogin}
+                    disabled={loading}
+                >
+                    <Text style={styles.btnLogin}>{loading ? 'loading...' : 'Login'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.contenedorSignUp}>
-                    <Text style={styles.btnSignUp} onPress={() => router.push('/signup')}>Sign Up</Text>
+                <TouchableOpacity style={styles.contenedorSignUp} onPress={() => router.push('/signup')}>
+                    <Text style={styles.btnSignUp}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>
@@ -133,6 +173,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         color: '#ffffff',
+        fontWeight: 'bold',
+    },
+    errorText: {
+        color: '#ff4444',
+        marginBottom: 10,
         fontWeight: 'bold',
     },
 });

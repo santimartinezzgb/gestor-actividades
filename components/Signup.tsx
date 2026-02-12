@@ -1,12 +1,48 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Dimensions, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { register } from '../services/authService';
 
 const { width, height } = Dimensions.get('window');
 
 export const Signup = () => {
     const router = useRouter();
-    const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password'>(null);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password' | 'confirm'>(null);
+
+    const handleSignup = async () => {
+        if (!username || !password || !confirmPassword) {
+            setError('Please fill in all fields');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            await register({
+                username,
+                password,
+                rol: 'USER', // Default value
+            });
+            alert('Registration successful! You can now log in.');
+            router.push('/login');
+        } catch (err: any) {
+            setError(err.message || 'Error registering user');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <ImageBackground
             style={styles.container}
@@ -16,8 +52,11 @@ export const Signup = () => {
             <Text style={styles.title}>SIGNUP</Text>
 
             <View style={styles.containerInputs}>
+                {error && <Text style={styles.errorText}>{error}</Text>}
                 <TextInput
                     placeholder="Username"
+                    value={username}
+                    onChangeText={setUsername}
                     style={[
                         styles.input,
                         focusedInput === 'username' && styles.inputFocused
@@ -27,6 +66,8 @@ export const Signup = () => {
                 />
                 <TextInput
                     placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
                     secureTextEntry
                     style={[
                         styles.input,
@@ -38,22 +79,28 @@ export const Signup = () => {
 
                 <TextInput
                     placeholder="Confirm password"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
                     secureTextEntry
                     style={[
                         styles.input,
-                        focusedInput === 'password' && styles.inputFocused
+                        focusedInput === 'confirm' && styles.inputFocused
                     ]}
-                    onFocus={() => setFocusedInput('password')}
+                    onFocus={() => setFocusedInput('confirm')}
                     onBlur={() => setFocusedInput(null)}
                 />
             </View>
 
             <View style={styles.containerButtons}>
-                <TouchableOpacity style={styles.contenedorSignUp}>
-                    <Text style={styles.btnSignUp}>Sign Up</Text>
+                <TouchableOpacity
+                    style={[styles.contenedorSignUp, loading && { opacity: 0.7 }]}
+                    onPress={handleSignup}
+                    disabled={loading}
+                >
+                    <Text style={styles.btnSignUp}>{loading ? '...' : 'Sign Up'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.contenedorLogin}>
-                    <Text style={styles.btnLogin} onPress={() => router.push('/login')}>Login</Text>
+                <TouchableOpacity style={styles.contenedorLogin} onPress={() => router.push('/login')}>
+                    <Text style={styles.btnLogin}>Login</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>
@@ -143,6 +190,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         color: '#ffffff',
+        fontWeight: 'bold',
+    },
+    errorText: {
+        color: '#ff4444',
+        marginBottom: 10,
         fontWeight: 'bold',
     },
 });
