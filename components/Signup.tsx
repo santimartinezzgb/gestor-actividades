@@ -13,7 +13,7 @@ export const Signup = () => {
             resizeMode="cover"
             resizeMethod="scale"
         >
-            <Text style={styles.title}>MyFitness</Text>
+            <Text style={styles.title}>SIGNUP</Text>
 
             <View style={styles.containerInputs}>
                 <TextInput

@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,11 +13,37 @@ export const Login = () => {
             resizeMode="cover"
             resizeMethod="scale"
         >
-            <Text style={styles.title}>USER SCREEN</Text>
+            <Text style={styles.title}>LOGIN</Text>
+
+            <View style={styles.containerInputs}>
+                <TextInput
+                    placeholder="Username"
+                    style={[
+                        styles.input,
+                        focusedInput === 'username' && styles.inputFocused
+                    ]}
+                    onFocus={() => setFocusedInput('username')}
+                    onBlur={() => setFocusedInput(null)}
+                />
+                <TextInput
+                    placeholder="Password"
+                    secureTextEntry
+                    style={[
+                        styles.input,
+                        focusedInput === 'password' && styles.inputFocused
+                    ]}
+                    onFocus={() => setFocusedInput('password')}
+                    onBlur={() => setFocusedInput(null)}
+                />
+            </View>
+
 
             <View style={styles.containerButtons}>
-                <TouchableOpacity style={styles.contenedorLogin} onPress={() => router.push('/signup')}>
-                    <Text style={styles.btnLogin}>Salir</Text>
+                <TouchableOpacity style={styles.contenedorLogin}>
+                    <Text style={styles.btnLogin} onPress={() => router.push('/user')}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.contenedorSignUp}>
+                    <Text style={styles.btnSignUp} onPress={() => router.push('/signup')}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>
