@@ -40,15 +40,19 @@ public class UserService {
         ValidationUtil.validateStringNotEmpty(user.getUsername(), "Username");
         ValidationUtil.validateStringNotEmpty(user.getPassword(), "Password");
 
-        if (user.getId() == null) { // Nuevo usuario
-            // Solo encriptamos si no está ya encriptada (BCrypt empieza por $2a$)
+        if (user.getId() == null) { // New user
+            if (userRepository.existsByUsername(user.getUsername())) {
+                throw new com.backend.gestorActividades.exception.DuplicateUserException("Username already exists");
+            }
+            // Only encrypt if not already encrypted (BCrypt starts with $2a$)
             if (!user.getPassword().startsWith("$2a$")) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
             user.setActive(true);
-            if (user.getRol() == null) user.setRol(RolUser.USER); // Rol por defecto
+            if (user.getRol() == null)
+                user.setRol(RolUser.USER); // Default role
         } else {
-            // Lógica de actualización si fuera necesaria
+            // Update logic if necessary
         }
         return userRepository.save(user);
     }

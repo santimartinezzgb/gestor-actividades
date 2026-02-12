@@ -54,24 +54,23 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1. Autenticación y Registro de usuarios
+                        // 1. User Authentication and Registration
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
 
-                        // 2. CRUD de Actividades
-                        // Permitimos verlas a todo el mundo
+                        // 2. Activities CRUD
+                        // Allow everyone to view them
                         .requestMatchers(HttpMethod.GET, "/activities/**").permitAll()
-                        // Permitimos Crear, Editar y Eliminar (Solo ADMIN si ya tienes roles configurados,
-                        // o permitAll() si estás probando todavía)
+                        // Allow Create, Edit and Delete (Only ADMIN if roles are configured,
+                        // or permitAll() if still testing)
                         .requestMatchers(HttpMethod.POST, "/activities/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/activities/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/activities/**").permitAll()
 
-                        // 3. Gestión de usuarios (Solo ADMIN)
+                        // 3. User Management (Only ADMIN)
                         .requestMatchers("/users/**").hasRole("ADMIN")
 
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .httpBasic(Customizer.withDefaults());
 
@@ -87,7 +86,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Aplicar esta configuración a todas las rutas, incluyendo /activities
+        // Apply this configuration to all routes, including /activities
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

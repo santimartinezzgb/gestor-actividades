@@ -21,12 +21,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Buscamos al usuario en MongoDB
+        // Find user in MongoDB
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        // IMPORTANTE: Spring Security necesita el prefijo ROLE_ para los authorities
-        // Usamos user.getRol().name() para que sea dinámico según tu Enum
+        // IMPORTANT: Spring Security requires the ROLE_ prefix for authorities
+        // We use user.getRol().name() to make it dynamic according to your Enum
         String roleWithPrefix = "ROLE_" + user.getRol().name();
 
         return org.springframework.security.core.userdetails.User

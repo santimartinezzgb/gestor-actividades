@@ -23,7 +23,6 @@ public class ActivityController {
         return ResponseEntity.ok(activityService.getActivities());
     }
 
-
     /**
      * ONLY ADMIN CAN USE THESE ENDPOINTS
      */
@@ -31,7 +30,7 @@ public class ActivityController {
     @PostMapping("/addActivity") // ENDPOINT TO ADD AN ACTIVITY
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
         // OK IF IT WAS CREATED SUCCESSFULLY
-        return ResponseEntity.ok(activityService.addActivity(activity));
+        return ResponseEntity.ok(activityService.saveActivity(activity));
     }
 
     @PutMapping("/{id}") // UPDATE ACTIVITY BY ID

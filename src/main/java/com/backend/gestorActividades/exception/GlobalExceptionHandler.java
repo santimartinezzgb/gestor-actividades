@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 
 /**
  * HANDLER GLOBAL DE EXCEPTIONS TO RETURN CUSTOM ERROR RESPONSES
- * CATCH ALL EXCEPTIONS AND MAP THEM TO HTTP STATUS CODES AND CUSTOM ERROR MESSAGES
+ * CATCH ALL EXCEPTIONS AND MAP THEM TO HTTP STATUS CODES AND CUSTOM ERROR
+ * MESSAGES
  */
 
 @RestControllerAdvice
@@ -23,8 +24,18 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT.value(),
                 "DUPLICATE_RESERVATION",
                 ex.getMessage(),
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    // DUPLICATE USER
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateUser(DuplicateUserException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "DUPLICATE_USER",
+                ex.getMessage(),
+                LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
@@ -35,8 +46,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 "DONT_PERMIT_CANCEL",
                 ex.getMessage(),
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -47,8 +57,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNAUTHORIZED.value(),
                 "AUTH_FAILED",
                 ex.getMessage(),
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
@@ -59,8 +68,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 "INVALID_STATE",
                 ex.getMessage(),
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -71,8 +79,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "INTERNAL_ERROR",
                 ex.getMessage(),
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -83,8 +90,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 "INVALID_DATA",
                 ex.getMessage(),
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -95,8 +101,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN.value(),
                 "DENIED_ACCESS",
                 "You don't have permission to access this resource.",
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 }

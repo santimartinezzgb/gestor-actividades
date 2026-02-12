@@ -13,9 +13,9 @@ public interface ReserveRepository extends MongoRepository<Reserve, String> {
     // Cuenta solo las plazas ocupadas (las confirmadas)
     long countByActivityIdAndState(String activityId, ReserveState state);
 
-    // Verifica si el usuario ya tiene una plaza activa
+    // Verify if the user already has an active spot
     boolean existsByUserIdAndActivityIdAndState(String userId, String activityId, ReserveState state);
 
-    // Útil para el perfil del usuario
+    // Useful for user profile
     List<Reserve> findByUserId(String userId);
 }

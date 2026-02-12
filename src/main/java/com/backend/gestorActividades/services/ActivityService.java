@@ -27,13 +27,13 @@ public class ActivityService {
                 .orElseThrow(() -> new RuntimeException("Actividad con ID " + id + " no encontrada"));
     }
 
-    // ADD NEW ACTIVITY
-    public Activity addActivity(Activity activity) {
-        // Validamos campos básicos
-        ValidationUtil.validateStringNotEmpty(activity.getName(), "Nombre");
+    // SAVE ACTIVITY
+    public Activity saveActivity(Activity activity) {
+        // Validate basic fields
+        ValidationUtil.validateStringNotEmpty(activity.getName(), "Activity name");
         ValidationUtil.validateStringNotEmpty(activity.getDescription(), "Descripción");
 
-        // Validamos la regla de las 24 horas de antelación
+        // Validate the 24-hour advance rule
         ValidationUtil.validateActivityDate(activity.getDate());
 
         return activityRepository.save(activity);

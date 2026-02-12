@@ -5,10 +5,9 @@ import java.util.regex.Pattern;
 
 public class ValidationUtil {
 
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
 
-    // --- MÉTODOS EXISTENTES ---
+    // --- EXISTING METHODS ---
 
     public static void validateEmail(String email) {
         if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
