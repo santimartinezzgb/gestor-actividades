@@ -63,21 +63,37 @@ export const ActivitiesUser = () => {
         }
     };
 
-    const renderItem = ({ item }: { item: any }) => (
-        <View style={styles.activityCard}>
-            <View style={styles.cardInfo}>
-                <Text style={styles.activityName}>{item.name}</Text>
-                <Text style={styles.activityDetails}>
-                    {new Date(item.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
-                </Text>
-                <Text style={styles.capacityInfo}>Available capacity: {item.capacity}</Text>
+    const renderItem = ({ item }: { item: any }) => {
+        const isFull = item.reservedCount >= item.capacity;
+
+        return (
+            <View style={[styles.activityCard, isFull && styles.fullCard]}>
+                <View style={styles.cardInfo}>
+                    <Text style={styles.activityName}>{item.name}</Text>
+                    <Text style={styles.activityDetails}>
+                        {new Date(item.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                    </Text>
+                    <Text style={[styles.capacityInfo, isFull && styles.fullText]}>
+                        {isFull ? 'COMPLETA' : `Disponibles: ${item.capacity - item.reservedCount} / ${item.capacity}`}
+                    </Text>
+                </View>
+                <TouchableOpacity
+                    onPress={() => handleReserve(item.id)}
+                    style={[styles.reserveButton, isFull && styles.disabledButton]}
+                    disabled={isFull}
+                >
+                    <MaterialCommunityIcons
+                        name={isFull ? "calendar-remove" : "calendar-plus"}
+                        size={24}
+                        color={isFull ? "#888" : "#F7B176"}
+                    />
+                    <Text style={[styles.reserveText, isFull && styles.disabledText]}>
+                        {isFull ? 'Llena' : 'Reservar'}
+                    </Text>
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => handleReserve(item.id)} style={styles.reserveButton}>
-                <MaterialCommunityIcons name="calendar-plus" size={24} color="#F7B176" />
-                <Text style={styles.reserveText}>Reserve</Text>
-            </TouchableOpacity>
-        </View>
-    );
+        );
+    };
 
     return (
         <ImageBackground style={styles.container}>
@@ -181,5 +197,19 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 50,
         fontSize: 16,
+    },
+    fullCard: {
+        borderColor: 'rgba(255, 0, 0, 0.2)',
+        backgroundColor: 'rgba(255, 0, 0, 0.05)',
+    },
+    fullText: {
+        color: '#ff6b6b',
+        fontWeight: 'bold',
+    },
+    disabledButton: {
+        opacity: 0.5,
+    },
+    disabledText: {
+        color: '#888',
     }
 });

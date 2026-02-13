@@ -30,8 +30,12 @@ export const ReservesUser = () => {
         try {
             setLoading(true);
             const data = await getReserves();
-            // Filter reserves by current user
-            const userReserves = data.filter((r: any) => r.userId === userSession.userId);
+            // Filter reserves by current user and only ACTIVE ones (not CANCELED)
+            const userReserves = data.filter((r: any) =>
+                r.userId === userSession.userId &&
+                r.state !== 'CANCELED' &&
+                r.state !== 'CANCELLED'
+            );
             setReserves(userReserves);
         } catch (error: any) {
             Alert.alert('Error', error.message || 'Could not load reserves');

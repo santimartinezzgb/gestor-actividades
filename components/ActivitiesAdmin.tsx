@@ -132,7 +132,7 @@ export const ActivitiesAdmin = () => {
         <View style={styles.activityCard}>
             <View style={styles.cardInfo}>
                 <Text style={styles.activityName}>{item.name}</Text>
-                <Text style={styles.activityDetails}>Capacity: {item.capacity} people</Text>
+                <Text style={styles.activityDetails}>Users registered: {item.reservedCount} / {item.capacity}</Text>
             </View>
             <View style={styles.cardActions}>
                 <TouchableOpacity onPress={() => handleOpenModal(item)} style={styles.actionButton}>
