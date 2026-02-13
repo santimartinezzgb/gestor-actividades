@@ -39,28 +39,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    // CANCELATION NOT ALLOWED
-    @ExceptionHandler(CancellationNotAllowedException.class)
-    public ResponseEntity<ErrorResponse> handleCancelation(CancellationNotAllowedException ex) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "DONT_PERMIT_CANCEL",
-                ex.getMessage(),
-                LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    // INVALID CREDENTIALS
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleAuthError(InvalidCredentialsException ex) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.UNAUTHORIZED.value(),
-                "AUTH_FAILED",
-                ex.getMessage(),
-                LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
-    }
-
     // INVALID STATE FOR OPERATION
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {

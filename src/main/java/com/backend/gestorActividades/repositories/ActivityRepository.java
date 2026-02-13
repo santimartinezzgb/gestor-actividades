@@ -10,9 +10,6 @@ import java.util.List;
 @Repository
 public interface ActivityRepository extends MongoRepository<Activity, String> {
 
-    // Buscar actividades por capacidad (tu método actual)
-    List<Activity> findByCapacity(int capacity);
-
     // Buscar actividades que aún no han ocurrido (útil para el catálogo)
     List<Activity> findByDateAfterOrderByDateAsc(LocalDateTime date);
 
