@@ -18,4 +18,8 @@ public interface ReserveRepository extends MongoRepository<Reserve, String> {
 
     // Useful for user profile
     List<Reserve> findByUserId(String userId);
+
+    long countByUserId(String userId);
+
+    long countByUserIdAndState(String userId, ReserveState state);
 }

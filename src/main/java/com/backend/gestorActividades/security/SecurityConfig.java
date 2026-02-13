@@ -67,7 +67,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/activities/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/activities/**").permitAll()
 
-                        // 3. User Management (Only ADMIN)
+                        // 3. Reserves CRUD
+                        .requestMatchers("/reserves/**").permitAll()
+
+                        // 4. User Profile and Password (Permit all for now to match app pattern)
+                        .requestMatchers(HttpMethod.GET, "/users/username/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/users/*/password").permitAll()
+
+                        // 5. User Management (Only ADMIN)
                         .requestMatchers("/users/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated())
@@ -80,10 +87,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         // Apply this configuration to all routes, including /activities

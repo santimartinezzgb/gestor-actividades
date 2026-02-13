@@ -18,5 +18,6 @@ public class Activity {
 
     private LocalDateTime date;
     private int capacity;
+    private int reservedCount = 0;
     private boolean isActive = true;
 }

@@ -1,7 +1,9 @@
 package com.backend.gestorActividades.controllers;
 
+import com.backend.gestorActividades.dto.PasswordUpdateRequest;
 import com.backend.gestorActividades.dto.UserDTO;
 import com.backend.gestorActividades.models.User;
+import com.backend.gestorActividades.repositories.ReserveRepository;
 import com.backend.gestorActividades.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +16,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final ReserveRepository reserveRepository;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ReserveRepository reserveRepository) {
         this.userService = userService;
+        this.reserveRepository = reserveRepository;
     }
 
     // VERY IMPORTANT STEP TO SECURITY
@@ -31,6 +35,11 @@ public class UserController {
         dto.setRol(user.getRol());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setActive(user.isActive());
+
+        // ADD USER STATISTICS (Only confirmed ones)
+        dto.setTotalReserves(reserveRepository.countByUserIdAndState(user.getId(),
+                com.backend.gestorActividades.models.enums.ReserveState.CONFIRMED));
+
         return dto;
     }
 
@@ -81,7 +90,7 @@ public class UserController {
     // UPDATE EXISTING USER ( Using DTO )
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable String id,
-                                          @RequestBody User user) {
+            @RequestBody User user) {
         // SET ID
         user.setId(id);
         // SAVE THE UPDATED USER AND CONVERT IT TO DTO BEFORE RETURNING IT
@@ -108,5 +117,17 @@ public class UserController {
         return userService.deleteUser(id)
                 ? ResponseEntity.noContent().build() // RETURN 204 NO CONTENT IF USER WAS DELETED
                 : ResponseEntity.notFound().build(); // RETURN 404 NOT FOUND IF USER WAS NOT FOUND
+    }
+
+    // UPDATE PASSWORD
+    @PutMapping("/{id}/password")
+    public ResponseEntity<String> updatePassword(@PathVariable String id,
+            @RequestBody PasswordUpdateRequest request) {
+        try {
+            userService.updatePassword(id, request.getOldPassword(), request.getNewPassword());
+            return ResponseEntity.ok("Contraseña actualizada con éxito");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }

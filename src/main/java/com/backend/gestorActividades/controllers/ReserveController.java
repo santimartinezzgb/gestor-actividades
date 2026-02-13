@@ -19,23 +19,33 @@ public class ReserveController {
         this.reserveService = reserveService;
     }
 
-    // CONVERT RESERVE TO RESERVEDTO ( TO AVOID CIRCULAR REFERENCES AND CONTROL WHAT WE EXPOSE IN THE API )
+    // CONVERT RESERVE TO RESERVEDTO ( TO AVOID CIRCULAR REFERENCES AND CONTROL WHAT
+    // WE EXPOSE IN THE API )
     private ReserveDTO convertToDTO(Reserve reserve) {
-        if (reserve == null) return null;
+        if (reserve == null)
+            return null;
         ReserveDTO dto = new ReserveDTO();
         dto.setId(reserve.getId());
         dto.setReservedAt(reserve.getReservedAt());
         dto.setState(reserve.getState());
 
-        if (reserve.getUser() != null) { // AVOID nullPointerException IF USER IS NOT LOADED
-            dto.setUserId(reserve.getUser().getId());
-            dto.setUsername(reserve.getUser().getUsername());
+        if (reserve.getUser() != null) {
+            try {
+                dto.setUserId(reserve.getUser().getId());
+                dto.setUsername(reserve.getUser().getUsername());
+            } catch (Exception e) {
+                dto.setUsername("User not available");
+            }
         }
 
-        if (reserve.getActivity() != null) { // AVOID nullPointerException IF ACTIVITY IS NOT LOADED
-            dto.setActivityId(reserve.getActivity().getId());
-            dto.setActivityName(reserve.getActivity().getName());
-            dto.setActivityDate(reserve.getActivity().getDate());
+        if (reserve.getActivity() != null) {
+            try {
+                dto.setActivityId(reserve.getActivity().getId());
+                dto.setActivityName(reserve.getActivity().getName());
+                dto.setActivityDate(reserve.getActivity().getDate());
+            } catch (Exception e) {
+                dto.setActivityName("Activity not available");
+            }
         }
         return dto;
     }

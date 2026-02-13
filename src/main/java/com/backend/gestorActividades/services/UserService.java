@@ -74,4 +74,24 @@ public class UserService {
                     return userRepository.save(user); // SAVE THE UPDATED USER AND RETURN IT
                 });
     }
+
+    // UPDATE PASSWORD
+    public void updatePassword(String userId, String oldPassword, String newPassword) {
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            throw new IllegalArgumentException("New password can't be empty");
+        }
+        if (newPassword.length() < 6) {
+            throw new IllegalArgumentException("New password must be at least 6 characters long");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }

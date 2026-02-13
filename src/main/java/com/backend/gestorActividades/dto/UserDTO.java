@@ -17,4 +17,5 @@ public class UserDTO {
     private RolUser rol;
     private LocalDateTime createdAt;
     private boolean isActive;
+    private long totalReserves;
 }
