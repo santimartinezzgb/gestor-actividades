@@ -6,16 +6,13 @@ import {
     FlatList,
     TouchableOpacity,
     Alert,
-    Dimensions,
-    ActivityIndicator,
-    ImageBackground
+    ActivityIndicator
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getReserves, cancelReserve } from '../services/reserveService';
 import { userSession } from './ActivitiesUser';
 import { useRouter } from 'expo-router';
 
-const { width, height } = Dimensions.get('window');
 
 export const ReservesUser = () => {
     const [reserves, setReserves] = useState<any[]>([]);
@@ -74,21 +71,19 @@ export const ReservesUser = () => {
                 <Text style={styles.activityDetails}>
                     {new Date(item.activityDate).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
                 </Text>
-                <View style={[styles.statusBadge, item.state === 'CANCELLED' && styles.cancelledBadge]}>
+                <View style={styles.statusBadge}>
                     <Text style={styles.statusText}>{item.state}</Text>
                 </View>
             </View>
-            {item.state !== 'CANCELLED' && (
-                <TouchableOpacity onPress={() => handleCancel(item.id)} style={styles.cancelButton}>
-                    <MaterialCommunityIcons name="calendar-remove" size={24} color="#ff6b6b" />
-                    <Text style={styles.cancelText}>Cancel</Text>
-                </TouchableOpacity>
-            )}
+            <TouchableOpacity onPress={() => handleCancel(item.id)} style={styles.cancelButton}>
+                <MaterialCommunityIcons name="calendar-remove" size={24} color="#ff6b6b" />
+                <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
         </View>
     );
 
     return (
-        <ImageBackground style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.overlay}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -110,7 +105,7 @@ export const ReservesUser = () => {
                     />
                 )}
             </View>
-        </ImageBackground>
+        </View>
     );
 };
 
@@ -175,9 +170,6 @@ const styles = StyleSheet.create({
         paddingVertical: 2,
         borderRadius: 4,
         marginTop: 8,
-    },
-    cancelledBadge: {
-        backgroundColor: 'rgba(244, 67, 54, 0.2)',
     },
     statusText: {
         color: '#fff',

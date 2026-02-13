@@ -1,9 +1,7 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-const { width, height } = Dimensions.get('window');
 
 export const AdminDashboard = () => {
     const router = useRouter();
@@ -15,10 +13,7 @@ export const AdminDashboard = () => {
     ];
 
     return (
-        <ImageBackground
-            style={styles.container}
-            resizeMode="cover"
-        >
+        <View style={styles.container}>
             <View style={styles.overlay}>
                 <Text style={styles.headerTitle}>ADMIN PANEL</Text>
 
@@ -45,15 +40,13 @@ export const AdminDashboard = () => {
                     <Text style={styles.logoutText}>Logout</Text>
                 </TouchableOpacity>
             </View>
-        </ImageBackground>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: width,
-        height: height,
         backgroundColor: '#121212',
     },
     overlay: {
@@ -87,7 +80,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.2)',
-        backdropFilter: 'blur(10px)',
     },
     iconCircle: {
         width: 60,

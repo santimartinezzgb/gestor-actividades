@@ -1,10 +1,9 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { login } from '../services/authService';
 import { userSession } from './ActivitiesUser';
 
-const { width, height } = Dimensions.get('window');
 
 export const Login = () => {
     const router = useRouter();
@@ -44,11 +43,7 @@ export const Login = () => {
     };
 
     return (
-        <ImageBackground
-            style={styles.container}
-            resizeMode="cover"
-            resizeMethod="scale"
-        >
+        <View style={styles.container}>
             <Text style={styles.title}>My Fitness</Text>
 
             <View style={styles.containerInputs}>
@@ -91,7 +86,7 @@ export const Login = () => {
                     <Text style={styles.btnSignUp}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
-        </ImageBackground>
+        </View>
     );
 };
 
@@ -99,8 +94,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         gap: 54,
-        width: width,
-        height: height,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#222',

@@ -6,9 +6,7 @@ import {
     FlatList,
     TouchableOpacity,
     Alert,
-    Dimensions,
-    ActivityIndicator,
-    ImageBackground
+    ActivityIndicator
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getActivities } from '../services/activityService';
@@ -24,8 +22,6 @@ export let userSession = {
     userId: '',
     username: ''
 };
-
-const { width, height } = Dimensions.get('window');
 
 export const ActivitiesUser = () => {
     const [activities, setActivities] = useState<any[]>([]);
@@ -96,7 +92,7 @@ export const ActivitiesUser = () => {
     };
 
     return (
-        <ImageBackground style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.overlay}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -118,7 +114,7 @@ export const ActivitiesUser = () => {
                     />
                 )}
             </View>
-        </ImageBackground>
+        </View>
     );
 };
 

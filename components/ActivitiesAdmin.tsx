@@ -8,15 +8,12 @@ import {
     Modal,
     TextInput,
     Alert,
-    Dimensions,
-    ActivityIndicator,
-    ImageBackground
+    ActivityIndicator
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getActivities, createActivity, deleteActivity, updateActivity } from '../services/activityService';
 import { useRouter } from 'expo-router';
 
-const { width, height } = Dimensions.get('window');
 
 export const ActivitiesAdmin = () => {
     const [activities, setActivities] = useState<any[]>([]);
@@ -146,7 +143,7 @@ export const ActivitiesAdmin = () => {
     );
 
     return (
-        <ImageBackground style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.overlay}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -232,7 +229,7 @@ export const ActivitiesAdmin = () => {
                     </View>
                 </Modal>
             </View>
-        </ImageBackground>
+        </View>
     );
 };
 
@@ -314,7 +311,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContent: {
-        width: width * 0.85,
+        width: '85%',
         backgroundColor: '#1e1e1e',
         borderRadius: 20,
         padding: 25,
