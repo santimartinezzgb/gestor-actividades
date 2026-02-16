@@ -74,8 +74,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users/username/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/users/*/password").permitAll()
 
-                        // 5. User Management (Only ADMIN)
-                        .requestMatchers("/users/**").hasRole("ADMIN")
+                        // 5. User Management
+                        .requestMatchers("/users/**").permitAll()
 
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())

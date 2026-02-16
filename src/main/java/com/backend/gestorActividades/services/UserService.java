@@ -25,6 +25,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    // GET USERS BY ROLE
+    public List<User> getUsersByRole(RolUser rol) {
+        return userRepository.findByRol(rol);
+    }
+
     // GET USER BY USERNAME
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);

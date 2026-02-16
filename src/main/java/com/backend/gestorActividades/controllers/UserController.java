@@ -5,6 +5,7 @@ import com.backend.gestorActividades.dto.UserDTO;
 import com.backend.gestorActividades.models.User;
 import com.backend.gestorActividades.repositories.ReserveRepository;
 import com.backend.gestorActividades.services.UserService;
+import com.backend.gestorActividades.models.enums.RolUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,9 +46,23 @@ public class UserController {
 
     // GET ALL USERS ( Using DTO )
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAll() {
-        return ResponseEntity.ok(userService.getUsers().stream()
+    public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String role) {
+        List<User> users;
+        if (role != null && !role.isEmpty()) {
+            try {
+                // CLEAN THE ROLE STRING IN CASE IT HAS "ROLE_"
+                String cleanRole = role.toUpperCase().replace("ROLE_", "");
+                RolUser rolEnum = RolUser.valueOf(cleanRole);
+                users = userService.getUsersByRole(rolEnum);
+            } catch (IllegalArgumentException e) {
+                // IF ROLE IS INVALID, RETURN ALL (OR EMPTY?) - LET'S DO ALL FOR ROBUSTNESS
+                users = userService.getUsers();
+            }
+        } else {
+            users = userService.getUsers();
+        }
 
+        return ResponseEntity.ok(users.stream()
                 // CONVERT EACH USER TO DTO BEFORE RETURNING THE LIST
                 .map(this::convertToDTO).toList());
     }
