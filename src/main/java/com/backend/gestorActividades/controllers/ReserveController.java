@@ -19,8 +19,7 @@ public class ReserveController {
         this.reserveService = reserveService;
     }
 
-    // CONVERT RESERVE TO RESERVEDTO ( TO AVOID CIRCULAR REFERENCES AND CONTROL WHAT
-    // WE EXPOSE IN THE API )
+    // CONVERTIR RESERVA A RESERVA DTO ( PARA CONTROLAR QUÉ SE EXPONE EN LA API)
     private ReserveDTO convertToDTO(Reserve reserve) {
         if (reserve == null)
             return null;

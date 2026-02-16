@@ -35,16 +35,16 @@ public class ReserveService {
         return reserveRepository.findById(id).orElse(null);
     }
 
-    // CREATE RESERVE
+    // CREAR RESERVA
     public Reserve createReserve(Reserve reserve) {
         validatePresence(reserve);
 
         Activity activity = activityRepository.findById(reserve.getActivity().getId())
                 .orElseThrow(
-                        () -> new RuntimeException("Actividad no encontrada con ID: " + reserve.getActivity().getId()));
+                        () -> new RuntimeException("Activity not found with ID: " + reserve.getActivity().getId()));
 
         User user = userRepository.findById(reserve.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + reserve.getUser().getId()));
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + reserve.getUser().getId()));
 
         checkTimingConstraint(activity);
         checkDuplicateReserve(user.getId(), activity.getId());
@@ -55,55 +55,56 @@ public class ReserveService {
         reserve.setReservedAt(LocalDateTime.now());
         reserve.setState(ReserveState.CONFIRMED); // Asegurar el estado inicial
 
-        // INCREMENT RESERVED COUNT
+        // INCREMENTAR EL CONTADOR DE RESERVAS
         activity.setReservedCount(activity.getReservedCount() + 1);
         activityRepository.save(activity);
 
         return reserveRepository.save(reserve);
     }
 
-    // VERIFY PRESENCE OF USER AND ACTIVITY
+    // VERIFICAR PRESENCIA DE USUARIO Y ACTIVIDAD
     private void validatePresence(Reserve reserve) {
         if (reserve.getActivity() == null || reserve.getUser() == null) {
             throw new IllegalArgumentException("The user and activity must be provided for a reservation");
         }
     }
 
-    // CHECK IF THE RESERVATION IS MADE WITH AT LEAST 15 MINUTES IN ADVANCE
+    // COMPROBAR SI LA RESERVA SE HACE CON AL MENOS 15 MINUTOS DE ANTELACIÓN
     private void checkTimingConstraint(Activity activity) {
         if (Duration.between(LocalDateTime.now(), activity.getDate()).toMinutes() <= 15) {
             throw new IllegalStateException("The reserves must be made at least 15 mins before the activity starts.");
         }
     }
 
-    // CHECK IF THE USER ALREADY HAS A CONFIRMED RESERVATION FOR THE SAME ACTIVITY
+    // COMPROBAR SI EL USUARIO YA TIENE UNA RESERVA CONFIRMADA PARA LA MISMA
+    // ACTIVIDAD
     private void checkDuplicateReserve(String userId, String activityId) {
-        // ONLY DUPLICATE IF THERE'S AN ACTIVE RESERVATION
+        // SOLO ES DUPLICADA SI HAY UNA RESERVA ACTIVA
         if (reserveRepository.existsByUserIdAndActivityIdAndState(userId, activityId, ReserveState.CONFIRMED)) {
             throw new IllegalStateException("The user already has a confirmed reservation for this activity.");
         }
     }
 
-    // CHECK IF THE ACTIVITY HAS AVAILABLE CAPACITY
+    // COMPROBAR SI LA ACTIVIDAD TIENE CAPACIDAD DISPONIBLE
     private void checkCapacity(Activity activity) {
         if (activity.getReservedCount() >= activity.getCapacity()) {
             throw new IllegalStateException("Sorry, the activity has reached its maximum capacity.");
         }
     }
 
-    // CANCEL RESERVE
+    // CANCELAR RESERVA
     public Reserve cancelReserve(String id) {
 
-        // GET THE RESERVATION BY ID
+        // OBTENER LA RESERVA POR ID
         return reserveRepository.findById(id)
                 .map(reserve -> {
-                    // WE NO LONGER BLOCK CANCELLATION < 15 MINS
+                    // YA NO BLOQUEAMOS LA CANCELACIÓN < 15 MINS
                     // checkTimingConstraint(reserve.getActivity());
 
                     if (reserve.getState() == ReserveState.CONFIRMED) {
                         Activity activity = reserve.getActivity();
 
-                        // ONLY RELEASE SPOT IF > 15 MINS IN ADVANCE
+                        // SOLO LIBERAR PLAZA SI ES CON > 15 MINS DE ANTELACIÓN
                         long minutesToStart = Duration.between(LocalDateTime.now(), activity.getDate()).toMinutes();
                         if (minutesToStart > 15) {
                             activity.setReservedCount(Math.max(0, activity.getReservedCount() - 1));
@@ -111,28 +112,28 @@ public class ReserveService {
                         }
                     }
 
-                    reserve.setState(ReserveState.CANCELED); // UPDATE THE STATE TO CANCELED
-                    return reserveRepository.save(reserve); // SAVE THE CHANGES TO THE DATABASE
+                    reserve.setState(ReserveState.CANCELED); // ACTUALIZAR EL ESTADO A CANCELADO
+                    return reserveRepository.save(reserve); // GUARDAR LOS CAMBIOS EN LA BASE DE DATOS
                 })
-                // IF THE RESERVATION IS NOT FOUND, THROW AN EXCEPTION
+                // SI NO SE ENCUENTRA LA RESERVA, LANZAR UNA EXCEPCIÓN
                 .orElseThrow(() -> new RuntimeException("Reserve not found with ID: " + id));
     }
 
-    // UPDATE RESERVE
+    // ACTUALIZAR RESERVA
     public Reserve updateReserve(String id, Reserve reserve) {
         return reserveRepository.findById(id)
                 .map(reserveUpdated -> {
 
                     if (!reserveUpdated.getActivity().getId().equals(reserve.getActivity().getId())) {
 
-                        // NEW ACTIVITY TO UPDATE
+                        // NUEVA ACTIVIDAD PARA ACTUALIZAR
                         Activity newActivity = activityRepository.findById(reserve.getActivity().getId())
                                 .orElseThrow(() -> new RuntimeException(
                                         "New activity not found with ID: " + reserve.getActivity().getId()));
 
-                        checkCapacity(newActivity); // VALIDATE THE CAPACITY OF THE NEW ACTIVITY
+                        checkCapacity(newActivity); // VALIDAR LA CAPACIDAD DE LA NUEVA ACTIVIDAD
 
-                        // Update counters
+                        // Actualizar contadores
                         if (reserveUpdated.getState() == ReserveState.CONFIRMED) {
                             Activity oldActivity = reserveUpdated.getActivity();
                             oldActivity.setReservedCount(Math.max(0, oldActivity.getReservedCount() - 1));
@@ -142,7 +143,7 @@ public class ReserveService {
                             activityRepository.save(newActivity);
                         }
 
-                        reserveUpdated.setActivity(newActivity); // UPDATE THE ACTIVITY IN THE RESERVATION
+                        reserveUpdated.setActivity(newActivity); // ACTUALIZAR LA ACTIVIDAD EN LA RESERVA
                     }
 
                     if (reserve.getUser() != null && reserve.getUser().getId() != null) {
@@ -152,13 +153,13 @@ public class ReserveService {
                         reserveUpdated.setUser(user);
                     }
 
-                    return reserveRepository.save(reserveUpdated); // SAVE THE CHANGES TO THE DATABASE
+                    return reserveRepository.save(reserveUpdated); // GUARDAR LOS CAMBIOS EN LA BASE DE DATOS
                 })
-                // IF THE RESERVATION IS NOT FOUND, THROW AN EXCEPTION
+                // SI NO SE ENCUENTRA LA RESERVA, LANZAR UNA EXCEPCIÓN
                 .orElseThrow(() -> new RuntimeException("Reserve not found with ID: " + id));
     }
 
-    // DELETE RESERVE
+    // ELIMINAR RESERVA
     public void deleteReserve(String id) {
         Reserve reserve = reserveRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserve not found with ID: " + id));
@@ -169,6 +170,6 @@ public class ReserveService {
             activityRepository.save(activity);
         }
 
-        reserveRepository.deleteById(id); // DELETE THE RESERVATION FROM THE DATABASE
+        reserveRepository.deleteById(id); // ELIMINAR LA RESERVA DE LA BASE DE DATOS
     }
 }

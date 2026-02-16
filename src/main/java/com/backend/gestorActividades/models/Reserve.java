@@ -15,7 +15,7 @@ public class Reserve {
     @Id
     private String id;
 
-    @DBRef(lazy = true) // lazy = true improves performance by not loading the user if not requested
+    @DBRef(lazy = true) // lazy = true mejora el rendimiento al no cargar el usuario si no se solicita
     private User user;
 
     @DBRef(lazy = true)

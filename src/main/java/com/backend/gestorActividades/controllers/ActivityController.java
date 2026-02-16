@@ -11,50 +11,50 @@ import java.util.List;
 @RequestMapping("/activities")
 public class ActivityController {
 
-    // SERVICE TO HANDLE EACH ACTIVITY
+    // SERVICIO PARA MANEJAR CADA ACTIVIDAD
     private final ActivityService activityService;
 
     public ActivityController(ActivityService activityService) {
         this.activityService = activityService;
     }
 
-    @GetMapping // ENDPOINT TO GET ALL ACTIVITIES
+    @GetMapping // ENDPOINT PARA OBTENER TODAS LAS ACTIVIDADES
     public ResponseEntity<List<Activity>> getAll() {
         return ResponseEntity.ok(activityService.getActivities());
     }
 
     /**
-     * ONLY ADMIN CAN USE THESE ENDPOINTS
+     * SOLO EL ADMIN PUEDE USAR ESTOS ENDPOINTS
      */
 
-    @PostMapping("/addActivity") // ENDPOINT TO ADD AN ACTIVITY
+    @PostMapping("/addActivity") // ENDPOINT PARA AÑADIR UNA ACTIVIDAD
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
-        // OK IF IT WAS CREATED SUCCESSFULLY
+        // OK SI SE CREÓ CORRECTAMENTE
         return ResponseEntity.ok(activityService.saveActivity(activity));
     }
 
-    @PutMapping("/{id}") // UPDATE ACTIVITY BY ID
+    @PutMapping("/{id}") // ACTUALIZAR ACTIVIDAD POR ID
     public ResponseEntity<Activity> updateActivity(@PathVariable String id, @RequestBody Activity activity) {
-        // INSTANCE OF THE UPDATED ACTIVITY
+        // INSTANCIA DE LA ACTIVIDAD ACTUALIZADA
         Activity updated = activityService.updateActivity(id, activity);
 
-        if (updated == null) {// 404 IF THE ACTIVITY WAS NOT FOUND
+        if (updated == null) {// 404 SI LA ACTIVIDAD NO FUE ENCONTRADA
             return ResponseEntity.notFound().build();
         }
-        // OK IF IT WAS UPDATED SUCCESSFULLY
+        // OK SI SE ACTUALIZÓ CORRECTAMENTE
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{id}") // DELETE ACTIVITY BY ID
+    @DeleteMapping("/{id}") // ELIMINAR ACTIVIDAD POR ID
     public ResponseEntity<Void> deleteActivity(@PathVariable String id) {
-        // INSTANCE OF THE DELETED ACTIVITY
+        // INSTANCIA DE LA ACTIVIDAD ELIMINADA
         boolean deleted = activityService.deleteActivity(id);
 
-        // 404 IF THE ACTIVITY WAS NOT FOUND
+        // 404 SI LA ACTIVIDAD NO FUE ENCONTRADA
         if (!deleted) {
             return ResponseEntity.notFound().build();
         }
-        // NO CONTENT IF IT WAS DELETED SUCCESSFULLY
+        // SIN CONTENIDO SI SE ELIMINÓ CORRECTAMENTE
         return ResponseEntity.noContent().build();
     }
 }

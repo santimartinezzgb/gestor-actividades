@@ -20,9 +20,9 @@ public class User {
     private String password;
     private RolUser rol;
 
-    @CreatedDate // AUTOMATICALLY DATA WHEN THE DOCUMENT IS CREATED
+    @CreatedDate // FECHA AUTOMÁTICA CUANDO SE CREA EL DOCUMENTO
     @ReadOnlyProperty
     private LocalDateTime createdAt;
 
-    private boolean isActive = true; // DEFAULT TRUE
+    private boolean isActive = true; // POR DEFECTO TRUE
 }

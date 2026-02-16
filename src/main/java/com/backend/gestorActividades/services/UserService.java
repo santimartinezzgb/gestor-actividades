@@ -12,75 +12,75 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository; // TO INTERACT WITH THE DATABASE
-    private final BCryptPasswordEncoder passwordEncoder; // TO ENCODE PASSWORDS
+    private final UserRepository userRepository; // PARA INTERACTUAR CON LA BASE DE DATOS
+    private final BCryptPasswordEncoder passwordEncoder; // PARA ENCRIPTAR CONTRASEÑAS
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    // GET ALL USERS
+    // OBTENER TODOS LOS USUARIOS
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
-    // GET USERS BY ROLE
+    // OBTENER USUARIOS POR ROL
     public List<User> getUsersByRole(RolUser rol) {
         return userRepository.findByRol(rol);
     }
 
-    // GET USER BY USERNAME
+    // OBTENER USUARIO POR ID
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }
 
-    // GET USER BY USERNAME
+    // OBTENER USUARIO POR NOMBRE DE USUARIO
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    // SAVE OR UPDATE USER
+    // GUARDAR O ACTUALIZAR USUARIO
     public User saveUser(User user) {
         ValidationUtil.validateStringNotEmpty(user.getUsername(), "Username");
         ValidationUtil.validateStringNotEmpty(user.getPassword(), "Password");
 
-        if (user.getId() == null) { // New user
+        if (user.getId() == null) { // Nuevo usuario
             if (userRepository.existsByUsername(user.getUsername())) {
                 throw new com.backend.gestorActividades.exception.DuplicateUserException("Username already exists");
             }
-            // Only encrypt if not already encrypted (BCrypt starts with $2a$)
+            // Solo encriptar si no está ya encriptado (BCrypt empieza con $2a$)
             if (!user.getPassword().startsWith("$2a$")) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
             user.setActive(true);
             if (user.getRol() == null)
-                user.setRol(RolUser.USER); // Default role
+                user.setRol(RolUser.USER); // Rol por defecto
         } else {
-            // Update logic if necessary
+            // Lógica de actualización si es necesario
         }
         return userRepository.save(user);
     }
 
-    // DELETE USER BY ID
+    // ELIMINAR USUARIO POR ID
     public boolean deleteUser(String id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-            return true; // USER DELETED SUCCESSFULLY
+            return true; // USUARIO ELIMINADO CORRECTAMENTE
         }
-        return false; // USER NOT FOUND
+        return false; // USUARIO NO ENCONTRADO
     }
 
-    // DEACTIVATE USER BY ID
+    // DESACTIVAR USUARIO POR ID
     public Optional<User> deactivateUser(String id) {
-        return userRepository.findById(id) // FIND THE USER BY ID
-                .map(user -> { // IF USER EXISTS
-                    user.setActive(false); // SET ACTIVE TO FALSE
-                    return userRepository.save(user); // SAVE THE UPDATED USER AND RETURN IT
+        return userRepository.findById(id) // BUSCAR AL USUARIO POR ID
+                .map(user -> { // SI EL USUARIO EXISTE
+                    user.setActive(false); // ESTABLECER ACTIVO A FALSO
+                    return userRepository.save(user); // GUARDAR EL USUARIO ACTUALIZADO Y DEVOLVERLO
                 });
     }
 
-    // UPDATE PASSWORD
+    // ACTUALIZAR CONTRASEÑA
     public void updatePassword(String userId, String oldPassword, String newPassword) {
         if (newPassword == null || newPassword.trim().isEmpty()) {
             throw new IllegalArgumentException("New password can't be empty");

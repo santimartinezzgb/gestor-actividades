@@ -54,27 +54,29 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1. User Authentication and Registration
+                        // 1. Autenticación y registro de usuarios
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
 
-                        // 2. Activities CRUD
-                        // Allow everyone to view them
+                        // 2. CRUD de Actividades
+                        // Permitir que todos las vean
                         .requestMatchers(HttpMethod.GET, "/activities/**").permitAll()
-                        // Allow Create, Edit and Delete (Only ADMIN if roles are configured,
-                        // or permitAll() if still testing)
+                        // Permitir Crear, Editar y Eliminar (Solo ADMIN si los roles están
+                        // configurados,
+                        // o permitAll() si se sigue probando)
                         .requestMatchers(HttpMethod.POST, "/activities/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/activities/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/activities/**").permitAll()
 
-                        // 3. Reserves CRUD
+                        // 3. CRUD de Reservas
                         .requestMatchers("/reserves/**").permitAll()
 
-                        // 4. User Profile and Password (Permit all for now to match app pattern)
+                        // 4. Perfil de usuario y contraseña (Permitir todo por ahora para coincidir con
+                        // el patrón de la aplicación)
                         .requestMatchers(HttpMethod.GET, "/users/username/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/users/*/password").permitAll()
 
-                        // 5. User Management
+                        // 5. Gestión de usuarios
                         .requestMatchers("/users/**").permitAll()
 
                         .anyRequest().authenticated())
@@ -93,7 +95,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Apply this configuration to all routes, including /activities
+        // Aplicar esta configuración a todas las rutas, incluyendo /activities
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

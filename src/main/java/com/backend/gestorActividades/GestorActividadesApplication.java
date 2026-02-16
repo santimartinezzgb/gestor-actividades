@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
 @SpringBootApplication
-@EnableMongoAuditing // ALLOW AUDITING FIELDS IN MONGODB DOCUMENTS
+@EnableMongoAuditing // PERMITIR CAMPOS DE AUDITORÍA EN DOCUMENTOS MONGODB
 public class GestorActividadesApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GestorActividadesApplication.class, args);

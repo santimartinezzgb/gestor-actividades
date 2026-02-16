@@ -24,9 +24,10 @@ public class UserController {
         this.reserveRepository = reserveRepository;
     }
 
-    // VERY IMPORTANT STEP TO SECURITY
-    // CONVERT USER ENTITY TO DTO TO AVOID EXPOSING SENSITIVE DATA LIKE PASSWORD
-    // DTO IS A USER MODEL WITHOUT THE PASSWORD FIELD
+    // PASO MUY IMPORTANTE PARA LA SEGURIDAD
+    // CONVERTIR LA ENTIDAD USUARIO A DTO PARA EVITAR EXPONER DATOS SENSIBLES COMO
+    // LA CONTRASEÑA
+    // EL DTO ES UN MODELO DE USUARIO SIN EL CAMPO CONTRASEÑA
     private UserDTO convertToDTO(User user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
@@ -37,25 +38,26 @@ public class UserController {
         dto.setCreatedAt(user.getCreatedAt());
         dto.setActive(user.isActive());
 
-        // ADD USER STATISTICS (Only confirmed ones)
+        // AÑADIR ESTADÍSTICAS DE USUARIO (Solo las confirmadas)
         dto.setTotalReserves(reserveRepository.countByUserIdAndState(user.getId(),
                 com.backend.gestorActividades.models.enums.ReserveState.CONFIRMED));
 
         return dto;
     }
 
-    // GET ALL USERS ( Using DTO )
+    // OBTENER TODOS LOS USUARIOS ( Usando DTO )
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String role) {
         List<User> users;
         if (role != null && !role.isEmpty()) {
             try {
-                // CLEAN THE ROLE STRING IN CASE IT HAS "ROLE_"
+                // LIMPIAR LA CADENA DEL ROL EN CASO DE QUE TENGA "ROLE_"
                 String cleanRole = role.toUpperCase().replace("ROLE_", "");
                 RolUser rolEnum = RolUser.valueOf(cleanRole);
                 users = userService.getUsersByRole(rolEnum);
             } catch (IllegalArgumentException e) {
-                // IF ROLE IS INVALID, RETURN ALL (OR EMPTY?) - LET'S DO ALL FOR ROBUSTNESS
+                // SI EL ROL NO ES VÁLIDO, DEVOLVER TODOS (¿O VACÍO?) - HAGAMOS TODOS POR
+                // ROBUSTEZ
                 users = userService.getUsers();
             }
         } else {
@@ -63,26 +65,26 @@ public class UserController {
         }
 
         return ResponseEntity.ok(users.stream()
-                // CONVERT EACH USER TO DTO BEFORE RETURNING THE LIST
+                // CONVERTIR CADA USUARIO A DTO ANTES DE DEVOLVER LA LISTA
                 .map(this::convertToDTO).toList());
     }
 
-    // GET USER BY ID ( Using DTO )
+    // OBTENER USUARIO POR ID ( Usando DTO )
     @GetMapping("/username/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         return userService.getUserById(id)
 
-                // CONVERT THE USER TO DTO
+                // CONVERTIR EL USUARIO A DTO
                 .map(this::convertToDTO)
 
-                // IF THE USER IS FOUND, RETURN THE 200 OK
+                // SI SE ENCUENTRA EL USUARIO, DEVOLVER 200 OK
                 .map(ResponseEntity::ok)
 
-                // IF THE USER IS NOT FOUND, RETURN 404 NOT FOUND
+                // SI NO SE ENCUENTRA EL USUARIO, DEVOLVER 404 NOT FOUND
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET USER BY USERNAME ( Using DTO )
+    // OBTENER USUARIO POR NOMBRE DE USUARIO ( Usando DTO )
     @GetMapping("/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
@@ -91,56 +93,56 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // CREATE NEW USER ( Using DTO )
+    // CREAR NUEVO USUARIO ( Usando DTO )
     @PostMapping
     public ResponseEntity<UserDTO> create(@RequestBody User user) {
 
-        // RETURN 201 CREATED STATUS
+        // DEVOLVER ESTADO 201 CREATED
         return ResponseEntity.status(HttpStatus.CREATED)
 
-                // CONVERT THE CREATED USER TO DTO BEFORE RETURNING IT
+                // CONVERTIR EL USUARIO CREADO A DTO ANTES DE DEVOLVERLO
                 .body(convertToDTO(userService.saveUser(user)));
     }
 
-    // UPDATE EXISTING USER ( Using DTO )
+    // ACTUALIZAR USUARIO EXISTENTE ( Usando DTO )
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable String id,
             @RequestBody User user) {
-        // SET ID
+        // ESTABLECER ID
         user.setId(id);
-        // SAVE THE UPDATED USER AND CONVERT IT TO DTO BEFORE RETURNING IT
+        // GUARDAR EL USUARIO ACTUALIZADO Y CONVERTIRLO A DTO ANTES DE DEVOLVERLO
         return ResponseEntity.ok(convertToDTO(userService.saveUser(user)));
     }
 
-    // DEACTIVATE USER BY ID ( Using DTO )
+    // DESACTIVAR USUARIO POR ID ( Usando DTO )
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<UserDTO> deactivate(@PathVariable String id) {
 
         return userService.deactivateUser(id)
 
-                // CONVERT TO DTO
+                // CONVERTIR A DTO
                 .map(this::convertToDTO)
-                // RETURN 200 OK IF THE USER WAS DEACTIVATED SUCCESSFULLY
+                // DEVOLVER 200 OK SI EL USUARIO SE DESACTIVÓ CORRECTAMENTE
                 .map(ResponseEntity::ok)
-                // RETURN 404 NOT FOUND IF THE USER WAS NOT FOUND
+                // DEVOLVER 404 NOT FOUND SI EL USUARIO NO FUE ENCONTRADO
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE USER BY ID
+    // ELIMINAR USUARIO POR ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         return userService.deleteUser(id)
-                ? ResponseEntity.noContent().build() // RETURN 204 NO CONTENT IF USER WAS DELETED
-                : ResponseEntity.notFound().build(); // RETURN 404 NOT FOUND IF USER WAS NOT FOUND
+                ? ResponseEntity.noContent().build() // DEVOLVER 204 NO CONTENT SI EL USUARIO FUE ELIMINADO
+                : ResponseEntity.notFound().build(); // DEVOLVER 404 NOT FOUND SI EL USUARIO NO FUE ENCONTRADO
     }
 
-    // UPDATE PASSWORD
+    // ACTUALIZAR CONTRASEÑA
     @PutMapping("/{id}/password")
     public ResponseEntity<String> updatePassword(@PathVariable String id,
             @RequestBody PasswordUpdateRequest request) {
         try {
             userService.updatePassword(id, request.getOldPassword(), request.getNewPassword());
-            return ResponseEntity.ok("Contraseña actualizada con éxito");
+            return ResponseEntity.ok("Password updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

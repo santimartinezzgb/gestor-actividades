@@ -16,30 +16,30 @@ public class ActivityService {
         this.activityRepository = activityRepository;
     }
 
-    // LIST ALL ACTIVITIES
+    // LISTAR TODAS LAS ACTIVIDADES
     public List<Activity> getActivities() {
         return activityRepository.findAll();
     }
 
-    // GET ACTIVITY BY ID
+    // OBTENER ACTIVIDAD POR ID
     public Activity getActivityById(String id) {
         return activityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Actividad con ID " + id + " no encontrada"));
+                .orElseThrow(() -> new RuntimeException("Activity with ID " + id + " not found"));
     }
 
-    // SAVE ACTIVITY
+    // GUARDAR ACTIVIDAD
     public Activity saveActivity(Activity activity) {
-        // Validate basic fields
+        // Validar campos básicos
         ValidationUtil.validateStringNotEmpty(activity.getName(), "Activity name");
         ValidationUtil.validateStringNotEmpty(activity.getDescription(), "Descripción");
 
-        // Validate the 24-hour advance rule
+        // Validar la regla de 24 horas de antelación
         ValidationUtil.validateActivityDate(activity.getDate());
 
         return activityRepository.save(activity);
     }
 
-    // UPDATE ACTIVITY BY ID
+    // ACTUALIZAR ACTIVIDAD POR ID
     public Activity updateActivity(String id, Activity activityDetails) {
         return activityRepository.findById(id).map(existingActivity -> {
             // Si la fecha ha cambiado, validamos que la nueva fecha cumpla las 24h
@@ -57,7 +57,7 @@ public class ActivityService {
         }).orElseThrow(() -> new RuntimeException("Activity with ID " + id + " not found"));
     }
 
-    // DELETE ACTIVITY BY ID
+    // ELIMINAR ACTIVIDAD POR ID
     public boolean deleteActivity(String id) {
         if (activityRepository.existsById(id)) {
             activityRepository.deleteById(id);

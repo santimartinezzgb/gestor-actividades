@@ -37,7 +37,7 @@ public class AuthService {
             return new AuthResponse(user.getId(), request.getUsername(), role, "¡WELCOME!");
 
         } catch (BadCredentialsException e) {
-            throw new RuntimeException("Credenciales incorrectas");
+            throw new RuntimeException("Incorrect credentials");
         }
     }
 

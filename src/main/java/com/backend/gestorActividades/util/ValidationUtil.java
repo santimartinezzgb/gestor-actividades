@@ -7,7 +7,7 @@ public class ValidationUtil {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
 
-    // --- EXISTING METHODS ---
+    // --- MÉTODOS EXISTENTES ---
 
     public static void validateEmail(String email) {
         if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
@@ -44,7 +44,7 @@ public class ValidationUtil {
         LocalDateTime minimumAllowedDate = LocalDateTime.now().plusDays(1);
 
         if (activityDate.isBefore(minimumAllowedDate)) {
-            throw new IllegalArgumentException("La actividad debe crearse con al menos 24 horas de antelación.");
+            throw new IllegalArgumentException("Activities must be created at least 24 hours in advance.");
         }
     }
 }
