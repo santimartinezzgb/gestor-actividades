@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export const AdminDashboard = () => {
     const router = useRouter();
 
+    // PARA RENDERIZAR LAS SECCIONES DEL PANEL DE ADMINISTRACIÓN
     const sections = [
         { id: 'users', title: 'Users', icon: 'account-group', route: '/admin/users' },
         { id: 'activities', title: 'Activities', icon: 'calendar-check', route: '/admin/activities' },

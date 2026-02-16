@@ -13,29 +13,19 @@ export const Login = () => {
     const [error, setError] = useState<string | null>(null);
     const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password'>(null);
 
+    // PARA INICIAR SESIÓN
     const handleLogin = async () => {
-        if (!username || !password) {
-            setError('Please fill in all fields');
-            return;
-        }
-
+        if (!username || !password) return setError('Please fill in all fields');
         setLoading(true);
         setError(null);
-
         try {
-            const response = await login(username, password);
-            console.log('Login success:', response);
+            const res = await login(username, password);
 
-            // Save session info
-            userSession.userId = response.userId;
-            userSession.username = response.username;
-            userSession.token = response.token;
+            // GUARDAR INFORMACIÓN DEL USUARIO
+            Object.assign(userSession, { userId: res.userId, username: res.username, token: res.token });
 
-            if (response.role && response.role.toUpperCase() === 'ADMIN') {
-                router.push('/admin');
-            } else {
-                router.push('/user');
-            }
+            // REDIRECCIONAR A LA PÁGINA CORRECTA
+            router.push(res.role?.toUpperCase() === 'ADMIN' ? '/admin' : '/user');
         } catch (err: any) {
             setError(err.message || 'Error logging in');
         } finally {
@@ -43,44 +33,29 @@ export const Login = () => {
         }
     };
 
+    // PARA EL CAMPO DE ENTRADA
+    const InputField = ({ type, placeholder, value, setter, secure }: any) => (
+        <TextInput
+            placeholder={placeholder}
+            value={value}
+            onChangeText={setter}
+            secureTextEntry={secure}
+            style={[styles.input, focusedInput === type && styles.inputFocused]}
+            onFocus={() => setFocusedInput(type)}
+            onBlur={() => setFocusedInput(null)}
+        />
+    );
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>My Fitness</Text>
-
             <View style={styles.containerInputs}>
                 {error && <Text style={styles.errorText}>{error}</Text>}
-                <TextInput
-                    placeholder="Username"
-                    value={username}
-                    onChangeText={setUsername}
-                    style={[
-                        styles.input,
-                        focusedInput === 'username' && styles.inputFocused
-                    ]}
-                    onFocus={() => setFocusedInput('username')}
-                    onBlur={() => setFocusedInput(null)}
-                />
-                <TextInput
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    style={[
-                        styles.input,
-                        focusedInput === 'password' && styles.inputFocused
-                    ]}
-                    onFocus={() => setFocusedInput('password')}
-                    onBlur={() => setFocusedInput(null)}
-                />
+                <InputField type="username" placeholder="Username" value={username} setter={setUsername} />
+                <InputField type="password" placeholder="Password" value={password} setter={setPassword} secure />
             </View>
-
-
             <View style={styles.containerButtons}>
-                <TouchableOpacity
-                    style={[styles.contenedorLogin, loading && { opacity: 0.7 }]}
-                    onPress={handleLogin}
-                    disabled={loading}
-                >
+                <TouchableOpacity style={[styles.contenedorLogin, { opacity: loading ? 0.7 : 1 }]} onPress={handleLogin} disabled={loading}>
                     <Text style={styles.btnLogin}>{loading ? 'loading...' : 'Login'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contenedorSignUp} onPress={() => router.push('/signup')}>

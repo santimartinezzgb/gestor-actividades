@@ -38,7 +38,7 @@ export const ActivitiesUser = () => {
 
     const handleReserve = async (activityId: string) => {
         if (!userSession.userId) {
-            Alert.alert('Error', 'Session not found. Please login again.');
+            Alert.alert('Error', 'Session not found. Please log in again.');
             router.replace('/login');
             return;
         }
@@ -62,7 +62,7 @@ export const ActivitiesUser = () => {
                         {new Date(item.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
                     </Text>
                     <Text style={[styles.capacityInfo, isFull && styles.fullText]}>
-                        {isFull ? 'COMPLETA' : `Disponibles: ${item.capacity - item.reservedCount} / ${item.capacity}`}
+                        {isFull ? 'FULL' : `Available: ${item.capacity - item.reservedCount} / ${item.capacity}`}
                     </Text>
                 </View>
                 <TouchableOpacity
@@ -76,7 +76,7 @@ export const ActivitiesUser = () => {
                         color={isFull ? "#888" : "#F7B176"}
                     />
                     <Text style={[styles.reserveText, isFull && styles.disabledText]}>
-                        {isFull ? 'Llena' : 'Reservar'}
+                        {isFull ? 'Full' : 'Reserve'}
                     </Text>
                 </TouchableOpacity>
             </View>

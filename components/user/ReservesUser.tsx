@@ -27,7 +27,7 @@ export const ReservesUser = () => {
         try {
             setLoading(true);
             const data = await getReserves();
-            // Filter reserves by current user and only ACTIVE ones (not CANCELED)
+            // Filtrar reservas por el usuario actual y solo las ACTIVAS (no CANCELADAS)
             const userReserves = data.filter((r: any) =>
                 r.userId === userSession.userId &&
                 r.state !== 'CANCELED' &&

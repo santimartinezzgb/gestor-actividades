@@ -14,7 +14,7 @@ export const getActivities = async () => {
         }
         return await response.json();
     } catch (error) {
-        console.error('getActivities error:', error);
+        console.error('Error en getActivities:', error);
         throw error;
     }
 };
@@ -37,7 +37,7 @@ export const createActivity = async (activity: any) => {
 
         return await response.json();
     } catch (error) {
-        console.error('createActivity error:', error);
+        console.error('Error en createActivity:', error);
         throw error;
     }
 };
@@ -60,7 +60,7 @@ export const updateActivity = async (id: string, activity: any) => {
 
         return await response.json();
     } catch (error) {
-        console.error('updateActivity error:', error);
+        console.error('Error en updateActivity:', error);
         throw error;
     }
 };
@@ -81,7 +81,7 @@ export const deleteActivity = async (id: string) => {
 
         return await response.json();
     } catch (error) {
-        console.error('deleteActivity error:', error);
+        console.error('Error en deleteActivity:', error);
         throw error;
     }
 };

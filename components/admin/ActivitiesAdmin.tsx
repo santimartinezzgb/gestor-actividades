@@ -16,23 +16,26 @@ import { useRouter } from 'expo-router';
 
 
 export const ActivitiesAdmin = () => {
+    // ESTADOS
     const [activities, setActivities] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [editingActivity, setEditingActivity] = useState<any | null>(null);
     const router = useRouter();
 
-    // Form state
+    // ESTADOS DEL FORMULARIO
     const [name, setName] = useState('');
     const [capacity, setCapacity] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
 
+    // PARA CARGAR DATOS
     useEffect(() => {
         loadActivities();
     }, []);
 
+    // PARA CARGAR ACTIVIDADES
     const loadActivities = async () => {
         try {
             setLoading(true);
@@ -45,57 +48,36 @@ export const ActivitiesAdmin = () => {
         }
     };
 
+    // PARA MANEJAR LA APERTURA DEL MODAL (CREAR O ACTUALIZAR ACTIVIDAD)
     const handleOpenModal = (activity?: any) => {
-        if (activity) {
-            setEditingActivity(activity);
-            setName(activity.name);
-            setCapacity(activity.capacity.toString());
-            setDescription(activity.description || '');
+        const [d, t] = (activity?.date || '').split('T');
 
-            // Split Date and Time from ISO string (e.g., 2026-02-12T14:30:00)
-            const [d, t] = (activity.date || '').split('T');
-            setDate(d || '');
-            setTime(t ? t.slice(0, 5) : ''); // Take HH:mm
-        } else {
-            setEditingActivity(null);
-            setName('');
-            setCapacity('');
-            setDescription('');
-            setDate(new Date().toISOString().split('T')[0]);
-            setTime('12:00');
-        }
+        setEditingActivity(activity || null);
+        setName(activity?.name || '');
+        setCapacity(activity?.capacity?.toString() || '');
+        setDescription(activity?.description || '');
+        setDate(activity ? d : new Date().toISOString().split('T')[0]);
+        setTime(activity ? (t?.slice(0, 5) || '') : '12:00');
         setModalVisible(true);
     };
 
+    // PARA MANEJAR EL BOTÓN DE GUARDAR
     const handleSave = async () => {
-        if (!name || !capacity || !date || !time) {
-            Alert.alert('Validation Error', 'Please fill name, capacity, date and time');
-            return;
-        }
-
-        // Combine Date and Time into ISO format: YYYY-MM-DDTHH:mm:ss
-        let formattedTime = time;
-        if (time.length === 5) formattedTime += ':00';
-        else if (time.length === 0) formattedTime = '00:00:00';
-
-        const fullDateTime = `${date}T${formattedTime}`;
+        if (!name || !capacity || !date || !time) return Alert.alert('Validation Error', 'Please fill name, capacity, date and time');
 
         const activityData = {
             name,
             capacity: parseInt(capacity),
             description,
-            date: fullDateTime,
+            // Parseando la fecha y hora a formato ISO
+            date: `${date}T${time.length === 5 ? time + ':00' : (time || '12:00:00')}`,
             isActive: true
         };
 
         try {
-            if (editingActivity) {
-                await updateActivity(editingActivity.id, activityData);
-                Alert.alert('Success', 'Activity updated successfully');
-            } else {
-                await createActivity(activityData);
-                Alert.alert('Success', 'Activity created successfully');
-            }
+            // IF THE ACTIVITY HAS AN ID, IT WILL UPDATE IT
+            await (editingActivity ? updateActivity(editingActivity.id, activityData) : createActivity(activityData));
+            Alert.alert('Success', `Activity ${editingActivity ? 'updated' : 'created'} successfully`);
             setModalVisible(false);
             loadActivities();
         } catch (error: any) {
@@ -103,28 +85,26 @@ export const ActivitiesAdmin = () => {
         }
     };
 
+    // PARA MANEJAR EL BOTÓN DE ELIMINAR
     const handleDelete = (id: string) => {
-        Alert.alert(
-            'Confirm Delete',
-            'Are you sure you want to delete this activity?',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Delete',
-                    style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            await deleteActivity(id);
-                            loadActivities();
-                        } catch (error: any) {
-                            Alert.alert('Error', error.message || 'Delete failed');
-                        }
+        Alert.alert('Confirm Delete', 'Are you sure you want to delete this activity?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: async () => {
+                    try {
+                        await deleteActivity(id);
+                        loadActivities();
+                    } catch (error: any) {
+                        Alert.alert('Error', error.message || 'Delete failed');
                     }
                 }
-            ]
-        );
+            }
+        ]);
     };
 
+    // PARA RENDERIZAR LAS ACTIVIDADES EN LA FLATLIST
     const renderItem = ({ item }: { item: any }) => (
         <View style={styles.activityCard}>
             <View style={styles.cardInfo}>
@@ -144,7 +124,7 @@ export const ActivitiesAdmin = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.overlay}>
+            <View style={styles.menu}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
@@ -173,7 +153,7 @@ export const ActivitiesAdmin = () => {
                     visible={modalVisible}
                     onRequestClose={() => setModalVisible(false)}
                 >
-                    <View style={styles.modalOverlay}>
+                    <View style={styles.modalmenu}>
                         <View style={styles.modalContent}>
                             <Text style={styles.modalTitle}>{editingActivity ? 'Edit Activity' : 'Add New Activity'}</Text>
 
@@ -238,7 +218,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121212',
     },
-    overlay: {
+    menu: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.7)',
         paddingTop: 60,
@@ -304,7 +284,7 @@ const styles = StyleSheet.create({
         marginTop: 50,
         fontSize: 16,
     },
-    modalOverlay: {
+    modalmenu: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.8)',
         justifyContent: 'center',

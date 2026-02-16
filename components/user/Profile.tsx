@@ -43,26 +43,26 @@ export const Profile = () => {
 
     const handleChangePassword = async () => {
         if (!oldPassword || !newPassword || !confirmPassword) {
-            Alert.alert('Error', 'Por favor, rellena todos los campos');
+            Alert.alert('Error', 'Please fill in all fields');
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            Alert.alert('Error', 'Las nuevas contraseñas no coinciden');
+            Alert.alert('Error', 'New passwords do not match');
             return;
         }
 
         try {
             setUpdating(true);
             await updatePassword(userSession.userId, oldPassword, newPassword);
-            Alert.alert('Éxito', 'Contraseña actualizada correctamente');
+            Alert.alert('Success', 'Password updated successfully');
             setModalVisible(false);
             setOldPassword('');
             setNewPassword('');
             setConfirmPassword('');
         } catch (error: any) {
-            // BACKEND ERROR MESSAGES ARE ALREADY LOCALIZED OR CLEAR ENOUGH
-            Alert.alert('Error', error.message || 'Error al actualizar la contraseña');
+            // LOS MENSAJES DE ERROR DEL BACKEND YA ESTÁN LOCALIZADOS O SON LO SUFICIENTEMENTE CLAROS
+            Alert.alert('Error', error.message || 'Error updating password');
         } finally {
             setUpdating(false);
         }
@@ -116,7 +116,7 @@ export const Profile = () => {
                         <View style={styles.infoRow}>
                             <MaterialCommunityIcons name="book-check-outline" size={24} color="#F7B176" />
                             <View style={styles.infoTextContainer}>
-                                <Text style={styles.infoLabel}>Total Reservations</Text>
+                                <Text style={styles.infoLabel}>Total Reserves</Text>
                                 <Text style={styles.infoValue}>{user?.totalReserves || 0}</Text>
                             </View>
                         </View>
@@ -124,7 +124,7 @@ export const Profile = () => {
                         <View style={styles.infoRow}>
                             <MaterialCommunityIcons name="calendar-clock" size={24} color="#F7B176" />
                             <View style={styles.infoTextContainer}>
-                                <Text style={styles.infoLabel}>Member Since</Text>
+                                <Text style={styles.infoLabel}>Member since</Text>
                                 <Text style={styles.infoValue}>
                                     {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                                 </Text>
@@ -137,7 +137,7 @@ export const Profile = () => {
                         onPress={() => setModalVisible(true)}
                     >
                         <MaterialCommunityIcons name="lock-reset" size={24} color="#fff" />
-                        <Text style={styles.buttonText}>Change Password</Text>
+                        <Text style={styles.buttonText}>Change password</Text>
                     </TouchableOpacity>
                 </ScrollView>
             </View>
@@ -151,37 +151,37 @@ export const Profile = () => {
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
                         <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Change Password</Text>
+                            <Text style={styles.modalTitle}>Change password</Text>
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <MaterialCommunityIcons name="close" size={24} color="#fff" />
                             </TouchableOpacity>
                         </View>
 
-                        <Text style={styles.inputLabel}>Current Password</Text>
+                        <Text style={styles.inputLabel}>Current password</Text>
                         <TextInput
                             style={styles.input}
                             secureTextEntry
-                            placeholder="Current Password"
+                            placeholder="Current password"
                             placeholderTextColor="#666"
                             value={oldPassword}
                             onChangeText={setOldPassword}
                         />
 
-                        <Text style={styles.inputLabel}>New Password</Text>
+                        <Text style={styles.inputLabel}>New password</Text>
                         <TextInput
                             style={styles.input}
                             secureTextEntry
-                            placeholder="New Password (min 6 chars)"
+                            placeholder="New password (min 6 chars)"
                             placeholderTextColor="#666"
                             value={newPassword}
                             onChangeText={setNewPassword}
                         />
 
-                        <Text style={styles.inputLabel}>Confirm New Password</Text>
+                        <Text style={styles.inputLabel}>Confirm new password</Text>
                         <TextInput
                             style={styles.input}
                             secureTextEntry
-                            placeholder="Confirm New Password"
+                            placeholder="Confirm new password"
                             placeholderTextColor="#666"
                             value={confirmPassword}
                             onChangeText={setConfirmPassword}
@@ -195,7 +195,7 @@ export const Profile = () => {
                             {updating ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
-                                <Text style={styles.submitButtonText}>Update Password</Text>
+                                <Text style={styles.submitButtonText}>Update password</Text>
                             )}
                         </TouchableOpacity>
                     </View>

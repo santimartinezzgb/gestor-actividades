@@ -1,6 +1,6 @@
-// For Android emulator use 'http://10.0.2.2:8080/api/auth'
-// For physical device use your PC's IP (e.g. 'http://192.168.1.172:8080/api/auth')
-export const API_URL = 'http://192.168.1.172:8080/api/auth';
+// Para el emulador de Android usar 'http://10.0.2.2:8080/api/auth'
+// Para dispositivo físico usar la IP del PC (ej. 'http://[IP_ADDRESS]/api/auth')
+export const API_URL = 'http://[IP_ADDRESS]/api/auth';
 
 export const login = async (username: string, password: string) => {
     try {
@@ -14,12 +14,12 @@ export const login = async (username: string, password: string) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Error logging in');
+            throw new Error(errorData.message || 'Login failed');
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('Error de inicio de sesión:', error);
         throw error;
     }
 };
@@ -36,12 +36,12 @@ export const register = async (userData: any) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Error registering user');
+            throw new Error(errorData.message || 'Registration failed');
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Register error:', error);
+        console.error('Error de registro:', error);
         throw error;
     }
 };

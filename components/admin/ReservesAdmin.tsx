@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    Alert,
-    ActivityIndicator
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { getReserves, cancelReserve } from '../../services/reserveService';
@@ -21,15 +13,12 @@ export const ReservesAdmin = () => {
         loadReserves();
     }, []);
 
+    // PARA CARGAR LAS RESERVAS
     const loadReserves = async () => {
         try {
             setLoading(true);
             const data = await getReserves();
-            // Only show active reserves (filter out CANCELLED or CANCELED)
-            const activeReserves = data.filter((r: any) =>
-                r.state !== 'CANCELLED' && r.state !== 'CANCELED'
-            );
-            setReserves(activeReserves);
+            setReserves(data.filter((r: any) => r.state !== 'CANCELLED' && r.state !== 'CANCELED'));
         } catch (error: any) {
             Alert.alert('Error', error.message || 'Could not load reserves');
         } finally {
@@ -37,29 +26,27 @@ export const ReservesAdmin = () => {
         }
     };
 
+    // PARA MANEJAR EL BOTÓN DE CANCELAR
     const handleCancelReserve = (id: string) => {
-        Alert.alert(
-            'Confirm Cancel',
-            'Are you sure you want to cancel this reservation?',
-            [
-                { text: 'No', style: 'cancel' },
-                {
-                    text: 'Yes, Cancel',
-                    style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            await cancelReserve(id);
-                            Alert.alert('Success', 'Reservation cancelled successfully');
-                            loadReserves();
-                        } catch (error: any) {
-                            Alert.alert('Error', error.message || 'Cancellation failed');
-                        }
+        Alert.alert('Confirm Cancel', 'Are you sure you want to cancel this reservation?', [
+            { text: 'No', style: 'cancel' },
+            {
+                text: 'Yes, Cancel',
+                style: 'destructive',
+                onPress: async () => {
+                    try {
+                        await cancelReserve(id);
+                        Alert.alert('Success', 'Reservation cancelled successfully');
+                        loadReserves();
+                    } catch (error: any) {
+                        Alert.alert('Error', error.message || 'Cancellation failed');
                     }
                 }
-            ]
-        );
+            }
+        ]);
     };
 
+    // PARA RENDERIZAR CADA ELEMENTO
     const renderItem = ({ item }: { item: any }) => (
         <View style={styles.reserveCard}>
             <View style={styles.cardInfo}>

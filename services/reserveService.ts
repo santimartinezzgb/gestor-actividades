@@ -7,11 +7,11 @@ export const getReserves = async () => {
     try {
         const response = await fetch(RESERVES_URL);
         if (!response.ok) {
-            throw new Error('Error fetching reserves');
+            throw new Error('Error fetching reservations');
         }
         return await response.json();
     } catch (error) {
-        console.error('getReserves error:', error);
+        console.error('Error en getReserves:', error);
         throw error;
     }
 };
@@ -33,12 +33,12 @@ export const createReserve = async (userId: string, activityId: string) => {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || 'Error creating reserve');
+            throw new Error(errorData.message || 'Error creating reservation');
         }
 
         return await response.json();
     } catch (error) {
-        console.error('createReserve error:', error);
+        console.error('Error en createReserve:', error);
         throw error;
     }
 };
@@ -51,12 +51,12 @@ export const cancelReserve = async (id: string) => {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || 'Error cancelling reserve');
+            throw new Error(errorData.message || 'Error canceling reservation');
         }
 
         return await response.json();
     } catch (error) {
-        console.error('cancelReserve error:', error);
+        console.error('Error en cancelReserve:', error);
         throw error;
     }
 };

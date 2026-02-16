@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    Alert,
-    ActivityIndicator
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { userSession } from '../../services/session';
 
 import { getUsers, deleteUser } from '../../services/userService';
 
@@ -23,6 +14,7 @@ export const UsersAdmin = () => {
         loadUsers();
     }, []);
 
+    // PARA CARGAR LOS USUARIOS
     const loadUsers = async () => {
         try {
             setLoading(true);
@@ -35,6 +27,7 @@ export const UsersAdmin = () => {
         }
     };
 
+    // PARA MANEJAR EL BOTÓN DE ELIMINAR
     const handleDeleteUser = (id: string) => {
         Alert.alert(
             'Confirm Delete',
@@ -58,6 +51,7 @@ export const UsersAdmin = () => {
         );
     };
 
+    // PARA RENDERIZAR CADA ELEMENTO
     const renderItem = ({ item }: { item: any }) => (
         <View style={styles.userCard}>
             <View style={styles.cardInfo}>
@@ -72,7 +66,7 @@ export const UsersAdmin = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.overlay}>
+            <View style={styles.menu}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
@@ -102,7 +96,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121212',
     },
-    overlay: {
+    menu: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.7)',
         paddingTop: 60,
