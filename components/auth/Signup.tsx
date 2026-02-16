@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { register } from '../services/authService';
+import { register } from '../../services/authService';
 
 export const Signup = () => {
     const router = useRouter();

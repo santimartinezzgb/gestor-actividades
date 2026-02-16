@@ -11,7 +11,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getActivities, createActivity, deleteActivity, updateActivity } from '../services/activityService';
+import { getActivities, createActivity, deleteActivity, updateActivity } from '../../services/activityService';
 import { useRouter } from 'expo-router';
 
 

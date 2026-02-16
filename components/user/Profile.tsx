@@ -11,8 +11,8 @@ import {
     Modal
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getUserById, updatePassword } from '../services/userService';
-import { userSession } from './ActivitiesUser';
+import { getUserById, updatePassword } from '../../services/userService';
+import { userSession } from '../../services/session';
 import { useRouter } from 'expo-router';
 
 export const Profile = () => {

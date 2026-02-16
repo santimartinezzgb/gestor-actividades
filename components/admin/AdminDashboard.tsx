@@ -14,7 +14,7 @@ export const AdminDashboard = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.overlay}>
+            <View style={styles.menu}>
                 <Text style={styles.headerTitle}>ADMIN PANEL</Text>
 
                 <View style={styles.panelOptions}>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121212',
     },
-    overlay: {
+    menu: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.6)',
         paddingHorizontal: 20,
@@ -65,15 +65,16 @@ const styles = StyleSheet.create({
     },
     panelOptions: {
         width: '100%',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         gap: 20,
     },
     card: {
-        width: '45%',
-        aspectRatio: 1,
+        width: '60%',
+        height: 200,
+        flexDirection: 'column',
+        gap: 20,
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
         borderRadius: 20,
         justifyContent: 'center',
@@ -82,16 +83,15 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(255, 255, 255, 0.2)',
     },
     iconCircle: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 80,
+        height: 80,
+        borderRadius: 40,
         backgroundColor: 'rgba(247, 177, 118, 0.15)',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 12,
     },
     cardTitle: {
-        fontSize: 16,
+        fontSize: 36,
         fontWeight: '600',
         color: '#ffffff',
     },

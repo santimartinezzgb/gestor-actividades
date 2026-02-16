@@ -9,8 +9,8 @@ import {
     ActivityIndicator
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getReserves, cancelReserve } from '../services/reserveService';
-import { userSession } from './ActivitiesUser';
+import { getReserves, cancelReserve } from '../../services/reserveService';
+import { userSession } from '../../services/session';
 import { useRouter } from 'expo-router';
 
 

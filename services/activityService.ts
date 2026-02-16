@@ -1,9 +1,14 @@
 export const BASE_API_URL = 'http://192.168.1.172:8080/api';
 export const ACTIVITIES_URL = `${BASE_API_URL}/activities`;
+import { userSession } from './session';
 
 export const getActivities = async () => {
     try {
-        const response = await fetch(ACTIVITIES_URL);
+        const response = await fetch(ACTIVITIES_URL, {
+            headers: {
+                'Authorization': `Bearer ${userSession.token}`
+            }
+        });
         if (!response.ok) {
             throw new Error('Error fetching activities');
         }
@@ -20,6 +25,7 @@ export const createActivity = async (activity: any) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userSession.token}`
             },
             body: JSON.stringify(activity),
         });
@@ -42,6 +48,7 @@ export const updateActivity = async (id: string, activity: any) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userSession.token}`
             },
             body: JSON.stringify(activity),
         });
@@ -62,6 +69,9 @@ export const deleteActivity = async (id: string) => {
     try {
         const response = await fetch(`${ACTIVITIES_URL}/${id}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${userSession.token}`
+            }
         });
 
         if (!response.ok) {

@@ -9,19 +9,11 @@ import {
     ActivityIndicator
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getActivities } from '../services/activityService';
-import { createReserve } from '../services/reserveService';
+import { getActivities } from '../../services/activityService';
+import { createReserve } from '../../services/reserveService';
 import { useRouter } from 'expo-router';
 
-// In a real app we would use Context or AsyncStorage/SecureStore
-// For now, we'll try to get it from a global variable set during login or just use a placeholder if not available
-// However, the user asked to implement it, so I should ideally have a way to store it.
-// I'll add a simple global storage for the session.
-
-export let userSession = {
-    userId: '',
-    username: ''
-};
+import { userSession } from '../../services/session';
 
 export const ActivitiesUser = () => {
     const [activities, setActivities] = useState<any[]>([]);

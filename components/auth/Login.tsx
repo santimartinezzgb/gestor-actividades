@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { login } from '../services/authService';
-import { userSession } from './ActivitiesUser';
+import { login } from '../../services/authService';
+import { userSession } from '../../services/session';
 
 
 export const Login = () => {
@@ -29,6 +29,7 @@ export const Login = () => {
             // Save session info
             userSession.userId = response.userId;
             userSession.username = response.username;
+            userSession.token = response.token;
 
             if (response.role && response.role.toUpperCase() === 'ADMIN') {
                 router.push('/admin');
