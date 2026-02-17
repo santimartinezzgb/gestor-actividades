@@ -55,12 +55,7 @@ export const ReservesAdmin = () => {
                 <Text style={styles.date}>
                     {new Date(item.activityDate).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
                 </Text>
-                <Text style={[
-                    styles.state,
-                    item.state === 'CANCELLED' ? styles.cancelled : styles.confirmed
-                ]}>
-                    {item.state}
-                </Text>
+
             </View>
             {item.state !== 'CANCELLED' && (
                 <TouchableOpacity onPress={() => handleCancelReserve(item.id)} style={styles.actionButton}>

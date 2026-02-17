@@ -71,9 +71,7 @@ export const ReservesUser = () => {
                 <Text style={styles.activityDetails}>
                     {new Date(item.activityDate).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
                 </Text>
-                <View style={styles.statusBadge}>
-                    <Text style={styles.statusText}>{item.state}</Text>
-                </View>
+
             </View>
             <TouchableOpacity onPress={() => handleCancel(item.id)} style={styles.cancelButton}>
                 <MaterialCommunityIcons name="calendar-remove" size={24} color="#ff6b6b" />
@@ -101,7 +99,7 @@ export const ReservesUser = () => {
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         contentContainerStyle={styles.listContainer}
-                        ListEmptyComponent={<Text style={styles.emptyText}>You don't have any reserves yet</Text>}
+                        ListEmptyComponent={<Text style={styles.emptyText}>You dont have any reserves yet</Text>}
                     />
                 )}
             </View>

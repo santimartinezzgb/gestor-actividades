@@ -1,4 +1,4 @@
-export const BASE_API_URL = 'http://192.168.1.172:8080/api';
+import { BASE_API_URL } from '../constants/apiConfig';
 export const ACTIVITIES_URL = `${BASE_API_URL}/activities`;
 import { userSession } from './session';
 

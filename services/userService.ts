@@ -1,7 +1,7 @@
-import { API_URL } from './authService';
+import { BASE_API_URL } from '../constants/apiConfig';
 import { userSession } from './session';
 
-const USERS_URL = API_URL.replace('/auth', '/users');
+const USERS_URL = `${BASE_API_URL}/users`;
 
 export const getUserById = async (id: string) => {
     try {

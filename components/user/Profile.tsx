@@ -93,7 +93,7 @@ export const Profile = () => {
                             <MaterialCommunityIcons name="account" size={80} color="#F7B176" />
                         </View>
                         <Text style={styles.userName}>{user?.name} {user?.surname}</Text>
-                        <Text style={styles.userRole}>@{user?.username} • {user?.rol}</Text>
+                        <Text style={styles.userRole}>@{user?.username}</Text>
                     </View>
 
                     <View style={styles.infoSection}>
@@ -105,13 +105,6 @@ export const Profile = () => {
                             </View>
                         </View>
 
-                        <View style={styles.infoRow}>
-                            <MaterialCommunityIcons name="shield-account-outline" size={24} color="#F7B176" />
-                            <View style={styles.infoTextContainer}>
-                                <Text style={styles.infoLabel}>Account Role</Text>
-                                <Text style={styles.infoValue}>{user?.rol}</Text>
-                            </View>
-                        </View>
 
                         <View style={styles.infoRow}>
                             <MaterialCommunityIcons name="book-check-outline" size={24} color="#F7B176" />
@@ -121,15 +114,6 @@ export const Profile = () => {
                             </View>
                         </View>
 
-                        <View style={styles.infoRow}>
-                            <MaterialCommunityIcons name="calendar-clock" size={24} color="#F7B176" />
-                            <View style={styles.infoTextContainer}>
-                                <Text style={styles.infoLabel}>Member since</Text>
-                                <Text style={styles.infoValue}>
-                                    {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-                                </Text>
-                            </View>
-                        </View>
                     </View>
 
                     <TouchableOpacity

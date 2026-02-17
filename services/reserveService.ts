@@ -1,4 +1,4 @@
-import { BASE_API_URL } from './activityService';
+import { BASE_API_URL } from '../constants/apiConfig';
 import { userSession } from './session';
 
 export const RESERVES_URL = `${BASE_API_URL}/reserves`;

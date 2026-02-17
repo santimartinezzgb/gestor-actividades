@@ -1,6 +1,6 @@
-// Para el emulador de Android usar 'http://10.0.2.2:8080/api/auth'
-// Para dispositivo físico usar la IP del PC (ej. 'http://[IP_ADDRESS]/api/auth')
-export const API_URL = 'http://[IP_ADDRESS]/api/auth';
+import { BASE_API_URL } from '../constants/apiConfig';
+
+export const API_URL = `${BASE_API_URL}/auth`;
 
 export const login = async (username: string, password: string) => {
     try {
