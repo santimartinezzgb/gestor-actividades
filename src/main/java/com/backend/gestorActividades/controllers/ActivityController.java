@@ -29,7 +29,6 @@ public class ActivityController {
 
     @PostMapping("/addActivity") // ENDPOINT PARA AÑADIR UNA ACTIVIDAD
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
-        // OK SI SE CREÓ CORRECTAMENTE
         return ResponseEntity.ok(activityService.saveActivity(activity));
     }
 
@@ -41,7 +40,6 @@ public class ActivityController {
         if (updated == null) {// 404 SI LA ACTIVIDAD NO FUE ENCONTRADA
             return ResponseEntity.notFound().build();
         }
-        // OK SI SE ACTUALIZÓ CORRECTAMENTE
         return ResponseEntity.ok(updated);
     }
 
@@ -54,7 +52,6 @@ public class ActivityController {
         if (!deleted) {
             return ResponseEntity.notFound().build();
         }
-        // SIN CONTENIDO SI SE ELIMINÓ CORRECTAMENTE
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // SIN CONTENIDO SI SE ELIMINÓ CORRECTAMENTE
     }
 }

@@ -9,15 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
 /**
- * HANDLER GLOBAL DE EXCEPTIONS TO RETURN CUSTOM ERROR RESPONSES
- * CATCH ALL EXCEPTIONS AND MAP THEM TO HTTP STATUS CODES AND CUSTOM ERROR
- * MESSAGES
+ * HANDLER GLOBAL DE EXCEPCIONES PARA CONTROLAR ERRORES DE MANERA CENTRALIZADA Y DEVOLVER RESPUESTAS
  */
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // DUPLICATE RESERVATION
+    // RESERVA DUPLICADA
     @ExceptionHandler(DuplicateReserveException.class)
     public ResponseEntity<ErrorResponse> handleDuplicate(DuplicateReserveException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -28,7 +26,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    // DUPLICATE USER
+    // USUARIO DUPLICADO
     @ExceptionHandler(DuplicateUserException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateUser(DuplicateUserException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -39,7 +37,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    // INVALID STATE FOR OPERATION
+    // OPERACIÓN NO PERMITIDA POR EL ESTADO ACTUAL
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -50,7 +48,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // CATCH ALL OTHER UNHANDLED EXCEPTIONS
+    // EXCEPCIÓN GENERAL PARA ERRORES NO CONTROLADOS
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -61,7 +59,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // INVALID ARGUMENTS
+    // ARGUMENTOS INVÁLIDOS
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -72,7 +70,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // ACCESS DENIED
+    // ACCESO DENEGADO
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDenied(Exception ex) {
         ErrorResponse error = new ErrorResponse(

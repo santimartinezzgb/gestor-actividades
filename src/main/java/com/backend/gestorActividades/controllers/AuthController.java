@@ -1,7 +1,7 @@
 package com.backend.gestorActividades.controllers;
 
-import com.backend.gestorActividades.dto.AuthResponse;
-import com.backend.gestorActividades.dto.LoginRequest;
+import com.backend.gestorActividades.dto.AuthDTO;
+import com.backend.gestorActividades.dto.LoginDTO;
 import com.backend.gestorActividades.models.User;
 import com.backend.gestorActividades.services.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +17,19 @@ public class AuthController {
         this.authService = authService;
     }
 
+    // ENDPOINT PARA INICIAR SESIÓN
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        AuthResponse response = authService.login(request);
+    public ResponseEntity<AuthDTO> login(
+            @RequestBody LoginDTO request // RECIBE UN OBJETO LoginDTO CON username Y password CON LA PETICIÓN
+    ) {
+        AuthDTO response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<User> register(
+            @RequestBody User user // RECIBE UN OBJETO User CON username, password Y rol CON LA PETICIÓN
+    ) {
         return ResponseEntity.ok(authService.register(user));
     }
 }

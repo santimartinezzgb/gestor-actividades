@@ -42,22 +42,28 @@ public class UserService {
 
     // GUARDAR O ACTUALIZAR USUARIO
     public User saveUser(User user) {
+        // VALIDACIONES BÁSICAS
         ValidationUtil.validateStringNotEmpty(user.getUsername(), "Username");
         ValidationUtil.validateStringNotEmpty(user.getPassword(), "Password");
 
-        if (user.getId() == null) { // Nuevo usuario
+        if (user.getId() == null) {
+
+            // VALIDACIÓN DE DUPLICADOS
             if (userRepository.existsByUsername(user.getUsername())) {
                 throw new com.backend.gestorActividades.exception.DuplicateUserException("Username already exists");
             }
-            // Solo encriptar si no está ya encriptado (BCrypt empieza con $2a$)
+
+            // SINO ESTÁ ENCRIPTADA, ENCRIPTARLA
+            // SE AÑADE 2a$ PARA IDENTIFICAR QUE YA ESTÁ ENCRIPTADA (ESTÁNDAR DE BCRYPT)
             if (!user.getPassword().startsWith("$2a$")) {
+                // ENCRIPTAR LA CONTRASEÑA ANTES DE GUARDARLA
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
             user.setActive(true);
             if (user.getRol() == null)
-                user.setRol(RolUser.USER); // Rol por defecto
+                user.setRol(RolUser.USER); // ROL POR DEFECTO
         } else {
-            // Lógica de actualización si es necesario
+            throw new IllegalArgumentException("Updating existing users is not allowed through this method.");
         }
         return userRepository.save(user);
     }
@@ -73,15 +79,17 @@ public class UserService {
 
     // DESACTIVAR USUARIO POR ID
     public Optional<User> deactivateUser(String id) {
-        return userRepository.findById(id) // BUSCAR AL USUARIO POR ID
+        return userRepository.findById(id)
                 .map(user -> { // SI EL USUARIO EXISTE
-                    user.setActive(false); // ESTABLECER ACTIVO A FALSO
+                    user.setActive(false);
                     return userRepository.save(user); // GUARDAR EL USUARIO ACTUALIZADO Y DEVOLVERLO
                 });
     }
 
     // ACTUALIZAR CONTRASEÑA
     public void updatePassword(String userId, String oldPassword, String newPassword) {
+
+        // VALIDACIONES BÁSICAS
         if (newPassword == null || newPassword.trim().isEmpty()) {
             throw new IllegalArgumentException("New password can't be empty");
         }
@@ -89,6 +97,7 @@ public class UserService {
             throw new IllegalArgumentException("New password must be at least 6 characters long");
         }
 
+        // OBTENER EL USUARIO POR ID
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -96,7 +105,8 @@ public class UserService {
             throw new RuntimeException("Current password is incorrect");
         }
 
+        // ENCRIPTAR LA NUEVA CONTRASEÑA Y GUARDARLA
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        userRepository.save(user); // GUARDAR EL USUARIO CON LA NUEVA CONTRASEÑA
     }
 }

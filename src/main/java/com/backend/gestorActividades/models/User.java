@@ -9,8 +9,8 @@ import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
 @Document(collection = "users")
-@Data
-@NoArgsConstructor
+@Data // GENERA GETTERS, SETTERS, EQUALS Y HASHCODE
+@NoArgsConstructor // CONSTRUCTOR SIN ARGUMENTOS
 public class User {
     @Id
     private String id;
@@ -21,7 +21,7 @@ public class User {
     private RolUser rol;
 
     @CreatedDate // FECHA AUTOMÁTICA CUANDO SE CREA EL DOCUMENTO
-    @ReadOnlyProperty
+    @ReadOnlyProperty // PARA EVITAR QUE SE MODIFIQUE DESPUÉS DE LA CREACIÓN
     private LocalDateTime createdAt;
 
     private boolean isActive = true; // POR DEFECTO TRUE

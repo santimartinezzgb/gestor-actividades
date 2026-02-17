@@ -8,11 +8,4 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface ActivityRepository extends MongoRepository<Activity, String> {
-
-    // Buscar actividades que aún no han ocurrido (útil para el catálogo)
-    List<Activity> findByDateAfterOrderByDateAsc(LocalDateTime date);
-
-    // Buscar actividades por nombre (ignora mayúsculas/minúsculas)
-    List<Activity> findByNameContainingIgnoreCase(String name);
-}
+public interface ActivityRepository extends MongoRepository<Activity, String> {}

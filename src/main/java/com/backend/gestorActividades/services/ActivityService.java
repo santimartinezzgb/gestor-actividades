@@ -21,12 +21,6 @@ public class ActivityService {
         return activityRepository.findAll();
     }
 
-    // OBTENER ACTIVIDAD POR ID
-    public Activity getActivityById(String id) {
-        return activityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Activity with ID " + id + " not found"));
-    }
-
     // GUARDAR ACTIVIDAD
     public Activity saveActivity(Activity activity) {
         // Validar campos básicos
@@ -41,28 +35,35 @@ public class ActivityService {
 
     // ACTUALIZAR ACTIVIDAD POR ID
     public Activity updateActivity(String id, Activity activityDetails) {
-        return activityRepository.findById(id).map(existingActivity -> {
-            // Si la fecha ha cambiado, validamos que la nueva fecha cumpla las 24h
-            if (activityDetails.getDate() != null && !activityDetails.getDate().equals(existingActivity.getDate())) {
+        return activityRepository.findById(id).map(a -> {
+
+            // ¿HA CAMBIADO LA FECHA?
+            if (activityDetails.getDate() != null && !activityDetails.getDate().equals(a.getDate())) {
+
+                // VALIDAR NUEVA FECHA
                 ValidationUtil.validateActivityDate(activityDetails.getDate());
-                existingActivity.setDate(activityDetails.getDate());
+                // ACTUALIZAR FECHA
+                a.setDate(activityDetails.getDate());
             }
 
-            existingActivity.setName(activityDetails.getName());
-            existingActivity.setDescription(activityDetails.getDescription());
-            existingActivity.setCapacity(activityDetails.getCapacity());
-            existingActivity.setActive(activityDetails.isActive());
+            // ACTUALIZAR LOS DEMÁS CAMPOS
+            a.setName(activityDetails.getName());
+            a.setDescription(activityDetails.getDescription());
+            a.setCapacity(activityDetails.getCapacity());
+            a.setActive(activityDetails.isActive());
 
-            return activityRepository.save(existingActivity);
+            return activityRepository.save(a);
         }).orElseThrow(() -> new RuntimeException("Activity with ID " + id + " not found"));
     }
 
     // ELIMINAR ACTIVIDAD POR ID
     public boolean deleteActivity(String id) {
+
+        // VERIFICAR SI LA ACTIVIDAD EXISTE ANTES DE ELIMINAR
         if (activityRepository.existsById(id)) {
-            activityRepository.deleteById(id);
+            activityRepository.deleteById(id); // ELIMINAR ACTIVIDAD
             return true;
         }
-        return false;
+        return false; // FALSE SI LA ACTIVIDAD NO EXISTE
     }
 }

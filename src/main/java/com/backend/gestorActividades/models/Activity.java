@@ -6,16 +6,13 @@ import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
 @Document(collection = "activities")
-@Data // Esto ya incluye Getters, Setters, ToString, EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
+@Data // INCLUYE GETTERS, SETTERS, EQUALS Y HASHCODE
+@NoArgsConstructor // CONSTRUCTOR SIN ARGUMENTOS
 public class Activity {
     @Id
     private String id;
-
     private String name;
     private String description;
-
     private LocalDateTime date;
     private int capacity;
     private int reservedCount = 0;

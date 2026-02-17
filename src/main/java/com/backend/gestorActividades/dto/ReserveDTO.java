@@ -5,23 +5,23 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * DTO TO RESPONSE TO ALL DATA OF A RESERVATION
+ * DTO PARA EXPONER LOS DATOS DE UNA RESERVA DE MANERA CONTROLADA EN LA API
  */
 
 @Data
 public class ReserveDTO {
     private String id;
 
-    // USER DATA ( whitout password )
+    // DATOS DEL USUARIO ( sin exponer datos sensibles )
     private String userId;
     private String username;
 
-    // ACTIVITY DATA
+    // DATOS DE LA ACTIVIDAD
     private String activityId;
     private String activityName;
     private LocalDateTime activityDate;
 
-    // RESERVATION DATA
+    // DATOS DE LA RESERVA
     private LocalDateTime reservedAt;
     private ReserveState state;
 }

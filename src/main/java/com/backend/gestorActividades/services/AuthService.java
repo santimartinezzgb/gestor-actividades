@@ -1,7 +1,7 @@
 package com.backend.gestorActividades.services;
 
-import com.backend.gestorActividades.dto.AuthResponse;
-import com.backend.gestorActividades.dto.LoginRequest;
+import com.backend.gestorActividades.dto.AuthDTO;
+import com.backend.gestorActividades.dto.LoginDTO;
 import com.backend.gestorActividades.models.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
+    // AUTENTICAR USUARIOS Y UserService PARA GESTIONAR USUARIOS
     private final AuthenticationManager authenticationManager;
+
+    // SERVICIO PARA GESTIONAR USUARIOS
     private final UserService userService;
 
     public AuthService(AuthenticationManager authenticationManager, UserService userService) {
@@ -21,29 +24,35 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public AuthResponse login(LoginRequest request) {
+    // INICIO DE SESIÓN
+    public AuthDTO login(LoginDTO request) {
         try {
+            // AUTENTICAR USUARIO
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
+            // OBTENER ROL DEL USUARIO
             String role = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .map(r -> r.replace("ROLE_", ""))
                     .findFirst()
                     .orElse("USER");
 
+            // OBTENER USUARIO PARA RESPUESTA
             User user = userService.getUserByUsername(request.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found after authentication"));
-            return new AuthResponse(user.getId(), request.getUsername(), role, "¡WELCOME!");
+
+            // DEVOLVER RESPUESTA CON ID, USERNAME, ROL Y MENSAJE DE BIENVENIDA
+            return new AuthDTO(user.getId(), request.getUsername(), role, "¡WELCOME!");
 
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Incorrect credentials");
         }
     }
 
+    // REGISTRO DE USUARIOS
     public User register(User user) {
-        // Quitamos el passwordEncoder de aquí.
-        // UserService.saveUser ya se encarga de encriptar.
+        // GUARDAR USUARIO EN LA BASE DE DATOS
         return userService.saveUser(user);
     }
 }

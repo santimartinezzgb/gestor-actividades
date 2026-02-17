@@ -24,11 +24,10 @@ public class UserController {
         this.reserveRepository = reserveRepository;
     }
 
-    // PASO MUY IMPORTANTE PARA LA SEGURIDAD
-    // CONVERTIR LA ENTIDAD USUARIO A DTO PARA EVITAR EXPONER DATOS SENSIBLES COMO
-    // LA CONTRASEÑA
-    // EL DTO ES UN MODELO DE USUARIO SIN EL CAMPO CONTRASEÑA
+    // CONVERTIR UN USUARIO A DTO (OCULTANDO CONTRASEÑA Y AÑADIENDO ESTADÍSTICAS DE RESERVAS)
     private UserDTO convertToDTO(User user) {
+
+        // CREAR UN NUEVO DTO Y COPIAR LOS CAMPOS NECESARIOS
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
         dto.setName(user.getName());
@@ -38,18 +37,28 @@ public class UserController {
         dto.setCreatedAt(user.getCreatedAt());
         dto.setActive(user.isActive());
 
-        // AÑADIR ESTADÍSTICAS DE USUARIO (Solo las confirmadas)
+        // AÑADIR ESTADÍSTICAS DE USUARIO
         dto.setTotalReserves(reserveRepository.countByUserIdAndState(user.getId(),
                 com.backend.gestorActividades.models.enums.ReserveState.CONFIRMED));
 
         return dto;
     }
 
+
+    /**
+     * OBTENER TODOS LOS USUARIOS ( CON DTO )
+     */
+
     // OBTENER TODOS LOS USUARIOS ( Usando DTO )
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String role) {
+    public ResponseEntity<List<UserDTO>> getAll(
+            @RequestParam(required = false) String role // PARÁMETRO OPCIONAL PARA FILTRAR POR ROL
+    ) {
         List<User> users;
         if (role != null && !role.isEmpty()) {
+
+            // CONTROL DE ERRORES PARA ROL NO VÁLIDO
+
             try {
                 // LIMPIAR LA CADENA DEL ROL EN CASO DE QUE TENGA "ROLE_"
                 String cleanRole = role.toUpperCase().replace("ROLE_", "");
@@ -71,22 +80,23 @@ public class UserController {
 
     // OBTENER USUARIO POR ID ( Usando DTO )
     @GetMapping("/username/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
+    public ResponseEntity<UserDTO> getUserById(
+            @PathVariable String id
+    ) {
         return userService.getUserById(id)
 
                 // CONVERTIR EL USUARIO A DTO
                 .map(this::convertToDTO)
 
-                // SI SE ENCUENTRA EL USUARIO, DEVOLVER 200 OK
                 .map(ResponseEntity::ok)
-
-                // SI NO SE ENCUENTRA EL USUARIO, DEVOLVER 404 NOT FOUND
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // OBTENER USUARIO POR NOMBRE DE USUARIO ( Usando DTO )
     @GetMapping("/{username}")
-    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<UserDTO> getUserByUsername(
+            @PathVariable String username
+    ) {
         return userService.getUserByUsername(username)
                 .map(this::convertToDTO)
                 .map(ResponseEntity::ok)
@@ -95,9 +105,9 @@ public class UserController {
 
     // CREAR NUEVO USUARIO ( Usando DTO )
     @PostMapping
-    public ResponseEntity<UserDTO> create(@RequestBody User user) {
-
-        // DEVOLVER ESTADO 201 CREATED
+    public ResponseEntity<UserDTO> create(
+            @RequestBody User user
+    ) {
         return ResponseEntity.status(HttpStatus.CREATED)
 
                 // CONVERTIR EL USUARIO CREADO A DTO ANTES DE DEVOLVERLO
@@ -106,8 +116,10 @@ public class UserController {
 
     // ACTUALIZAR USUARIO EXISTENTE ( Usando DTO )
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable String id,
-            @RequestBody User user) {
+    public ResponseEntity<UserDTO> update(
+            @PathVariable String id,
+            @RequestBody User user
+    ) {
         // ESTABLECER ID
         user.setId(id);
         // GUARDAR EL USUARIO ACTUALIZADO Y CONVERTIRLO A DTO ANTES DE DEVOLVERLO
@@ -116,30 +128,34 @@ public class UserController {
 
     // DESACTIVAR USUARIO POR ID ( Usando DTO )
     @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<UserDTO> deactivate(@PathVariable String id) {
+    public ResponseEntity<UserDTO> deactivate(
+            @PathVariable String id
+    ) {
 
         return userService.deactivateUser(id)
 
                 // CONVERTIR A DTO
                 .map(this::convertToDTO)
-                // DEVOLVER 200 OK SI EL USUARIO SE DESACTIVÓ CORRECTAMENTE
                 .map(ResponseEntity::ok)
-                // DEVOLVER 404 NOT FOUND SI EL USUARIO NO FUE ENCONTRADO
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // ELIMINAR USUARIO POR ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(
+            @PathVariable String id
+    ) {
         return userService.deleteUser(id)
-                ? ResponseEntity.noContent().build() // DEVOLVER 204 NO CONTENT SI EL USUARIO FUE ELIMINADO
-                : ResponseEntity.notFound().build(); // DEVOLVER 404 NOT FOUND SI EL USUARIO NO FUE ENCONTRADO
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 
     // ACTUALIZAR CONTRASEÑA
     @PutMapping("/{id}/password")
-    public ResponseEntity<String> updatePassword(@PathVariable String id,
-            @RequestBody PasswordUpdateRequest request) {
+    public ResponseEntity<String> updatePassword(
+            @PathVariable String id,
+            @RequestBody PasswordUpdateRequest request // DTO PARA ACTUALIZAR CONTRASEÑA, CONTIENE OLD Y NEW PASSWORD
+    ) {
         try {
             userService.updatePassword(id, request.getOldPassword(), request.getNewPassword());
             return ResponseEntity.ok("Password updated successfully");

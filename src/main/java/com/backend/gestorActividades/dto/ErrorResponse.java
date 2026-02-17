@@ -3,7 +3,7 @@ package com.backend.gestorActividades.dto;
 import java.time.LocalDateTime;
 
 /**
- * DTO TO REPONSE FOR ERROR
+ * DTO PARA RESPUESTA DE ERROR
  */
 
 public record ErrorResponse(

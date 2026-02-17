@@ -10,9 +10,13 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
+
+    // ENCUENTRA UN USUARIO POR SU USERNAME
     Optional<User> findByUsername(String username);
 
+    // VERIFICA SI EXISTE UN USUARIO POR SU USERNAME
     boolean existsByUsername(String username);
 
+    // ENCUENTRA USUARIOS POR SU ROL
     List<User> findByRol(RolUser rol);
 }

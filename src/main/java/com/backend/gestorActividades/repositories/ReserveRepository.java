@@ -10,14 +10,9 @@ import java.util.List;
 @Repository
 public interface ReserveRepository extends MongoRepository<Reserve, String> {
 
-    // Cuenta solo las plazas ocupadas (las confirmadas)
-    long countByActivityIdAndState(String activityId, ReserveState state);
-
-    // Verificar si el usuario ya tiene una plaza activa
+    // VERIFICA SI EL USUARIO YA TIENE UNA RESERVA PARA LA ACTIVIDAD
     boolean existsByUserIdAndActivityIdAndState(String userId, String activityId, ReserveState state);
 
-    // Útil para el perfil de usuario
-    List<Reserve> findByUserId(String userId);
-
+    // OBTIENE TODAS LAS RESERVAS DE UN USUARIO
     long countByUserIdAndState(String userId, ReserveState state);
 }

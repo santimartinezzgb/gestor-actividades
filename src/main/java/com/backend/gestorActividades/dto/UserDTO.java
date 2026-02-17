@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * DTO TO RESPONSE TO ALL USER DATA ( whitout password )
+ * DTO PARA RESPUESTA DE USUARIOS, SIN CONTRASEÑA Y CON ESTADÍSTICAS DE RESERVAS
  */
 
 @Data
