@@ -1,12 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { signup as signupService } from '../services/authService';
+import { signup as signupService } from '@/services/auth/authService';
+import { z } from 'zod';
+
+// ESQUEMA ZOD — define las reglas de validación
+const signupSchema = z.object({
+    username: z.string().min(1, 'Username is required'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z.string(),
+}).refine(data => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+});
 
 const router = useRouter();
 const styleBorder = '2px solid #F7B176';
 const activeView = ref('signup');
-const errorMessage = ref(''); // TO DISPLAY LOGIN ERRORS.
+const errors = ref({}); // Errores por campo de Zod
 
 const user = ref({
     username: '',
@@ -17,11 +28,20 @@ const user = ref({
 });
 
 const signup = async () => {
-    if (user.value.password !== user.value.confirmPassword) {
-        errorMessage.value = "Passwords do not match";
-        alert('Passwords do not match');
+    // Validar con Zod
+    const result = signupSchema.safeParse(user.value);
+
+    if (!result.success) {
+        // Mapear errores por campo
+        errors.value = {};
+        result.error.errors.forEach(err => {
+            errors.value[err.path[0]] = err.message;
+        });
         return;
     }
+
+    errors.value = {}; // Limpiar errores si todo OK
+
     const userToSend = {
         username: user.value.username,
         password: user.value.password,
@@ -65,8 +85,13 @@ const goToLogin = () => {
 
             <section class="inputs">
                 <input v-model="user.username" class="data" type="text" placeholder="Username">
+                <span v-if="errors.username" class="field-error">{{ errors.username }}</span>
+
                 <input v-model="user.password" class="data" type="password" placeholder="Password">
+                <span v-if="errors.password" class="field-error">{{ errors.password }}</span>
+
                 <input v-model="user.confirmPassword" class="data" type="password" placeholder="Confirm Password">
+                <span v-if="errors.confirmPassword" class="field-error">{{ errors.confirmPassword }}</span>
             </section>
 
             <button id="btn_signup" class="btn_enter" @click="signup">Register</button>
@@ -168,5 +193,12 @@ const goToLogin = () => {
     }
     .btn_enter:hover {
         opacity: 0.9;
+    }
+    .field-error {
+        color: #ff6b6b;
+        font-size: 0.85rem;
+        font-weight: 500;
+        align-self: flex-start;
+        margin-top: -0.5rem;
     }
 </style>

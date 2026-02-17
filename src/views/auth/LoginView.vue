@@ -1,43 +1,61 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { login } from '@/services/authService';
+import { login } from '@/services/auth/authService';
+import { userSession } from '@/services/auth/session';
+import { z } from 'zod';
 
-const styleBorder = '2px solid #F7B176';
-const router = useRouter(); // TO NAVIGATE BETWEEN VIEWS
-const errorMessage = ref(''); // TO DISPLAY LOGIN ERRORS
-const credentials = reactive({ // TO BIND LOGIN FORM FIELDS
-    username: '',
-    password: '',
-    remember: false
+const loginSchema = z.object({
+    username: z.string().min(1, 'Username is required'),
+    password: z.string().min(1, 'Password is required'),
 });
 
-// LOGIN HANDLER
+const styleBorder = '2px solid #F7B176';
+const router = useRouter();
+const errors = ref({});
+const errorMessage = ref('');
+const loading = ref(false);
+const credentials = reactive({
+    username: '',
+    password: '',
+});
+
 const handleLogin = async () => {
-    if (!credentials.username || !credentials.password) {
-        errorMessage.value = "Por favor, completa todos los campos";
+    const result = loginSchema.safeParse(credentials);
+    if (!result.success) {
+        errors.value = {};
+        result.error.errors.forEach(err => {
+            errors.value[err.path[0]] = err.message;
+        });
         return;
     }
 
+    errors.value = {};
+    loading.value = true;
+    errorMessage.value = '';
+
     try {
-        const data = await login(credentials); 
-        
-        // El rol viene limpio gracias al refactor del back (ej: "ADMIN")
-        console.log("Login exitoso. Rol:", data.role);
+        const data = await login(credentials);
 
-        // Lógica de redirección
-        if (data.role === 'ADMIN') {
-            router.push('/admin'); 
+        // Guardar información del usuario en la sesión reactiva
+        userSession.userId = data.userId;
+        userSession.username = data.username;
+        userSession.token = data.token;
+        localStorage.setItem('token', data.token);
+
+        // Redireccionar según el rol
+        if (data.role?.toUpperCase() === 'ADMIN') {
+            router.push('/admin');
         } else {
-            router.push('/home');
+            router.push('/user');
         }
-
     } catch (error) {
-        errorMessage.value = "Usuario o contraseña incorrectos";
+        errorMessage.value = error.message || "Incorrect username or password";
+    } finally {
+        loading.value = false;
     }
 };
 
-// NAVIGATE TO SIGNUP VIEW
 const goToSignup = () => router.push('/signup');
 </script>
 
@@ -57,11 +75,16 @@ const goToSignup = () => router.push('/signup');
 
                 <section class="inputs">
                     <input v-model="credentials.username" class="data" type="text" placeholder="Username">
+                    <span v-if="errors.username" class="field-error">{{ errors.username }}</span>
+
                     <input v-model="credentials.password" class="data" type="password" placeholder="Password">
+                    <span v-if="errors.password" class="field-error">{{ errors.password }}</span>
                     
                     <p v-if="errorMessage" style="color: #ff6b6b; font-size: 0.9rem;">{{ errorMessage }}</p>
 
-                    <button class="btn_enter" type="submit">Enter</button>
+                    <button class="btn_enter" type="submit" :disabled="loading">
+                        {{ loading ? 'Loading...' : 'Enter' }}
+                    </button>
                 </section>
             </form>
         </div>
@@ -183,5 +206,12 @@ const goToSignup = () => router.push('/signup');
     .btn_enter:hover {
         opacity: 0.9;
         transform: translateY(5px);
+    }
+    .field-error {
+        color: #ff6b6b;
+        font-size: 0.85rem;
+        font-weight: 500;
+        align-self: flex-start;
+        margin-top: -0.5rem;
     }
 </style>
