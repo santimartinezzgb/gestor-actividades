@@ -1,41 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    Alert,
-    ActivityIndicator
-} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getActivities } from '../../services/activityService';
 import { createReserve } from '../../services/reserveService';
-import { useRouter } from 'expo-router';
-
 import { userSession } from '../../services/session';
 
 export const ActivitiesUser = () => {
+    // ESTADOS
     const [activities, setActivities] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
+    // CARGAR ACTIVIDADES 
     useEffect(() => {
         loadActivities();
     }, []);
 
+    // CARGAR ACTIVIDADES DESDE EL SERVICIO --> activityService.ts
     const loadActivities = async () => {
         try {
             setLoading(true);
             const data = await getActivities();
             setActivities(data);
         } catch (error: any) {
-            Alert.alert('Error', error.message || 'Could not load activities');
+            Alert.alert('Error', error.message);
         } finally {
             setLoading(false);
         }
     };
 
+    // MANEJAR RESERVA DE ACTIVIDAD
     const handleReserve = async (activityId: string) => {
         if (!userSession.userId) {
             Alert.alert('Error', 'Session not found. Please log in again.');
@@ -47,15 +42,18 @@ export const ActivitiesUser = () => {
             await createReserve(userSession.userId, activityId);
             Alert.alert('Success', 'Activity reserved successfully! Check "My Reserves" section.');
         } catch (error: any) {
-            Alert.alert('Error', error.message || 'Reservation failed');
+            Alert.alert('Error', error.message);
         }
     };
 
+    // RENDERIZAR CADA ACTIVIDAD EN LA FLATLIST
     const renderItem = ({ item }: { item: any }) => {
         const isFull = item.reservedCount >= item.capacity;
 
         return (
             <View style={[styles.activityCard, isFull && styles.fullCard]}>
+
+                { /* INFORMACIÓN DE LA ACTIVIDAD */}
                 <View style={styles.cardInfo}>
                     <Text style={styles.activityName}>{item.name}</Text>
                     <Text style={styles.activityDetails}>
@@ -65,16 +63,22 @@ export const ActivitiesUser = () => {
                         {isFull ? 'FULL' : `Available: ${item.capacity - item.reservedCount} / ${item.capacity}`}
                     </Text>
                 </View>
-                <TouchableOpacity
-                    onPress={() => handleReserve(item.id)}
-                    style={[styles.reserveButton, isFull && styles.disabledButton]}
-                    disabled={isFull}
-                >
+
+                {/* BOTÓN DE RESERVA, DESHABILITADO SI LA ACTIVIDAD ESTÁ LLENA */}
+                <TouchableOpacity onPress={() => handleReserve(item.id)}
+                    style={[styles.reserveButton, isFull && styles.disabledButton]} disabled={isFull}>
+
+                    { /* ICONO.
+                        Actividad llena -> calendario eliminado,
+                        Actividad Disponible -> calendario modo disponible */}
                     <MaterialCommunityIcons
                         name={isFull ? "calendar-remove" : "calendar-plus"}
                         size={24}
                         color={isFull ? "#888" : "#F7B176"}
                     />
+                    {/* TEXTO DEL BOTÓN.
+                        Actividad llena -> texto "Full",
+                        Actividad Disponible -> texto "Reserve" */}
                     <Text style={[styles.reserveText, isFull && styles.disabledText]}>
                         {isFull ? 'Full' : 'Reserve'}
                     </Text>
@@ -85,7 +89,9 @@ export const ActivitiesUser = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.overlay}>
+            <View style={styles.main}>
+
+                {/* CABECERA */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
@@ -94,14 +100,17 @@ export const ActivitiesUser = () => {
                     <View style={{ width: 28 }} />
                 </View>
 
+                {/* MIENTRAS CARGA MUESTRA LOADING, SINO MUESTRA LA LISTA DE ACTIVIDADES */}
                 {loading ? (
                     <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
                 ) : (
-                    <FlatList
+                    /* LISTA DE ACTIVIDADES */
+                    < FlatList
                         data={activities}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         contentContainerStyle={styles.listContainer}
+                        /* SI NO HAY ACTIVIDADES, MUESTRA ESTE MENSAJE */
                         ListEmptyComponent={<Text style={styles.emptyText}>No activities available</Text>}
                     />
                 )}
@@ -115,7 +124,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121212',
     },
-    overlay: {
+    main: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.7)',
         paddingTop: 60,

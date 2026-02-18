@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { getReserves, cancelReserve } from '../../services/reserveService';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { cancelReserve, getReserves } from '../../services/reserveService';
 
 export const ReservesAdmin = () => {
+    // ESTADOS
     const [reserves, setReserves] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
+    // PARA CARGAR DATOS
     useEffect(() => {
         loadReserves();
     }, []);
@@ -28,6 +30,8 @@ export const ReservesAdmin = () => {
 
     // PARA MANEJAR EL BOTÓN DE CANCELAR
     const handleCancelReserve = (id: string) => {
+
+        // CONFIRMAR ANTES DE CANCELAR
         Alert.alert('Confirm Cancel', 'Are you sure you want to cancel this reservation?', [
             { text: 'No', style: 'cancel' },
             {
@@ -35,6 +39,7 @@ export const ReservesAdmin = () => {
                 style: 'destructive',
                 onPress: async () => {
                     try {
+                        // CANCELAR RESERVA Y RECARGAR DATOS
                         await cancelReserve(id);
                         Alert.alert('Success', 'Reservation cancelled successfully');
                         loadReserves();
@@ -46,17 +51,21 @@ export const ReservesAdmin = () => {
         ]);
     };
 
-    // PARA RENDERIZAR CADA ELEMENTO
+    // PARA RENDERIZAR LAS RESERVAS EN LA FLATLIST
     const renderItem = ({ item }: { item: any }) => (
+        // TARJETA DE CADA RESERVA
         <View style={styles.reserveCard}>
+
+            {/* INFORMACIÓN DE LA RESERVA */}
             <View style={styles.cardInfo}>
                 <Text style={styles.activityName}>{item.activityName}</Text>
                 <Text style={styles.username}>User: {item.username}</Text>
                 <Text style={styles.date}>
                     {new Date(item.activityDate).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
                 </Text>
-
             </View>
+
+            {/* ACCIÓN DE CANCELAR RESERVA */}
             {item.state !== 'CANCELLED' && (
                 <TouchableOpacity onPress={() => handleCancelReserve(item.id)} style={styles.actionButton}>
                     <MaterialCommunityIcons name="calendar-remove" size={24} color="#ff6b6b" />
@@ -68,6 +77,8 @@ export const ReservesAdmin = () => {
     return (
         <View style={styles.container}>
             <View style={styles.overlay}>
+
+                {/* CABECERA */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
@@ -76,6 +87,7 @@ export const ReservesAdmin = () => {
                     <View style={{ width: 28 }} />
                 </View>
 
+                {/* MIENTRAS CARGA: MUESTRA LOADING, SINO MUESTRA LA LISTA DE RESERVAS */}
                 {loading ? (
                     <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
                 ) : (

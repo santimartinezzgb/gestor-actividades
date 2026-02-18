@@ -13,16 +13,18 @@ export const Signup = () => {
     const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password' | 'confirm'>(null);
 
     const handleSignup = async () => {
+
+        // VALIDACIONES PARA EL REGISTRO
         if (!username || !password || !confirmPassword) {
             setError('Please fill in all fields');
             return;
         }
-
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
 
+        // INICIAR PROCESO DE REGISTRO
         setLoading(true);
         setError(null);
 
@@ -30,12 +32,12 @@ export const Signup = () => {
             await register({
                 username,
                 password,
-                rol: 'USER', // Default value
+                rol: 'USER',
             });
             alert('Registration successful! You can now log in.');
             router.push('/login');
         } catch (err: any) {
-            setError(err.message || 'Error registering user');
+            setError(err.message);
         } finally {
             setLoading(false);
         }
@@ -45,8 +47,11 @@ export const Signup = () => {
         <View style={styles.container}>
             <Text style={styles.title}>My Fitness</Text>
 
+            {/* CAMPOS DE ENTRADA PARA REGISTRO */}
             <View style={styles.containerInputs}>
                 {error && <Text style={styles.errorText}>{error}</Text>}
+
+                {/* CAMPO DE USUARIO */}
                 <TextInput
                     placeholder="Username"
                     value={username}
@@ -58,6 +63,7 @@ export const Signup = () => {
                     onFocus={() => setFocusedInput('username')}
                     onBlur={() => setFocusedInput(null)}
                 />
+                {/* CAMPO DE CONTRASEÑA */}
                 <TextInput
                     placeholder="Password"
                     value={password}
@@ -70,7 +76,7 @@ export const Signup = () => {
                     onFocus={() => setFocusedInput('password')}
                     onBlur={() => setFocusedInput(null)}
                 />
-
+                {/* CAMPO DE CONFIRMAR CONTRASEÑA */}
                 <TextInput
                     placeholder="Confirm password"
                     value={confirmPassword}
@@ -85,14 +91,14 @@ export const Signup = () => {
                 />
             </View>
 
+            {/* BOTONES DE REGISTRO Y LOGIN */}
             <View style={styles.containerButtons}>
-                <TouchableOpacity
-                    style={[styles.contenedorSignUp, loading && { opacity: 0.7 }]}
-                    onPress={handleSignup}
-                    disabled={loading}
-                >
+                {/* BOTÓN DE REGISTRO */}
+                <TouchableOpacity style={[styles.contenedorSignUp, loading && { opacity: 0.7 }]}
+                    onPress={handleSignup} disabled={loading}>
                     <Text style={styles.btnSignUp}>{loading ? '...' : 'Sign Up'}</Text>
                 </TouchableOpacity>
+                {/* BOTÓN DE LOGIN */}
                 <TouchableOpacity style={styles.contenedorLogin} onPress={() => router.push('/login')}>
                     <Text style={styles.btnLogin}>Login</Text>
                 </TouchableOpacity>

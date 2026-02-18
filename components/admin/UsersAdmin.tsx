@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-
-import { getUsers, deleteUser } from '../../services/userService';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { deleteUser, getUsers } from '../../services/userService';
 
 export const UsersAdmin = () => {
+    // ESTADOS
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
+    // PARA CARGAR DATOS
     useEffect(() => {
         loadUsers();
     }, []);
@@ -27,8 +28,10 @@ export const UsersAdmin = () => {
         }
     };
 
-    // PARA MANEJAR EL BOTÓN DE ELIMINAR
+    // PARA MANEJAR EL BOTÓN DE ELIMINAR EL USUARIO
     const handleDeleteUser = (id: string) => {
+
+        // CONFIRMAR ANTES DE ELIMINAR
         Alert.alert(
             'Confirm Delete',
             'Are you sure you want to delete this user?',
@@ -39,6 +42,7 @@ export const UsersAdmin = () => {
                     style: 'destructive',
                     onPress: async () => {
                         try {
+                            // ELIMINAR USUARIO Y RECARGAR DATOS
                             await deleteUser(id);
                             Alert.alert('Success', 'User deleted successfully');
                             loadUsers();
@@ -51,13 +55,18 @@ export const UsersAdmin = () => {
         );
     };
 
-    // PARA RENDERIZAR CADA ELEMENTO
+    // PARA RENDERIZAR LOS USUARIOS EN LA FLATLIST
     const renderItem = ({ item }: { item: any }) => (
+        // TARJETA DE CADA USUARIO
         <View style={styles.userCard}>
+
+            {/* INFORMACIÓN DEL USUARIO */}
             <View style={styles.cardInfo}>
                 <Text style={styles.username}>{item.username}</Text>
                 <Text style={styles.userDetails}>{item.name} {item.surname}</Text>
             </View>
+
+            {/* ACCIÓN DE ELIMINAR */}
             <TouchableOpacity onPress={() => handleDeleteUser(item.id)} style={styles.deleteButton}>
                 <MaterialCommunityIcons name="account-remove" size={24} color="#ff6b6b" />
             </TouchableOpacity>
@@ -67,6 +76,8 @@ export const UsersAdmin = () => {
     return (
         <View style={styles.container}>
             <View style={styles.menu}>
+
+                {/* CABECERA */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
@@ -75,15 +86,14 @@ export const UsersAdmin = () => {
                     <View style={{ width: 28 }} />
                 </View>
 
+                {/* MIENTRAS CARGA: MUESTRA LOADING, SINO MUESTRA LA LISTA DE USUARIOS */}
                 {loading ? (
                     <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
                 ) : (
-                    <FlatList
-                        data={users}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        contentContainerStyle={styles.listContainer}
-                        ListEmptyComponent={<Text style={styles.emptyText}>No users found</Text>}
+                    <FlatList data={users} renderItem={renderItem} keyExtractor={(item) => item.id}
+                        contentContainerStyle={styles.listContainer} ListEmptyComponent={
+                            <Text style={styles.emptyText}>No users found</Text>
+                        }
                     />
                 )}
             </View>

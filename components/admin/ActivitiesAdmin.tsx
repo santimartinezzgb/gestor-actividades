@@ -1,18 +1,18 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    Modal,
-    TextInput,
+    ActivityIndicator,
     Alert,
-    ActivityIndicator
+    FlatList,
+    Modal,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getActivities, createActivity, deleteActivity, updateActivity } from '../../services/activityService';
-import { useRouter } from 'expo-router';
+import { createActivity, deleteActivity, getActivities, updateActivity } from '../../services/activityService';
 
 
 export const ActivitiesAdmin = () => {
@@ -48,10 +48,11 @@ export const ActivitiesAdmin = () => {
         }
     };
 
-    // PARA MANEJAR LA APERTURA DEL MODAL (CREAR O ACTUALIZAR ACTIVIDAD)
-    const handleOpenModal = (activity?: any) => {
+    // CREAR O ACTUALIZAR ACTIVIDAD
+    const createOrUpdateActivity = (activity?: any) => {
         const [d, t] = (activity?.date || '').split('T');
 
+        // SETEAR CAMPOS DEL FORMULARIO
         setEditingActivity(activity || null);
         setName(activity?.name || '');
         setCapacity(activity?.capacity?.toString() || '');
@@ -63,8 +64,10 @@ export const ActivitiesAdmin = () => {
 
     // PARA MANEJAR EL BOTÓN DE GUARDAR
     const handleSave = async () => {
+        // VALIDACIÓN BÁSICA
         if (!name || !capacity || !date || !time) return Alert.alert('Validation Error', 'Please fill name, capacity, date and time');
 
+        // CREAR OBJETO DE ACTIVIDAD
         const activityData = {
             name,
             capacity: parseInt(capacity),
@@ -75,18 +78,22 @@ export const ActivitiesAdmin = () => {
         };
 
         try {
-            // IF THE ACTIVITY HAS AN ID, IT WILL UPDATE IT
+            // SI EDITA RECIBE EL ID, SINO CREA NUEVO
             await (editingActivity ? updateActivity(editingActivity.id, activityData) : createActivity(activityData));
+
+            // MENSAJE DE ÉXITO Y RECARGAR DATOS
             Alert.alert('Success', `Activity ${editingActivity ? 'updated' : 'created'} successfully`);
             setModalVisible(false);
             loadActivities();
         } catch (error: any) {
-            Alert.alert('Error', error.message || 'Operation failed');
+            Alert.alert('Error', error.message);
         }
     };
 
-    // PARA MANEJAR EL BOTÓN DE ELIMINAR
+    // PARA MANEJAR EL BOTÓN DE ELIMINAR LA ACTIVIDAD
     const handleDelete = (id: string) => {
+
+        // CONFIRMAR ANTES DE ELIMINAR
         Alert.alert('Confirm Delete', 'Are you sure you want to delete this activity?', [
             { text: 'Cancel', style: 'cancel' },
             {
@@ -94,6 +101,7 @@ export const ActivitiesAdmin = () => {
                 style: 'destructive',
                 onPress: async () => {
                     try {
+                        // ELIMINAR ACTIVIDAD Y RECARGAR DATOS
                         await deleteActivity(id);
                         loadActivities();
                     } catch (error: any) {
@@ -106,13 +114,18 @@ export const ActivitiesAdmin = () => {
 
     // PARA RENDERIZAR LAS ACTIVIDADES EN LA FLATLIST
     const renderItem = ({ item }: { item: any }) => (
+        // TARJETA DE CADA ACTIVIDAD
         <View style={styles.activityCard}>
+
+            {/* INFORMACIÓN DE LA ACTIVIDAD */}
             <View style={styles.cardInfo}>
                 <Text style={styles.activityName}>{item.name}</Text>
                 <Text style={styles.activityDetails}>Users registered: {item.reservedCount} / {item.capacity}</Text>
             </View>
+
+            {/* ACCIONES DE CREAR/EDITAR Y ELIMINAR */}
             <View style={styles.cardActions}>
-                <TouchableOpacity onPress={() => handleOpenModal(item)} style={styles.actionButton}>
+                <TouchableOpacity onPress={() => createOrUpdateActivity(item)} style={styles.actionButton}>
                     <MaterialCommunityIcons name="pencil" size={24} color="#F7B176" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.actionButton}>
@@ -125,38 +138,36 @@ export const ActivitiesAdmin = () => {
     return (
         <View style={styles.container}>
             <View style={styles.menu}>
+
+                {/* CABECERA */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>MANAGE ACTIVITIES</Text>
-                    <TouchableOpacity onPress={() => handleOpenModal()} style={styles.addButton}>
+                    <TouchableOpacity onPress={() => createOrUpdateActivity()} style={styles.addButton}>
                         <MaterialCommunityIcons name="plus-circle" size={32} color="#F7B176" />
                     </TouchableOpacity>
                 </View>
 
-                {loading ? (
-                    <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
-                ) : (
-                    <FlatList
-                        data={activities}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
+                {/* MIENTRAS CARGA: MUESTRA LOADING, SINO MUESTRA LA LISTA DE ACTIVIDADES */}
+                {loading
+                    ? <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
+                    : <FlatList data={activities} renderItem={renderItem} keyExtractor={i => i.id}
                         contentContainerStyle={styles.listContainer}
-                        ListEmptyComponent={<Text style={styles.emptyText}>No activities found</Text>}
-                    />
-                )}
+                        ListEmptyComponent={<Text style={styles.emptyText}>No activities found</Text>} />
+                }
 
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => setModalVisible(false)}
-                >
+                {/* MODAL PARA CREAR O EDITAR ACTIVIDAD */}
+                <Modal animationType="slide" transparent={true} visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}>
+
+                    {/* CONTENIDO DEL MODAL */}
                     <View style={styles.modalmenu}>
                         <View style={styles.modalContent}>
-                            <Text style={styles.modalTitle}>{editingActivity ? 'Edit Activity' : 'Add New Activity'}</Text>
 
+                            {/* CAMPOS DEL FORMULARIO */}
+                            <Text style={styles.modalTitle}>{editingActivity ? 'Edit Activity' : 'Add New Activity'}</Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Activity Name"
@@ -197,6 +208,7 @@ export const ActivitiesAdmin = () => {
                                 />
                             </View>
 
+                            {/* ACCIONES ( CANCELAR Y GUARDAR ) */}
                             <View style={styles.modalActions}>
                                 <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setModalVisible(false)}>
                                     <Text style={styles.buttonText}>Cancel</Text>

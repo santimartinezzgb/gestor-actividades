@@ -1,12 +1,16 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export const AdminDashboard = () => {
     const router = useRouter();
 
-    // PARA RENDERIZAR LAS SECCIONES DEL PANEL DE ADMINISTRACIÓN
+    // SECCIONES DEL PANEL DE ADMINISTRACIÓN
+    // ID. Id para cada sección
+    // TITLE. Título que se muestra en la tarjeta
+    // ICON. Icono de MaterialCommunityIcons ( Librería de iconos de React Native ) que se muestra en la tarjeta
+    // ROUTE. Ruta a la que se navega al hacer clic en la tarjeta
     const sections = [
         { id: 'users', title: 'Users', icon: 'account-group', route: '/admin/users' },
         { id: 'activities', title: 'Activities', icon: 'calendar-check', route: '/admin/activities' },
@@ -16,15 +20,14 @@ export const AdminDashboard = () => {
     return (
         <View style={styles.container}>
             <View style={styles.menu}>
+
+                {/* TÍTULO DEL PANEL */}
                 <Text style={styles.headerTitle}>ADMIN PANEL</Text>
 
+                {/* TARJETAS DE NAVEGACIÓN */}
                 <View style={styles.panelOptions}>
                     {sections.map((section) => (
-                        <TouchableOpacity
-                            key={section.id}
-                            style={styles.card}
-                            onPress={() => router.push(section.route as any)}
-                        >
+                        <TouchableOpacity key={section.id} style={styles.card} onPress={() => router.push(section.route as any)}>
                             <View style={styles.iconCircle}>
                                 <MaterialCommunityIcons name={section.icon as any} size={32} color="#F7B176" />
                             </View>
@@ -33,10 +36,8 @@ export const AdminDashboard = () => {
                     ))}
                 </View>
 
-                <TouchableOpacity
-                    style={styles.logoutButton}
-                    onPress={() => router.replace('/login')}
-                >
+                {/* BOTÓN DE CERRAR SESIÓN */}
+                <TouchableOpacity style={styles.logoutButton} onPress={() => router.replace('/login')}>
                     <MaterialCommunityIcons name="logout" size={20} color="#ff6b6b" />
                     <Text style={styles.logoutText}>Logout</Text>
                 </TouchableOpacity>

@@ -4,7 +4,6 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { login } from '../../services/authService';
 import { userSession } from '../../services/session';
 
-
 export const Login = () => {
     const router = useRouter();
     const [username, setUsername] = useState('');
@@ -15,16 +14,19 @@ export const Login = () => {
 
     // PARA INICIAR SESIÓN
     const handleLogin = async () => {
+
+        // VALIDACIONES PARA EL LOGIN
         if (!username || !password) return setError('Please fill in all fields');
         setLoading(true);
         setError(null);
+
         try {
             const res = await login(username, password);
 
             // GUARDAR INFORMACIÓN DEL USUARIO
             Object.assign(userSession, { userId: res.userId, username: res.username, token: res.token });
 
-            // REDIRECCIONAR A LA PÁGINA CORRECTA
+            // REDIRECCIONAR SEGÚN ROL ( ADMIN O USER )
             router.push(res.role?.toUpperCase() === 'ADMIN' ? '/admin' : '/user');
         } catch (err: any) {
             setError(err.message || 'Error logging in');
@@ -49,15 +51,21 @@ export const Login = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>My Fitness</Text>
+
+            {/* CAMPOS DE ENTRADA PARA LOGIN */}
             <View style={styles.containerInputs}>
                 {error && <Text style={styles.errorText}>{error}</Text>}
                 <InputField type="username" placeholder="Username" value={username} setter={setUsername} />
                 <InputField type="password" placeholder="Password" value={password} setter={setPassword} secure />
             </View>
+
+            {/* BOTONES DE LOGIN Y SIGNUP */}
             <View style={styles.containerButtons}>
+                {/* BOTÓN DE LOGIN */}
                 <TouchableOpacity style={[styles.contenedorLogin, { opacity: loading ? 0.7 : 1 }]} onPress={handleLogin} disabled={loading}>
                     <Text style={styles.btnLogin}>{loading ? 'loading...' : 'Login'}</Text>
                 </TouchableOpacity>
+                {/* BOTÓN DE SIGNUP */}
                 <TouchableOpacity style={styles.contenedorSignUp} onPress={() => router.push('/signup')}>
                     <Text style={styles.btnSignUp}>Sign Up</Text>
                 </TouchableOpacity>
