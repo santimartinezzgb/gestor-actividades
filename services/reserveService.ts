@@ -1,5 +1,4 @@
 import { BASE_API_URL } from '../constants/apiConfig';
-import { userSession } from './session';
 
 export const RESERVES_URL = `${BASE_API_URL}/reserves`;
 
@@ -33,7 +32,7 @@ export const createReserve = async (userId: string, activityId: string) => {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || 'Error creating reservation');
+            throw new Error(errorData.message);
         }
 
         return await response.json();
@@ -51,7 +50,7 @@ export const cancelReserve = async (id: string) => {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || 'Error canceling reservation');
+            throw new Error(errorData.message);
         }
 
         return await response.json();

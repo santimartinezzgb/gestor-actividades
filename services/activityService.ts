@@ -1,6 +1,6 @@
 import { BASE_API_URL } from '../constants/apiConfig';
-export const ACTIVITIES_URL = `${BASE_API_URL}/activities`;
 import { userSession } from './session';
+export const ACTIVITIES_URL = `${BASE_API_URL}/activities`;
 
 export const getActivities = async () => {
     try {
@@ -55,7 +55,7 @@ export const updateActivity = async (id: string, activity: any) => {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || 'Error updating activity');
+            throw new Error(errorData.message);
         }
 
         return await response.json();
@@ -76,7 +76,7 @@ export const deleteActivity = async (id: string) => {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || 'Error deleting activity');
+            throw new Error(errorData.message);
         }
 
         return await response.json();
