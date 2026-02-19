@@ -1,5 +1,3 @@
-import { userSession } from '../auth/session';
-
 const API_URL = 'http://localhost:8080/api/reserves';
 
 export const getReserves = async () => {
@@ -23,7 +21,7 @@ export const createReserve = async (userId: string, activityId: string) => {
     });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Error creating reservation');
+        throw new Error(errorData.message);
     }
     return await response.json();
 };
@@ -34,7 +32,7 @@ export const cancelReserve = async (id: string) => {
     });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Error canceling reservation');
+        throw new Error(errorData.message);
     }
     return await response.json();
 };

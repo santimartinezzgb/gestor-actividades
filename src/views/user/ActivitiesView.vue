@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { ArrowLeft } from 'lucide-vue-next';
 import { getActivities } from '@/services/activity/activityService';
 import { createReserve } from '@/services/reserve/reserveService';
 import { userSession } from '@/services/auth/session';
@@ -11,11 +12,13 @@ const loading = ref(true);
 const error = ref('');
 const successMsg = ref('');
 
+// CARGAR DATOS
 onMounted(() => loadActivities());
 
+// CARGAR ACTIVIDADES
 const loadActivities = async () => {
     try {
-        loading.value = true;
+        loading.value = true; // RESETEO DEL ESTAOD
         activities.value = await getActivities();
     } catch (e: any) {
         error.value = e.message || 'Could not load activities';
@@ -24,13 +27,17 @@ const loadActivities = async () => {
     }
 };
 
+// MANEJAR RESERVA
 const handleReserve = async (activityId: string) => {
+   
+    // VERIFICAR SESIÓN DEL USUARIO ( SI NO HAY ID DE USUARIO, REDIRIGIR A LOGIN )
     if (!userSession.userId) {
         alert('Session not found. Please log in again.');
         router.replace('/login');
         return;
     }
-    try {
+
+    try { // CREAR RESERVA
         await createReserve(userSession.userId, activityId);
         successMsg.value = 'Activity reserved successfully! Check "My Reserves" section.';
         setTimeout(() => successMsg.value = '', 3000);
@@ -42,33 +49,33 @@ const handleReserve = async (activityId: string) => {
 
 <template>
     <main>
-        <div class="overlay">
+        <div class="main">
             <div class="header">
-                <button class="back-button" @click="router.push('/user')">←</button>
-                <h2 class="header-title">AVAILABLE ACTIVITIES</h2>
+                <button class="backButton" @click="router.push('/user')"><ArrowLeft :size="20" /></button>
+                <h2 class="headerTitle">AVAILABLE ACTIVITIES</h2>
                 <div style="width: 28px"></div>
             </div>
 
-            <p v-if="successMsg" class="success-msg">{{ successMsg }}</p>
+            <p v-if="successMsg" class="successMsg">{{ successMsg }}</p>
 
             <div v-if="loading" class="loading">Loading...</div>
 
-            <div v-else class="list-container">
-                <p v-if="!activities.length" class="empty-text">No activities available</p>
+            <div v-else class="listContainer">
+                <p v-if="!activities.length" class="emptyText">No activities available</p>
                 <div
                     v-for="item in activities"
                     :key="item.id"
-                    class="activity-card"
-                    :class="{ 'full-card': item.reservedCount >= item.capacity }"
+                    class="activityCard"
+                    :class="{ 'fullCard': item.reservedCount >= item.capacity }"
                 >
-                    <div class="card-info">
-                        <span class="activity-name">{{ item.name }}</span>
-                        <span class="activity-details">
+                    <div class="cardInfo">
+                        <span class="activityName">{{ item.name }}</span>
+                        <span class="activityDetails">
                             {{ new Date(item.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) }}
                         </span>
                         <span
-                            class="capacity-info"
-                            :class="{ 'full-text': item.reservedCount >= item.capacity }"
+                            class="capacityInfo"
+                            :class="{ 'fullText': item.reservedCount >= item.capacity }"
                         >
                             {{ item.reservedCount >= item.capacity
                                 ? 'FULL'
@@ -76,13 +83,15 @@ const handleReserve = async (activityId: string) => {
                             }}
                         </span>
                     </div>
-                    <button
-                        class="reserve-button"
-                        :class="{ 'disabled-button': item.reservedCount >= item.capacity }"
+
+                    <!-- BOTÓN DE RESERVA ( ACTIVIDAD LLENA == DESHABILITADO ) -->
+                    <!-- Reservas mayores o iguales a la capacidad == DESHABILITADO -->
+                    <button class="reserveButton"
+                        :class="{ 'disabledButton': item.reservedCount >= item.capacity }"
                         :disabled="item.reservedCount >= item.capacity"
                         @click="handleReserve(item.id)"
                     >
-                        {{ item.reservedCount >= item.capacity ? '❌ Full' : '📅 Reserve' }}
+                        {{ item.reservedCount >= item.capacity ? 'Full' : 'Reserve' }} 
                     </button>
                 </div>
             </div>
@@ -96,7 +105,7 @@ main {
     height: 100vh;
     background-color: #121212;
 }
-.overlay {
+.main {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.7);
@@ -113,7 +122,7 @@ main {
     max-width: 800px;
     margin-bottom: 20px;
 }
-.back-button {
+.backButton {
     background: transparent;
     border: none;
     color: #fff;
@@ -121,7 +130,7 @@ main {
     cursor: pointer;
     padding: 5px;
 }
-.header-title {
+.headerTitle {
     font-size: 1.2rem;
     font-weight: bold;
     color: #fff;
@@ -132,7 +141,7 @@ main {
     font-size: 1.2rem;
     margin-top: 50px;
 }
-.success-msg {
+.successMsg {
     color: #4caf50;
     font-weight: bold;
     margin-bottom: 10px;
@@ -140,13 +149,13 @@ main {
     padding: 10px 20px;
     border-radius: 8px;
 }
-.list-container {
+.listContainer {
     width: 90%;
     max-width: 800px;
     overflow-y: auto;
     padding-bottom: 20px;
 }
-.activity-card {
+.activityCard {
     width: 100%;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 12px;
@@ -157,37 +166,37 @@ main {
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.2s;
 }
-.activity-card:hover {
+.activityCard:hover {
     background: rgba(255, 255, 255, 0.12);
 }
-.full-card {
+.fullCard {
     border-color: rgba(255, 0, 0, 0.2);
     background: rgba(255, 0, 0, 0.05);
 }
-.card-info {
+.cardInfo {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
-.activity-name {
+.activityName {
     font-size: 1.1rem;
     font-weight: bold;
     color: #fff;
 }
-.activity-details {
+.activityDetails {
     font-size: 0.9rem;
     color: #F7B176;
 }
-.capacity-info {
+.capacityInfo {
     font-size: 0.8rem;
     color: #aaa;
 }
-.full-text {
+.fullText {
     color: #ff6b6b;
     font-weight: bold;
 }
-.reserve-button {
+.reserveButton {
     background: transparent;
     border: 1px solid rgba(247, 177, 118, 0.3);
     color: #F7B176;
@@ -199,16 +208,16 @@ main {
     transition: all 0.2s;
     white-space: nowrap;
 }
-.reserve-button:hover:not(:disabled) {
+.reserveButton:hover:not(:disabled) {
     background: rgba(247, 177, 118, 0.15);
 }
-.disabled-button {
+.disabledButton {
     opacity: 0.5;
     cursor: not-allowed;
     color: #888;
     border-color: rgba(255,255,255,0.1);
 }
-.empty-text {
+.emptyText {
     color: #888;
     text-align: center;
     margin-top: 50px;

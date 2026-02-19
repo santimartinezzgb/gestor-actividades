@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { ArrowLeft, Trash2 } from 'lucide-vue-next';
 import { getUsers, deleteUser } from '@/services/user/userService';
 
 const router = useRouter();
@@ -24,7 +25,6 @@ const handleDeleteUser = async (id: string) => {
     if (!confirm('Are you sure you want to delete this user?')) return;
     try {
         await deleteUser(id);
-        alert('User deleted successfully');
         loadUsers();
     } catch (e: any) {
         alert(e.message || 'Delete failed');
@@ -36,7 +36,7 @@ const handleDeleteUser = async (id: string) => {
     <main>
         <div class="overlay">
             <div class="header">
-                <button class="back-button" @click="router.push('/admin')">←</button>
+                <button class="back-button" @click="router.push('/admin')"><ArrowLeft :size="20" /></button>
                 <h2 class="header-title">MANAGE USERS</h2>
                 <div style="width: 28px"></div>
             </div>
@@ -51,7 +51,7 @@ const handleDeleteUser = async (id: string) => {
                         <span class="user-details">{{ item.name }} {{ item.surname }}</span>
                     </div>
                     <button class="delete-button" @click="handleDeleteUser(item.id)">
-                        🗑️ Delete
+                        <Trash2 :size="16" /> Delete
                     </button>
                 </div>
             </div>

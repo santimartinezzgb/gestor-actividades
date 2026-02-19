@@ -1,65 +1,83 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { ArrowLeft } from 'lucide-vue-next';
 import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
 import { userSession } from '@/services/auth/session';
 
 const router = useRouter();
-const reserves = ref<any[]>([]);
-const loading = ref(true);
+const reserves = ref<any[]>([]); // ALMACENA LAS RESERVAS DEL USUARIO
+const loading = ref(true); // ESTADO DE CARGA
 
+// CARGAR RESERVAS AL MONTAR EL COMPONENTE
 onMounted(() => loadReserves());
 
+// CARGAR RESERVAS DEL USUSARIO
 const loadReserves = async () => {
     try {
         loading.value = true;
         const data = await getReserves();
+        
+        // FILTRO PARA RESERVAS DEL USUARIO ACTUAL NO CANCELADAS
         reserves.value = data.filter((r: any) =>
             r.userId === userSession.userId &&
             r.state !== 'CANCELED' &&
             r.state !== 'CANCELLED'
         );
     } catch (e: any) {
-        alert(e.message || 'Could not load reserves');
+        alert(e.message);
     } finally {
+        // DESACTIVAR ESTADO DE CARGA
         loading.value = false;
     }
 };
 
+// MANEJAR CANCELACIÓN DE RESERVA
 const handleCancel = async (id: string) => {
+    
+    // CONFIRMAR CANCELACIÓN
     if (!confirm('Are you sure you want to cancel this reservation?')) return;
+    
     try {
         await cancelReserve(id);
         alert('Reservation cancelled successfully');
-        loadReserves();
+        loadReserves(); // RECARGAR RESERVAS DESPUÉS DE CANCELAR
     } catch (e: any) {
-        alert(e.message || 'Cancellation failed');
+        alert(e.message);
     }
 };
 </script>
 
 <template>
     <main>
-        <div class="overlay">
+        <div class="main">
             <div class="header">
-                <button class="back-button" @click="router.push('/user')">←</button>
-                <h2 class="header-title">MY RESERVES</h2>
-                <div style="width: 28px"></div>
+                <button class="backButton" @click="router.push('/user')"><ArrowLeft :size="20" /></button>
+                <h2 class="headerTitle">MY RESERVES</h2>
+                <div style="width: 28px"></div> <!-- ESPACIO PARA ALINEAR TÍTULO -->
             </div>
 
+            <!-- MENSAJE DE CARGA -->
             <div v-if="loading" class="loading">Loading...</div>
 
-            <div v-else class="list-container">
-                <p v-if="!reserves.length" class="empty-text">You don't have any reserves yet</p>
-                <div v-for="item in reserves" :key="item.id" class="reserve-card">
-                    <div class="card-info">
-                        <span class="activity-name">{{ item.activityName }}</span>
-                        <span class="activity-details">
+            <div v-else class="listContainer">
+                <p v-if="!reserves.length" class="emptyText">You don't have any reserves yet</p>
+
+                <!-- LISTADO DE RESERVAS -->
+                <div v-for="item in reserves" :key="item.id" class="reserveCard">
+                    
+                    <!-- INFORMACIÓN DE LA RESERVA -->
+                    <div class="cardInfo">
+                        <!-- NOMBRE DE LA ACTIVIDAD -->
+                        <span class="activityName">{{ item.activityName }}</span>
+                        <!-- FECHA DE LA ACTIVIDAD -->
+                        <span class="activityDetails">
                             {{ new Date(item.activityDate).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) }}
                         </span>
                     </div>
-                    <button class="cancel-button" @click="handleCancel(item.id)">
-                        ❌ Cancel
+                    <!-- BOTÓN DE CANCELAR RESERVA -->
+                    <button class="cancelButton" @click="handleCancel(item.id)">
+                        Cancel
                     </button>
                 </div>
             </div>
@@ -73,7 +91,7 @@ main {
     height: 100vh;
     background-color: #121212;
 }
-.overlay {
+.main {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.7);
@@ -90,7 +108,7 @@ main {
     max-width: 800px;
     margin-bottom: 20px;
 }
-.back-button {
+.backButton {
     background: transparent;
     border: none;
     color: #fff;
@@ -98,7 +116,7 @@ main {
     cursor: pointer;
     padding: 5px;
 }
-.header-title {
+.headerTitle {
     font-size: 1.2rem;
     font-weight: bold;
     color: #fff;
@@ -109,13 +127,13 @@ main {
     font-size: 1.2rem;
     margin-top: 50px;
 }
-.list-container {
+.listContainer {
     width: 90%;
     max-width: 800px;
     overflow-y: auto;
     padding-bottom: 20px;
 }
-.reserve-card {
+.reserveCard {
     width: 100%;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 12px;
@@ -126,25 +144,25 @@ main {
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.2s;
 }
-.reserve-card:hover {
+.reserveCard:hover {
     background: rgba(255, 255, 255, 0.12);
 }
-.card-info {
+.cardInfo {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
-.activity-name {
+.activityName {
     font-size: 1.1rem;
     font-weight: bold;
     color: #fff;
 }
-.activity-details {
+.activityDetails {
     font-size: 0.9rem;
     color: #F7B176;
 }
-.cancel-button {
+.cancelButton {
     background: transparent;
     border: 1px solid rgba(255, 107, 107, 0.3);
     color: #ff6b6b;
@@ -156,10 +174,10 @@ main {
     transition: all 0.2s;
     white-space: nowrap;
 }
-.cancel-button:hover {
+.cancelButton:hover {
     background: rgba(255, 107, 107, 0.15);
 }
-.empty-text {
+.emptyText {
     color: #888;
     text-align: center;
     margin-top: 50px;

@@ -8,7 +8,9 @@ export const getActivities = async () => {
             'Authorization': `Bearer ${userSession.token}`
         }
     });
+
     if (!response.ok) throw new Error('Error fetching activities');
+
     return await response.json();
 };
 
@@ -23,7 +25,7 @@ export const createActivity = async (activity: any) => {
     });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Error creating activity');
+        throw new Error(errorData.message);
     }
     return await response.json();
 };
@@ -39,7 +41,7 @@ export const updateActivity = async (id: string, activity: any) => {
     });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Error updating activity');
+        throw new Error(errorData.message);
     }
     return await response.json();
 };
@@ -55,5 +57,4 @@ export const deleteActivity = async (id: string) => {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Error deleting activity');
     }
-    return await response.json();
 };

@@ -1,32 +1,37 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { ArrowLeft, CircleUser, Mail, ClipboardList, Lock, X } from 'lucide-vue-next';
 import { getUserById, updatePassword } from '@/services/user/userService';
 import { userSession } from '@/services/auth/session';
 
 const router = useRouter();
-const user = ref<any>(null);
-const loading = ref(true);
-const modalVisible = ref(false);
-const oldPassword = ref('');
-const newPassword = ref('');
-const confirmPassword = ref('');
-const updating = ref(false);
-const error = ref('');
-const successMsg = ref('');
+const user = ref<any>(null); // GUARDA LOS DATOS DEL USUARIO
+const loading = ref(true); // ESTADO DE CARGA
 
+// CONTROLADORES PARA EL MODAL DE CAMBIO DE CONTRASEÑA
+const modalVisible = ref(false); // VISIBILIDAD DEL MODAL
+const oldPassword = ref(''); // CONTRASEÑA ACTUAL
+const newPassword = ref(''); // NUEVA CONTRASEÑA
+const confirmPassword = ref(''); // CONFIRMACIÓN
+const updating = ref(false); // ESTADO DE ACTUALIZACIÓN
+const error = ref(''); // MENSAJE DE ERROR
+const successMsg = ref(''); // MENSAJE DE ÉXITO
+
+// CARGAR DATOS DEL USUARIO AL MONTAR EL COMPONENTE
 onMounted(async () => {
     try {
         loading.value = true;
         const data = await getUserById(userSession.userId);
         user.value = data;
     } catch (e: any) {
-        error.value = e.message || 'Could not load profile';
+        error.value = e.message;
     } finally {
         loading.value = false;
     }
 });
 
+// MANEJAR CAMBIO DE CONTRASEÑA
 const handleChangePassword = async () => {
     if (!oldPassword.value || !newPassword.value || !confirmPassword.value) {
         error.value = 'Please fill in all fields';
@@ -38,6 +43,7 @@ const handleChangePassword = async () => {
     }
 
     try {
+        // ACTUALIZAR CONTRASEÑA
         updating.value = true;
         error.value = '';
         await updatePassword(userSession.userId, oldPassword.value, newPassword.value);
@@ -47,12 +53,13 @@ const handleChangePassword = async () => {
         newPassword.value = '';
         confirmPassword.value = '';
     } catch (e: any) {
-        error.value = e.message || 'Error updating password';
+        error.value = e.message;
     } finally {
         updating.value = false;
     }
 };
 
+// CERRAR MODAL Y RESETEAR ESTADOS
 const closeModal = () => {
     modalVisible.value = false;
     error.value = '';
@@ -64,67 +71,67 @@ const closeModal = () => {
 
 <template>
     <main>
-        <div class="overlay">
+        <div class="main">
             <div class="header">
-                <button class="back-button" @click="router.push('/user')">← </button>
-                <h2 class="header-title">MY PROFILE</h2>
+                <button class="backButton" @click="router.push('/user')"><ArrowLeft :size="20" /></button>
+                <h2 class="headerTitle">MY PROFILE</h2>
                 <div style="width: 28px"></div>
             </div>
 
             <div v-if="loading" class="loading">Loading...</div>
 
-            <div v-else class="scroll-container">
-                <div class="profile-header">
-                    <div class="avatar-circle">👤</div>
-                    <h2 class="user-name">{{ user?.name }} {{ user?.surname }}</h2>
-                    <p class="user-role">@{{ user?.username }}</p>
+            <div v-else class="scrollContainer">
+                <div class="profileHeader">
+                    <div class="avatarCircle"><CircleUser :size="64" color="#F7B176" /></div>
+                    <h2 class="userName">{{ user?.name }} {{ user?.surname }}</h2>
+                    <p class="userRole">@{{ user?.username }}</p>
                 </div>
 
-                <div class="info-section">
-                    <div class="info-row">
-                        <span class="info-icon">📧</span>
-                        <div class="info-text">
-                            <span class="info-label">Username / Email</span>
-                            <span class="info-value">{{ user?.username }}</span>
+                <div class="infoSection">
+                    <div class="infoRow">
+                        <span class="infoIcon"><Mail :size="24" color="#F7B176" /></span>
+                        <div class="infoText">
+                            <span class="infoLabel">Username</span>
+                            <span class="infoValue">{{ user?.username }}</span>
                         </div>
                     </div>
-                    <div class="info-row">
-                        <span class="info-icon">📋</span>
-                        <div class="info-text">
-                            <span class="info-label">Total Reserves</span>
-                            <span class="info-value">{{ user?.totalReserves || 0 }}</span>
+                    <div class="infoRow">
+                        <span class="infoIcon"><ClipboardList :size="24" color="#F7B176" /></span>
+                        <div class="infoText">
+                            <span class="infoLabel">Total Reserves</span>
+                            <span class="infoValue">{{ user?.totalReserves || 0 }}</span>
                         </div>
                     </div>
                 </div>
 
-                <p v-if="successMsg" class="success-text">{{ successMsg }}</p>
+                <p v-if="successMsg" class="successText">{{ successMsg }}</p>
 
-                <button class="change-password-btn" @click="modalVisible = true">
-                    🔒 Change password
+                <button class="changePasswordBtn" @click="modalVisible = true">
+                    <Lock :size="18" /> Change password
                 </button>
             </div>
         </div>
 
-        <!-- Modal cambio de contraseña -->
-        <div v-if="modalVisible" class="modal-overlay" @click.self="closeModal">
-            <div class="modal-content">
-                <div class="modal-header">
+        <!-- MODAL DE CAMBIO DE CONTRASEÑA -->
+        <div v-if="modalVisible" class="modalmain" @click.self="closeModal">
+            <div class="modalContent">
+                <div class="modalHeader">
                     <h3>Change password</h3>
-                    <button class="close-btn" @click="closeModal">✕</button>
+                    <button class="closeBtn" @click="closeModal"><X :size="18" /></button>
                 </div>
 
-                <p v-if="error" class="error-text">{{ error }}</p>
+                <p v-if="error" class="errorText">{{ error }}</p>
 
-                <label class="input-label">Current password</label>
-                <input type="password" v-model="oldPassword" placeholder="Current password" class="modal-input" />
+                <label class="inputLabel">Current password</label>
+                <input type="password" v-model="oldPassword" placeholder="Current password" class="modalInput" />
 
-                <label class="input-label">New password</label>
-                <input type="password" v-model="newPassword" placeholder="New password (min 6 chars)" class="modal-input" />
+                <label class="inputLabel">New password</label>
+                <input type="password" v-model="newPassword" placeholder="New password (min 6 chars)" class="modalInput" />
 
-                <label class="input-label">Confirm new password</label>
-                <input type="password" v-model="confirmPassword" placeholder="Confirm new password" class="modal-input" />
+                <label class="inputLabel">Confirm new password</label>
+                <input type="password" v-model="confirmPassword" placeholder="Confirm new password" class="modalInput" />
 
-                <button class="submit-btn" @click="handleChangePassword" :disabled="updating">
+                <button class="submitBtn" @click="handleChangePassword" :disabled="updating">
                     {{ updating ? 'Updating...' : 'Update password' }}
                 </button>
             </div>
@@ -139,7 +146,7 @@ main {
     background-color: #121212;
     position: relative;
 }
-.overlay {
+.main {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.8);
@@ -156,7 +163,7 @@ main {
     max-width: 600px;
     margin-bottom: 30px;
 }
-.back-button {
+.backButton {
     background: transparent;
     border: none;
     color: #fff;
@@ -164,7 +171,7 @@ main {
     cursor: pointer;
     padding: 5px;
 }
-.header-title {
+.headerTitle {
     font-size: 1.2rem;
     font-weight: bold;
     color: #fff;
@@ -175,7 +182,7 @@ main {
     font-size: 1.2rem;
     margin-top: 50px;
 }
-.scroll-container {
+.scrollContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -183,11 +190,11 @@ main {
     overflow-y: auto;
     padding-bottom: 40px;
 }
-.profile-header {
+.profileHeader {
     text-align: center;
     margin-bottom: 40px;
 }
-.avatar-circle {
+.avatarCircle {
     width: 120px;
     height: 120px;
     border-radius: 60px;
@@ -199,19 +206,19 @@ main {
     border: 2px solid #F7B176;
     margin: 0 auto 15px auto;
 }
-.user-name {
+.userName {
     font-size: 1.5rem;
     font-weight: bold;
     color: #fff;
 }
-.user-role {
+.userRole {
     font-size: 0.9rem;
     color: #F7B176;
     margin-top: 5px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-.info-section {
+.infoSection {
     width: 90%;
     max-width: 500px;
     background: rgba(255, 255, 255, 0.05);
@@ -219,33 +226,33 @@ main {
     padding: 20px;
     margin-bottom: 30px;
 }
-.info-row {
+.infoRow {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
 }
-.info-row:last-child {
+.infoRow:last-child {
     margin-bottom: 0;
 }
-.info-icon {
+.infoIcon {
     font-size: 1.5rem;
     margin-right: 15px;
 }
-.info-text {
+.infoText {
     display: flex;
     flex-direction: column;
 }
-.info-label {
+.infoLabel {
     font-size: 0.75rem;
     color: #888;
     margin-bottom: 2px;
 }
-.info-value {
+.infoValue {
     font-size: 1rem;
     color: #fff;
     font-weight: 500;
 }
-.change-password-btn {
+.changePasswordBtn {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -259,22 +266,22 @@ main {
     cursor: pointer;
     transition: all 0.3s;
 }
-.change-password-btn:hover {
+.changePasswordBtn:hover {
     background: rgba(247, 177, 118, 0.35);
 }
-.success-text {
+.successText {
     color: #4caf50;
     font-weight: bold;
     margin-bottom: 15px;
 }
-.error-text {
+.errorText {
     color: #ff6b6b;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
 /* Modal */
-.modal-overlay {
+.modalmain {
     position: fixed;
     top: 0;
     left: 0;
@@ -286,7 +293,7 @@ main {
     align-items: center;
     z-index: 1000;
 }
-.modal-content {
+.modalContent {
     width: 90%;
     max-width: 450px;
     background: #1e1e1e;
@@ -294,32 +301,32 @@ main {
     padding: 25px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
-.modal-header {
+.modalHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
 }
-.modal-header h3 {
+.modalHeader h3 {
     font-size: 1.3rem;
     font-weight: bold;
     color: #fff;
 }
-.close-btn {
+.closeBtn {
     background: transparent;
     border: none;
     color: #fff;
     font-size: 1.3rem;
     cursor: pointer;
 }
-.input-label {
+.inputLabel {
     color: #F7B176;
     font-size: 0.85rem;
     margin-bottom: 8px;
     margin-left: 5px;
     display: block;
 }
-.modal-input {
+.modalInput {
     width: 100%;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
@@ -330,10 +337,10 @@ main {
     font-size: 0.95rem;
     box-sizing: border-box;
 }
-.modal-input::placeholder {
+.modalInput::placeholder {
     color: #666;
 }
-.submit-btn {
+.submitBtn {
     width: 100%;
     background: #F7B176;
     padding: 15px;
@@ -346,11 +353,11 @@ main {
     margin-top: 10px;
     transition: opacity 0.3s;
 }
-.submit-btn:disabled {
+.submitBtn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
-.submit-btn:hover:not(:disabled) {
+.submitBtn:hover:not(:disabled) {
     opacity: 0.9;
 }
 </style>

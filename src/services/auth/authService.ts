@@ -15,9 +15,10 @@ export async function signup(user: {
     });
     if (!respuesta.ok) {
         const errorData = await respuesta.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Error during registration');
+        throw new Error(errorData.message || 'Registration failed');
     }
-    return await respuesta.json();
+    const text = await respuesta.text(); // MANEJO DE RESPUESTA VACÍA
+    return text ? JSON.parse(text) : {}; // DEVOLVER OBJETO VACÍO SI NO HAY CONTENIDO
 }
 
 // SERVICIO DE LOGIN PARA MANEJAR LA LÓGICA DE INICIO DE SESIÓN
@@ -33,7 +34,7 @@ export async function login(credentials: {
 
     if (!respuesta.ok) {
         const errorData = await respuesta.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Incorrect credentials');
+        throw new Error(errorData.message);
     }
 
     return await respuesta.json();

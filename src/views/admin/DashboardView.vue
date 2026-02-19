@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { markRaw } from 'vue';
+import { Users, Dumbbell, Calendar, LogOut } from 'lucide-vue-next';
 
 const router = useRouter();
 
 const sections = [
-    { id: 'users', title: 'Users', icon: '👥', route: '/admin/users' },
-    { id: 'activities', title: 'Activities', icon: '🏋️', route: '/admin/activities' },
-    { id: 'reserves', title: 'Reserves', icon: '📅', route: '/admin/reserves' },
+    { id: 'users', title: 'Users', icon: markRaw(Users), route: '/admin/users' },
+    { id: 'activities', title: 'Activities', icon: markRaw(Dumbbell), route: '/admin/activities' },
+    { id: 'reserves', title: 'Reserves', icon: markRaw(Calendar), route: '/admin/reserves' },
 ];
 
 const logout = () => {
@@ -28,14 +30,14 @@ const logout = () => {
                     @click="router.push(section.route)"
                 >
                     <div class="icon-circle">
-                        <span class="icon">{{ section.icon }}</span>
+                        <component :is="section.icon" :size="40" color="#F7B176" />
                     </div>
                     <span class="card-title">{{ section.title }}</span>
                 </button>
             </div>
 
             <button class="logout-button" @click="logout">
-                🚪 Logout
+                <LogOut :size="18" /> Logout
             </button>
         </div>
     </main>
@@ -98,9 +100,6 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.icon {
-    font-size: 2.5rem;
 }
 .card-title {
     font-size: 1.5rem;

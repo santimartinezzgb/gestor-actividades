@@ -1,42 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, markRaw } from 'vue';
 import { useRouter } from 'vue-router';
+import { User, Calendar, Dumbbell, LogOut } from 'lucide-vue-next';
 
 const router = useRouter();
 
 const sections = [
-    { id: 'profile', title: 'My Profile', icon: '👤', route: '/user/profile' },
-    { id: 'reserves', title: 'My Reserves', icon: '📅', route: '/user/reserves' },
-    { id: 'activities', title: 'Activities', icon: '🏋️', route: '/user/activities' },
+    { id: 'profile', title: 'My Profile', icon: markRaw(User), route: '/user/profile' },
+    { id: 'reserves', title: 'My Reserves', icon: markRaw(Calendar), route: '/user/reserves' },
+    { id: 'activities', title: 'Activities', icon: markRaw(Dumbbell), route: '/user/activities' },
 ];
 
+// CERRAR SESIÓN
 const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token'); // ELIMINAR TOKEN
     router.push('/login');
 };
 </script>
 
 <template>
     <main>
-        <div class="overlay">
-            <h1 class="header-title">MY DASHBOARD</h1>
+        <div class="main">
+            <h1 class="headerTitle">MY DASHBOARD</h1>
 
-            <div class="panel-options">
+            <div class="panelOptions">
                 <button
                     v-for="section in sections"
                     :key="section.id"
                     class="card"
                     @click="router.push(section.route)"
                 >
-                    <div class="icon-circle">
-                        <span class="icon">{{ section.icon }}</span>
+                    <div class="iconCircle">
+                        <component :is="section.icon" :size="32" color="#F7B176" />
                     </div>
-                    <span class="card-title">{{ section.title }}</span>
+                    <span class="cardTitle">{{ section.title }}</span>
                 </button>
             </div>
 
-            <button class="logout-button" @click="logout">
-                🚪 Logout
+            <button class="logoutButton" @click="logout">
+                <LogOut :size="18" /> Logout
             </button>
         </div>
     </main>
@@ -48,7 +50,7 @@ main {
     height: 100vh;
     background-color: #121212;
 }
-.overlay {
+.main {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.6);
@@ -57,14 +59,14 @@ main {
     align-items: center;
     padding-top: 80px;
 }
-.header-title {
+.headerTitle {
     font-size: 2.5rem;
     font-weight: bold;
     color: #ffffff;
     margin-bottom: 60px;
     letter-spacing: 2px;
 }
-.panel-options {
+.panelOptions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -90,7 +92,7 @@ main {
     transform: translateY(-4px);
     border-color: #F7B176;
 }
-.icon-circle {
+.iconCircle {
     width: 64px;
     height: 64px;
     border-radius: 50%;
@@ -100,15 +102,12 @@ main {
     align-items: center;
     margin-bottom: 14px;
 }
-.icon {
-    font-size: 2rem;
-}
-.card-title {
+.cardTitle {
     font-size: 1rem;
     font-weight: 600;
     color: #ffffff;
 }
-.logout-button {
+.logoutButton {
     position: absolute;
     bottom: 50px;
     display: flex;
@@ -124,7 +123,7 @@ main {
     cursor: pointer;
     transition: all 0.3s;
 }
-.logout-button:hover {
+.logoutButton:hover {
     background: rgba(255, 107, 107, 0.15);
 }
 </style>

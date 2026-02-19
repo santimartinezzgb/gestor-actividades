@@ -23,7 +23,7 @@ export const updatePassword = async (id: string, oldPassword: string, newPasswor
     });
     if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || 'Error updating password');
+        throw new Error(errorText);
     }
     return true;
 };

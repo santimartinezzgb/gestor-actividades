@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { ArrowLeft, X } from 'lucide-vue-next';
 import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
 
 const router = useRouter();
@@ -37,7 +38,7 @@ const handleCancelReserve = async (id: string) => {
     <main>
         <div class="overlay">
             <div class="header">
-                <button class="back-button" @click="router.push('/admin')">←</button>
+                <button class="back-button" @click="router.push('/admin')"><ArrowLeft :size="20" /></button>
                 <h2 class="header-title">MANAGE RESERVES</h2>
                 <div style="width: 28px"></div>
             </div>
@@ -55,7 +56,7 @@ const handleCancelReserve = async (id: string) => {
                         </span>
                     </div>
                     <button class="cancel-button" @click="handleCancelReserve(item.id)">
-                        ❌ Cancel
+                        <X :size="16" /> Cancel
                     </button>
                 </div>
             </div>

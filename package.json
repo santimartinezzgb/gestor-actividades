@@ -10,6 +10,7 @@
     "electron": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron electron-main.js\""
   },
   "dependencies": {
+    "lucide-vue-next": "^0.574.0",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4",
     "zod": "^4.3.6"

@@ -5,6 +5,8 @@ import { login } from '@/services/auth/authService';
 import { userSession } from '@/services/auth/session';
 import { z } from 'zod';
 
+// IMPLEMENTAR VALIDACIÓN CON ZOD
+// ESQUEMA DE VALIDACIÓN PARA LOGIN
 const loginSchema = z.object({
     username: z.string().min(1, 'Username is required'),
     password: z.string().min(1, 'Password is required'),
@@ -37,13 +39,13 @@ const handleLogin = async () => {
     try {
         const data = await login(credentials);
 
-        // Guardar información del usuario en la sesión reactiva
+        // GUARDAR DATOS EN SESIÓN
         userSession.userId = data.userId;
         userSession.username = data.username;
         userSession.token = data.token;
         localStorage.setItem('token', data.token);
 
-        // Redireccionar según el rol
+        // REDIRECCIONAR SEGÚN ROL ( ADMIN O USER )
         if (data.role?.toUpperCase() === 'ADMIN') {
             router.push('/admin');
         } else {
@@ -79,12 +81,11 @@ const goToSignup = () => router.push('/signup');
 
                     <input v-model="credentials.password" class="data" type="password" placeholder="Password">
                     <span v-if="errors.password" class="field-error">{{ errors.password }}</span>
-                    
-                    <p v-if="errorMessage" style="color: #ff6b6b; font-size: 0.9rem;">{{ errorMessage }}</p>
 
                     <button class="btn_enter" type="submit" :disabled="loading">
                         {{ loading ? 'Loading...' : 'Enter' }}
                     </button>
+                    <span v-if="errorMessage" class="loginError">{{ errorMessage }}</span>
                 </section>
             </form>
         </div>
@@ -144,22 +145,6 @@ const goToSignup = () => router.push('/signup');
         color: #FFFFFF;
         margin: 0;
     }
-    .sectionRemember {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        margin: 1rem 0;
-    }
-    .sectionRemember input {
-        width: 20px;
-        height: 20px;
-        accent-color: #F7B176;
-    }
-    label {
-        font-size: 1.2rem;
-        color: #FFFFFF;
-    }
     .inputs {
         display: flex;
         flex-direction: column;
@@ -167,6 +152,7 @@ const goToSignup = () => router.push('/signup');
         align-items: flex-end;
         gap: 1rem;
         width: 100%;
+        position: relative;
     }
     .inputs .data {
         padding: 1rem;
@@ -213,5 +199,16 @@ const goToSignup = () => router.push('/signup');
         font-weight: 500;
         align-self: flex-start;
         margin-top: -0.5rem;
+    }
+    .loginError {
+        position: relative;
+        top:240px;
+        left: 30%;
+        color: #ff6b6b;
+        font-size: 1rem;
+        font-weight: 700;
+        width: 100%;
+        text-align: center;
+        position: absolute;
     }
 </style>

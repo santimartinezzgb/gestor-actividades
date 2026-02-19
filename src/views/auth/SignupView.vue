@@ -4,7 +4,8 @@ import { useRouter } from 'vue-router';
 import { signup as signupService } from '@/services/auth/authService';
 import { z } from 'zod';
 
-// ESQUEMA ZOD — define las reglas de validación
+// IMPLEMENTAR VALIDACIÓN CON ZOD
+// ESQUEMA ZOD PARA VALIDAR REGISTRO
 const signupSchema = z.object({
     username: z.string().min(1, 'Username is required'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
@@ -16,23 +17,26 @@ const signupSchema = z.object({
 
 const router = useRouter();
 const styleBorder = '2px solid #F7B176';
-const activeView = ref('signup');
-const errors = ref({}); // Errores por campo de Zod
+const errors = ref({});
+const serverError = ref('');
+const successMsg = ref('');
 
 const user = ref({
     username: '',
     password: '',
     confirmPassword: '',
-    rol: 'USER',
-    isActive: true
 });
 
 const signup = async () => {
-    // Validar con Zod
+    
+    // LIMPIAR MENSAJES ANTERIORES
+    serverError.value = '';
+    successMsg.value = '';
+
+    // VALIDAR CON ZOD
     const result = signupSchema.safeParse(user.value);
 
     if (!result.success) {
-        // Mapear errores por campo
         errors.value = {};
         result.error.errors.forEach(err => {
             errors.value[err.path[0]] = err.message;
@@ -40,7 +44,8 @@ const signup = async () => {
         return;
     }
 
-    errors.value = {}; // Limpiar errores si todo OK
+    // LIMPIAR ERRORES DE VALIDACIÓN
+    errors.value = {};
 
     const userToSend = {
         username: user.value.username,
@@ -50,17 +55,14 @@ const signup = async () => {
     };
     try {
         await signupService(userToSend);
-        alert('Registration successful! Please log in.');
-        router.push('/login');
+        successMsg.value = 'Registration successful! Redirecting to login...';
+        setTimeout(() => router.push('/login'), 2000);
     } catch (error) {
-        alert(error.message || 'Registration failed. Please try again.');
+        serverError.value = error.message || 'Registration failed. Please try again.';
     }
 };
 
-const goToLogin = () => {
-    activeView.value = 'login';
-    router.push('/login');
-};
+const goToLogin = () => router.push('/login');
 </script>
 
 <template>
@@ -74,24 +76,26 @@ const goToLogin = () => {
             <section class="options">
                 <button
                     class="btn_signin"
-                    :style="{ borderBottom: activeView === 'login' ? styleBorder : 'none' }"
                     @click="goToLogin"
                 >Login</button>
                 <button
                     class="btn_signup"
-                    :style="{ borderBottom: activeView === 'signup' ? styleBorder : 'none' }"
+                    :style="{ borderBottom: styleBorder }"
                 >Sign up</button>
             </section>
 
             <section class="inputs">
                 <input v-model="user.username" class="data" type="text" placeholder="Username">
-                <span v-if="errors.username" class="field-error">{{ errors.username }}</span>
+                <div v-if="errors.username" class="fieldError">{{ errors.username }}</div>
 
                 <input v-model="user.password" class="data" type="password" placeholder="Password">
-                <span v-if="errors.password" class="field-error">{{ errors.password }}</span>
+                <div v-if="errors.password" class="fieldError">{{ errors.password }}</div>
 
                 <input v-model="user.confirmPassword" class="data" type="password" placeholder="Confirm Password">
-                <span v-if="errors.confirmPassword" class="field-error">{{ errors.confirmPassword }}</span>
+                <div v-if="errors.confirmPassword" class="fieldError">{{ errors.confirmPassword }}</div>
+
+                <div v-if="serverError" class="serverError">{{ serverError }}</div>
+                <div v-if="successMsg" class="successMsg">{{ successMsg }}</div>
             </section>
 
             <button id="btn_signup" class="btn_enter" @click="signup">Register</button>
@@ -194,11 +198,37 @@ const goToLogin = () => {
     .btn_enter:hover {
         opacity: 0.9;
     }
-    .field-error {
+    .fieldError {
         color: #ff6b6b;
         font-size: 0.85rem;
-        font-weight: 500;
-        align-self: flex-start;
+        font-weight: 600;
+        width: 100%;
+        text-align: left;
         margin-top: -0.5rem;
+        display: block;
+    }
+    .serverError {
+        color: #ff6b6b;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-align: center;
+        width: 100%;
+        background: rgba(255, 107, 107, 0.1);
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 107, 107, 0.3);
+        box-sizing: border-box;
+    }
+    .successMsg {
+        color: #4caf50;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-align: center;
+        width: 100%;
+        background: rgba(76, 175, 80, 0.1);
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        box-sizing: border-box;
     }
 </style>
