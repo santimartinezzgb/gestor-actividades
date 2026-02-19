@@ -1,7 +1,5 @@
-// CONFIGURACIÓN
 const API_URL = 'http://localhost:8080/api/auth';
 
-// SERVICIO DE REGISTRO PARA MANEJAR EL REGISTRO DE USUARIOS
 export async function signup(user: {
     username: string;
     password: string;
@@ -17,11 +15,10 @@ export async function signup(user: {
         const errorData = await respuesta.json().catch(() => ({}));
         throw new Error(errorData.message || 'Registration failed');
     }
-    const text = await respuesta.text(); // MANEJO DE RESPUESTA VACÍA
-    return text ? JSON.parse(text) : {}; // DEVOLVER OBJETO VACÍO SI NO HAY CONTENIDO
+    const text = await respuesta.text();
+    return text ? JSON.parse(text) : {};
 }
 
-// SERVICIO DE LOGIN PARA MANEJAR LA LÓGICA DE INICIO DE SESIÓN
 export async function login(credentials: {
     username: string;
     password: string;

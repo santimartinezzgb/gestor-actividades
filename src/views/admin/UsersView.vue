@@ -50,7 +50,7 @@ const handleDeleteUser = async (id: string) => {
                         <span class="username">{{ item.username }}</span>
                         <span class="user-details">{{ item.name }} {{ item.surname }}</span>
                     </div>
-                    <button class="delete-button" @click="handleDeleteUser(item.id)">
+                    <button class="deleteButton" @click="handleDeleteUser(item.id)">
                         <Trash2 :size="16" /> Delete
                     </button>
                 </div>
@@ -63,7 +63,7 @@ const handleDeleteUser = async (id: string) => {
 main {
     width: 100vw;
     height: 100vh;
-    background-color: #121212;
+    background-color: transparent;
 }
 .overlay {
     width: 100%;
@@ -105,10 +105,14 @@ main {
     width: 90%;
     max-width: 800px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding-bottom: 20px;
 }
 .user-card {
-    width: 100%;
+    width: 50%;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     display: flex;
@@ -136,8 +140,12 @@ main {
     font-size: 0.85rem;
     color: #aaa;
 }
-.delete-button {
+.deleteButton {
     background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     border: 1px solid rgba(255, 107, 107, 0.3);
     color: #ff6b6b;
     padding: 8px 16px;
@@ -148,7 +156,7 @@ main {
     transition: all 0.2s;
     white-space: nowrap;
 }
-.delete-button:hover {
+.deleteButton:hover {
     background: rgba(255, 107, 107, 0.15);
 }
 .empty-text {

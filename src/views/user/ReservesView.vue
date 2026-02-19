@@ -22,7 +22,9 @@ const loadReserves = async () => {
         reserves.value = data.filter((r: any) =>
             r.userId === userSession.userId &&
             r.state !== 'CANCELED' &&
-            r.state !== 'CANCELLED'
+            r.state !== 'CANCELLED' &&
+            r.activityName &&
+            r.activityDate
         );
     } catch (e: any) {
         alert(e.message);
@@ -41,9 +43,10 @@ const handleCancel = async (id: string) => {
     try {
         await cancelReserve(id);
         alert('Reservation cancelled successfully');
-        loadReserves(); // RECARGAR RESERVAS DESPUÉS DE CANCELAR
+        await loadReserves(); // RECARGAR RESERVAS DESPUÉS DE CANCELAR
     } catch (e: any) {
-        alert(e.message);
+        alert(e.message || 'Error cancelling reservation');
+        await loadReserves();
     }
 };
 </script>
@@ -89,7 +92,7 @@ const handleCancel = async (id: string) => {
 main {
     width: 100vw;
     height: 100vh;
-    background-color: #121212;
+    background-color: transparent;
 }
 .main {
     width: 100%;

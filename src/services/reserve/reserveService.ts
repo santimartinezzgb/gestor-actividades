@@ -32,7 +32,8 @@ export const cancelReserve = async (id: string) => {
     });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message);
+        throw new Error(errorData.message || 'Error cancelling reservation');
     }
-    return await response.json();
+    const text = await response.text();
+    return text ? JSON.parse(text) : {};
 };

@@ -68,7 +68,7 @@ const handleCancelReserve = async (id: string) => {
 main {
     width: 100vw;
     height: 100vh;
-    background-color: #121212;
+    background-color: transparent;
 }
 .overlay {
     width: 100%;

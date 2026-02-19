@@ -168,7 +168,7 @@ const goToLogin = () => router.push('/login');
         font-size: 1.5rem;
         width: 100%;
         height: 60px;
-        border-radius: 0.3rem;
+        border-radius: 1rem;
         color: #FFFFFF;
         background-color: #828282;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -192,7 +192,7 @@ const goToLogin = () => router.push('/login');
         background-color: #F7B176;
         color: rgb(0, 0, 0);    
         border: none;
-        border-radius: 0.3rem;
+        border-radius: 1rem;
         cursor: pointer;
     }
     .btn_enter:hover {

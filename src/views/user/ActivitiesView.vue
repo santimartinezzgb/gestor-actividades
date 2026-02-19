@@ -3,28 +3,50 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ArrowLeft } from 'lucide-vue-next';
 import { getActivities } from '@/services/activity/activityService';
-import { createReserve } from '@/services/reserve/reserveService';
+import { createReserve, getReserves } from '@/services/reserve/reserveService';
 import { userSession } from '@/services/auth/session';
 
 const router = useRouter();
 const activities = ref<any[]>([]);
+const reservedActivityIds = ref<Set<string>>(new Set());
 const loading = ref(true);
 const error = ref('');
 const successMsg = ref('');
 
 // CARGAR DATOS
-onMounted(() => loadActivities());
+onMounted(() => loadData());
 
-// CARGAR ACTIVIDADES
-const loadActivities = async () => {
+// CARGAR ACTIVIDADES Y RESERVAS DEL USUARIO
+const loadData = async () => {
     try {
-        loading.value = true; // RESETEO DEL ESTAOD
-        activities.value = await getActivities();
+        loading.value = true;
+        const [acts, allReserves] = await Promise.all([getActivities(), getReserves()]);
+        activities.value = acts;
+
+        // FILTRAR RESERVAS CONFIRMADAS DEL USUARIO ACTUAL
+        reservedActivityIds.value = new Set(
+            allReserves
+                .filter((r: any) => r.userId === userSession.userId && r.state === 'CONFIRMED')
+                .map((r: any) => r.activityId)
+        );
     } catch (e: any) {
         error.value = e.message || 'Could not load activities';
     } finally {
         loading.value = false;
     }
+};
+
+// COMPROBAR SI EL USUARIO YA RESERVÓ ESTA ACTIVIDAD
+const isAlreadyReserved = (activityId: string) => reservedActivityIds.value.has(activityId);
+
+// COMPROBAR SI EL BOTÓN DEBE ESTAR DESHABILITADO
+const isButtonDisabled = (item: any) => item.reservedCount >= item.capacity || isAlreadyReserved(item.id);
+
+// TEXTO DEL BOTÓN
+const buttonText = (item: any) => {
+    if (item.reservedCount >= item.capacity) return 'Full';
+    if (isAlreadyReserved(item.id)) return 'Reserved';
+    return 'Reserve';
 };
 
 // MANEJAR RESERVA
@@ -41,6 +63,7 @@ const handleReserve = async (activityId: string) => {
         await createReserve(userSession.userId, activityId);
         successMsg.value = 'Activity reserved successfully! Check "My Reserves" section.';
         setTimeout(() => successMsg.value = '', 3000);
+        await loadData(); // RECARGAR PARA ACTUALIZAR ESTADO DE BOTONES
     } catch (e: any) {
         alert(e.message || 'Reservation failed');
     }
@@ -84,14 +107,16 @@ const handleReserve = async (activityId: string) => {
                         </span>
                     </div>
 
-                    <!-- BOTÓN DE RESERVA ( ACTIVIDAD LLENA == DESHABILITADO ) -->
-                    <!-- Reservas mayores o iguales a la capacidad == DESHABILITADO -->
+                    <!-- BOTÓN DE RESERVA ( LLENA O YA RESERVADA == DESHABILITADO ) -->
                     <button class="reserveButton"
-                        :class="{ 'disabledButton': item.reservedCount >= item.capacity }"
-                        :disabled="item.reservedCount >= item.capacity"
+                        :class="{
+                            'disabledButton': isButtonDisabled(item),
+                            'reservedButton': isAlreadyReserved(item.id)
+                        }"
+                        :disabled="isButtonDisabled(item)"
                         @click="handleReserve(item.id)"
                     >
-                        {{ item.reservedCount >= item.capacity ? 'Full' : 'Reserve' }} 
+                        {{ buttonText(item) }}
                     </button>
                 </div>
             </div>
@@ -103,7 +128,7 @@ const handleReserve = async (activityId: string) => {
 main {
     width: 100vw;
     height: 100vh;
-    background-color: #121212;
+    background-color: transparent;
 }
 .main {
     width: 100%;
@@ -170,8 +195,11 @@ main {
     background: rgba(255, 255, 255, 0.12);
 }
 .fullCard {
-    border-color: rgba(255, 0, 0, 0.2);
-    background: rgba(255, 0, 0, 0.05);
+    border-color: rgba(255, 80, 80, 0.4);
+    background: rgba(255, 40, 40, 0.12);
+}
+.fullCard:hover {
+    background: rgba(255, 40, 40, 0.18);
 }
 .cardInfo {
     flex: 1;
@@ -216,6 +244,13 @@ main {
     cursor: not-allowed;
     color: #888;
     border-color: rgba(255,255,255,0.1);
+}
+.reservedButton {
+    opacity: 0.7;
+    cursor: not-allowed;
+    color: #4caf50;
+    border-color: rgba(76, 175, 80, 0.3);
+    background: rgba(76, 175, 80, 0.08);
 }
 .emptyText {
     color: #888;
