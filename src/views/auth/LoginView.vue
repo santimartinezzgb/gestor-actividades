@@ -202,7 +202,7 @@ const goToSignup = () => router.push('/signup');
     }
     .loginError {
         position: relative;
-        top:240px;
+        top: 240px;
         left: 30%;
         color: #ff6b6b;
         font-size: 1rem;
