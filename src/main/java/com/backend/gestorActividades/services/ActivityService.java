@@ -1,11 +1,13 @@
 package com.backend.gestorActividades.services;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.backend.gestorActividades.models.Activity;
 import com.backend.gestorActividades.repositories.ActivityRepository;
 import com.backend.gestorActividades.util.ValidationUtil;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ActivityService {
@@ -16,9 +18,12 @@ public class ActivityService {
         this.activityRepository = activityRepository;
     }
 
-    // LISTAR TODAS LAS ACTIVIDADES
+    // LISTAR TODAS LAS ACTIVIDADES (FILTRA LAS EXPIRADAS > 24H)
     public List<Activity> getActivities() {
-        return activityRepository.findAll();
+        LocalDateTime cutoff = LocalDateTime.now().minusHours(24);
+        return activityRepository.findAll().stream()
+                .filter(a -> a.getDate() == null || a.getDate().isAfter(cutoff))
+                .toList();
     }
 
     // GUARDAR ACTIVIDAD

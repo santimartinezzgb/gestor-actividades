@@ -1,11 +1,11 @@
 package com.backend.gestorActividades.repositories;
 
-import com.backend.gestorActividades.models.Reserve;
-import com.backend.gestorActividades.models.enums.ReserveState;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.backend.gestorActividades.models.Activity;
+import com.backend.gestorActividades.models.Reserve;
+import com.backend.gestorActividades.models.enums.ReserveState;
 
 @Repository
 public interface ReserveRepository extends MongoRepository<Reserve, String> {
@@ -15,4 +15,7 @@ public interface ReserveRepository extends MongoRepository<Reserve, String> {
 
     // OBTIENE TODAS LAS RESERVAS DE UN USUARIO
     long countByUserIdAndState(String userId, ReserveState state);
+
+    // ELIMINAR RESERVAS VINCULADAS A UNA ACTIVIDAD
+    void deleteByActivity(Activity activity);
 }

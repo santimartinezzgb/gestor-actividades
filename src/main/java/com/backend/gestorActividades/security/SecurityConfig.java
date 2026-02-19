@@ -1,5 +1,7 @@
 package com.backend.gestorActividades.security;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,8 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration // CLASE DE CONFIGURACIÓN DE SPRING
 @EnableWebSecurity // HABILITA LA CONFIGURACIÓN DE SEGURIDAD EN LA APLICACIÓN
@@ -73,6 +73,7 @@ public class SecurityConfig {
                         // 3. CRUD DE RESERVAS ( PARA USUARIOS AUTENTICADOS )
                         .requestMatchers(HttpMethod.GET, "/reserves/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/reserves/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/reserves/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/reserves/**").permitAll()
 
                         // 5. CRUD DE USUARIOS ( PARA ADMIN )

@@ -72,13 +72,19 @@ public class ReserveService {
                 .map(reserve -> {
 
                     if (reserve.getState() == ReserveState.CONFIRMED) { // LIBERA SI ESTÁ CONFIRMADA
-                        Activity activity = reserve.getActivity();
-
-                        // SOLO LIBERAR PLAZA SI ES CON > 15 MINS DE ANTELACIÓN
-                        long minutesToStart = Duration.between(LocalDateTime.now(), activity.getDate()).toMinutes();
-                        if (minutesToStart > 15) {
-                            activity.setReservedCount(Math.max(0, activity.getReservedCount() - 1));
-                            activityRepository.save(activity);
+                        try {
+                            Activity activity = reserve.getActivity();
+                            if (activity != null && activity.getDate() != null) {
+                                // SOLO LIBERAR PLAZA SI ES CON > 15 MINS DE ANTELACIÓN
+                                long minutesToStart = Duration.between(LocalDateTime.now(), activity.getDate())
+                                        .toMinutes();
+                                if (minutesToStart > 15) {
+                                    activity.setReservedCount(Math.max(0, activity.getReservedCount() - 1));
+                                    activityRepository.save(activity);
+                                }
+                            }
+                        } catch (Exception e) {
+                            // LA ACTIVIDAD PUEDE HABER SIDO ELIMINADA, CONTINUAR CON LA CANCELACIÓN
                         }
                     }
 
