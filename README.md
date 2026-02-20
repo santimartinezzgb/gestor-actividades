@@ -1,6 +1,6 @@
 # Backend - Gestor de Actividades (MyFitness)
 
-API REST desarrollada con Spring Boot que gestiona usuarios, actividades deportivas y reservas. Proporciona autenticacion, control de acceso por roles, validacion de datos y limpieza automatica de registros expirados.
+API REST desarrollada con Spring Boot que gestiona usuarios, actividades deportivas y reservas. Proporciona autenticación, control de acceso por roles, validación de datos y limpieza automática de registros expirados.
 
 ---
 
@@ -19,12 +19,12 @@ API REST desarrollada con Spring Boot que gestiona usuarios, actividades deporti
 
 ---
 
-## Ejecucion
+## Ejecución
 
 ### Requisitos previos
 
 - Java 21 o superior
-- MongoDB activo (local o remoto)
+- MongoDB Atlas
 - Variable de entorno `MONGODB_URI` configurada
 
 ### Arranque
@@ -33,14 +33,11 @@ API REST desarrollada con Spring Boot que gestiona usuarios, actividades deporti
 ./mvnw spring-boot:run
 ```
 
-El servidor arranca en `http://localhost:8080/api`.
-El puerto se puede cambiar con la variable de entorno `PORT` (default: 8080).
-
 ---
 
 ## Arquitectura
 
-El proyecto sigue el patron clasico **MVC + Servicios + Repositorios**:
+El proyecto sigue el patron clásico **MVC + Servicios + Repositorios**:
 
 ```
                   Request
@@ -104,7 +101,7 @@ src/main/java/com/backend/gestorActividades/
 
 ---
 
-## Modelo de datos (MongoDB)
+## Modelo de datos (MongoDB Atlas)
 
 ### User
 
@@ -145,7 +142,7 @@ src/main/java/com/backend/gestorActividades/
 
 ## Endpoints
 
-### Autenticacion — `/api/auth`
+### Autenticación — `/api/auth`
 
 | Metodo | Ruta      | Body              | Respuesta        |
 | ------ | --------- | ----------------- | ---------------- |
@@ -195,18 +192,17 @@ src/main/java/com/backend/gestorActividades/
 2. **Duplicados:** no se permiten dos reservas CONFIRMED del mismo usuario para la misma actividad.
 3. **Capacidad:** `numUsers` no puede superar `maxCapacity`.
 
-### Cancelacion de reservas
+### Cancelación de reservas
 
 - Solo se puede cancelar si faltan mas de 15 minutos para el inicio.
 - Al cancelar se libera una plaza (`numUsers--`).
 
 ### Usuarios
 
-- El username debe ser unico (lanza `DuplicateUserException` si ya existe).
-- La contrasena se hashea con BCrypt; se detecta si ya esta encriptada (prefijo `$2a$`) para evitar doble hash.
+- El username debe ser único (lanza `DuplicateUserException` si ya existe).
+- La contraseña se hashea con BCrypt.
 - Rol por defecto: `ROLE_USER`.
-- El soft delete cambia `isActive = false` sin borrar el documento.
-- Cambio de contrasena: verifica la actual con `BCrypt.matches()` y valida longitud >= 6.
+- Cambio de contraseña: verifica la actual con `BCrypt.matches()` y válida longitud >= 6.
 
 ### Actividades
 
@@ -219,12 +215,12 @@ src/main/java/com/backend/gestorActividades/
 
 | Aspecto                   | Detalle                                                     |
 | ------------------------- | ----------------------------------------------------------- |
-| Autenticacion             | HTTP Basic con DaoAuthenticationProvider                     |
-| Sesiones                  | Stateless (sin cookies de sesion)                            |
-| Hash de contrasenas       | BCrypt con salt automatico                                   |
-| CSRF                      | Desactivado                                                  |
+| Autenticacion             | HTTP Basic con DaoAuthenticationProvider                    |
+| Sesiones                  | Stateless (sin cookies de sesion)                           |
+| Hash de contrasenas       | BCrypt con salt automatico                                  |
+| CSRF                      | Desactivado                                                 |
 | CORS                      | Abierto a todos los origenes, metodos GET/POST/PUT/PATCH/DELETE/OPTIONS |
-| Proteccion de contrasenas | El UserDTO no expone el campo password en respuestas         |
+| Proteccion de contrasenas | El UserDTO no expone el campo password en respuestas        |
 
 ---
 
@@ -252,14 +248,8 @@ Centralizado en `GlobalExceptionHandler` con respuestas uniformes (`ErrorRespons
 3. Elimina las actividades.
 4. Log con SLF4J de los registros eliminados.
 
-Ademas, `ActivityService.getAll()` filtra en memoria las actividades expiradas hace mas de 24h como doble proteccion.
+Además, `ActivityService.getAll()` filtra en memoria las actividades expiradas hace más de 24h como doble protección.
 
 ---
 
-## Patrones de diseno
 
-- **DTO manual:** la conversion Model a DTO se hace directamente en los controladores.
-- **DBRef lazy:** las referencias entre Reserve, User y Activity son lazy para rendimiento.
-- **Contadores desnormalizados:** `numUsers` en Activity se mantiene manualmente en cada operacion de reserva.
-- **Record para errores:** `ErrorResponseDTO` usa un Java record (inmutable) en lugar de clase Lombok.
-- **Variables de entorno:** `MONGODB_URI` y `PORT` configurados por env vars para despliegue flexible.
