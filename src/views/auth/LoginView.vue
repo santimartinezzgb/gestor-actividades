@@ -159,7 +159,7 @@ const goToSignup = () => router.push('/signup');
         border-radius: 1rem;
         color: #FFFFFF;
         background-color: #828282;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        box-shadow: 0px 4px 4px #00000040;
         border-left: #F7B176 4px none;
     }
 
@@ -179,7 +179,7 @@ const goToSignup = () => router.push('/signup');
         font-size: 1.5rem;
         width: 50%;
         background-color: #F7B176;
-        color: rgb(0, 0, 0);    
+        color: #000000;    
         border: none;
         border-radius: 1rem;
         cursor: pointer;

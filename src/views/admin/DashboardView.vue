@@ -16,10 +16,10 @@ const loading = ref(true);
 
 onMounted(async () => {
     try {
-        const [u, a, r] = await Promise.all([getUsers(), getActivities(), getReserves()]);
-        users.value = u;
-        activities.value = a;
-        reserves.value = r;
+        const [_users, _activities, _reserves] = await Promise.all([getUsers(), getActivities(), getReserves()]);
+        users.value = _users;
+        activities.value = _activities;
+        reserves.value = _reserves;
     } catch (e: any) {
         console.error('Error loading dashboard data:', e.message);
     } finally {
@@ -32,7 +32,7 @@ const logout = () => {
     router.push('/login');
 };
 
-// CALENDARIO (mitad inferior)
+// CALENDARIO
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
 
@@ -59,11 +59,11 @@ const nextMonth = () => {
 };
 
 const activityDays = computed(() => {
-    const days = new Set();
+    const days = new Set<string>();
     activities.value.forEach((a: any) => {
         if (!a.date) return;
-        const d = new Date(a.date);
-        days.add(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`);
+        const day = new Date(a.date);
+        days.add(`${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`);
     });
     return days;
 });
@@ -209,12 +209,12 @@ const fmt = (d: string) => new Date(d).toLocaleString([], { dateStyle: 'short', 
 main {
     width: 100vw;
     height: 100vh;
-    background-color: transparent;
+    padding: 5vh;
 }
 .overlay {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.6);
+    background: #00000099;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -244,8 +244,8 @@ main {
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    background: rgba(255, 107, 107, 0.10);
-    border: 1.5px solid rgba(255, 107, 107, 0.35);
+    background: #FF6B6B1A;
+    border: 1.5px solid #FF6B6B59;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -253,9 +253,8 @@ main {
     transition: all 0.3s ease;
 }
 .logoutButton:hover {
-    background: rgba(255, 107, 107, 0.25);
+    background: #FF6B6B40;
     border-color: #ff6b6b;
-    transform: scale(1.08);
 }
 .loadingText {
     color: #F7B176;
@@ -299,8 +298,8 @@ main {
     flex: 1 1 0;
     min-height: 0;
     min-width: 0;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #FFFFFF0F;
+    border: 1px solid #FFFFFF1A;
     border-radius: 16px;
     display: flex;
     flex-direction: column;
@@ -313,10 +312,10 @@ main {
     padding: 16px 20px;
     cursor: pointer;
     transition: background 0.2s;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid #FFFFFF14;
 }
 .panelHeader:hover {
-    background: rgba(247, 177, 118, 0.08);
+    background: #F7B17614;
 }
 .panelTitleGroup {
     display: flex;
@@ -329,7 +328,7 @@ main {
     color: #fff;
 }
 .panelCount {
-    background: rgba(247, 177, 118, 0.2);
+    background: #F7B17633;
     color: #F7B176;
     font-size: 0.8rem;
     font-weight: 700;
@@ -343,9 +342,9 @@ main {
     padding: 8px 0;
 }
 .panelBody::-webkit-scrollbar { width: 4px; }
-.panelBody::-webkit-scrollbar-thumb { background: rgba(247, 177, 118, 0.3); border-radius: 4px; }
+.panelBody::-webkit-scrollbar-thumb { background: #F7B1764C; border-radius: 4px; }
 .emptyPanel {
-    color: rgba(255,255,255,0.3);
+    color: #FFFFFF4C;
     text-align: center;
     padding: 30px 0;
     font-size: 0.9rem;
@@ -359,7 +358,7 @@ main {
     transition: background 0.15s;
 }
 .panelItem:hover {
-    background: rgba(255, 255, 255, 0.04);
+    background: #FFFFFF0A;
 }
 .itemCol {
     display: flex;
@@ -376,7 +375,7 @@ main {
     text-overflow: ellipsis;
 }
 .itemSub {
-    color: rgba(255,255,255,0.45);
+    color: #FFFFFF73;
     font-size: 0.8rem;
 }
 .itemCapacity {
@@ -398,19 +397,19 @@ main {
     white-space: nowrap;
 }
 .badgeAdmin {
-    background: rgba(247, 177, 118, 0.15);
+    background: #F7B17626;
     color: #F7B176;
 }
 .badgeUser {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255,255,255,0.5);
+    background: #FFFFFF14;
+    color: #FFFFFF80;
 }
 .badgeConfirmed {
-    background: rgba(76, 175, 80, 0.15);
+    background: #4CAF5026;
     color: #4caf50;
 }
 .badgeCanceled {
-    background: rgba(255, 107, 107, 0.15);
+    background: #FF6B6B26;
     color: #ff6b6b;
 }
 .rightCalendar {
@@ -422,8 +421,8 @@ main {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #FFFFFF0A;
+    border: 1px solid #FFFFFF14;
     border-radius: 16px;
     overflow: hidden;
 }
@@ -449,7 +448,7 @@ main {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
-    color: rgba(255,255,255,0.6);
+    color: #FFFFFF99;
     font-size: 0.85rem;
     margin-bottom: 6px;
 }
@@ -462,18 +461,18 @@ main {
     min-height: 0;
 }
 .calDay {
-    background: rgba(255,255,255,0.04);
+    background: #FFFFFF0A;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    color: rgba(255,255,255,0.6);
+    color: #FFFFFF99;
 }
 .calDay.empty { background: transparent; }
-.calDay.today { border: 1px solid rgba(247,177,118,0.6); }
-.calDay.hasActivity { background: rgba(247,177,118,0.12); color: #fff; }
-.calendarLegend { margin-top: 8px; color: rgba(255,255,255,0.6); display:flex; gap:12px; align-items:center; }
+.calDay.today { border: 1px solid #F7B17699; }
+.calDay.hasActivity { background: #F7B1761F; color: #fff; }
+.calendarLegend { margin-top: 8px; color: #FFFFFF99; display:flex; gap:12px; align-items:center; }
 .legendDot { width:10px; height:10px; border-radius:50%; display:inline-block; }
-.activityDot { background: rgba(247,177,118,0.8); }
-.todayDot { background: rgba(255,255,255,0.6); }
+.activityDot { background: #F7B176CC; }
+.todayDot { background: #FFFFFF99; }
 </style>

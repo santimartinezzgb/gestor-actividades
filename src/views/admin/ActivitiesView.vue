@@ -155,7 +155,7 @@ main {
 .main {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: #000000B2;
     padding-top: 60px;
     display: flex;
     flex-direction: column;
@@ -166,7 +166,7 @@ main {
     align-items: center;
     justify-content: space-between;
     width: 90%;
-    max-width: 800px;
+    max-width: 1000px;
     margin-bottom: 20px;
 }
 .back-button, .add-button {
@@ -193,24 +193,28 @@ main {
 }
 .list-container {
     width: 90%;
-    max-width: 800px;
+    max-width: 1000px;
     overflow-y: auto;
     padding-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    align-content: start;
 }
 .activity-card {
     width: 100%;
-    height: 70px;
-    background: rgba(255, 255, 255, 0.08);
+    min-height: 70px;
+    background: #FFFFFF14;
     border-radius: 12px;
     display: flex;
     align-items: center;
     padding: 0 20px;
-    margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 0;
+    border: 1px solid #FFFFFF1A;
     transition: all 0.2s;
 }
 .activity-card:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: #FFFFFF1F;
 }
 .card-info {
     flex: 1;
@@ -247,6 +251,7 @@ main {
     text-align: center;
     margin-top: 50px;
     font-size: 1rem;
+    grid-column: 1 / -1;
 }
 
 /* Modal */
@@ -256,7 +261,7 @@ main {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.8);
+    background: #000000CC;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -268,7 +273,7 @@ main {
     background: #1e1e1e;
     border-radius: 20px;
     padding: 25px;
-    border: 1px solid rgba(247, 177, 118, 0.3);
+    border: 1px solid #F7B1764C;
 }
 .modal-title {
     font-size: 1.4rem;

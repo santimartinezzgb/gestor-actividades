@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { User, Calendar, LogOut, Plus, Ban, ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { User, Calendar, LogOut, Dumbbell, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { clearSession } from '@/services/auth/session';
 import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
 import { userSession } from '@/services/auth/session';
@@ -125,44 +125,25 @@ const logout = () => {
             <!-- CONTENIDO CENTRAL -->
             <div class="centerContent">
                 <div class="dashboardGrid">
-                    <!-- LISTA DE RESERVAS -->
-                    <div class="reservesPanel">
-                        <div class="reservesHeader">
+
+                    <!-- PANELES EN ROW -->
+                    <div class="panelsRow">
+                        <!-- LISTA DE RESERVAS -->
+                        <div class="reservesPanel" @click="router.push('/user/reserves')">
                             <h2 class="reservesTitle">
                                 <Calendar :size="22" color="#F7B176" />
                                 My Reserves
                             </h2>
-                            <button class="addReserveBtn" @click="router.push('/user/activities')" title="Add Reserve">
-                                <Plus :size="18" />
-                                New
-                            </button>
                         </div>
 
-                        <div v-if="loadingReserves" class="reservesLoading">Loading reserves...</div>
-
-                        <div v-else-if="!reserves.length" class="reservesEmpty">
-                            <Calendar :size="40" color="rgba(255,255,255,0.15)" />
-                            <p>No reserves yet</p>
-                            <button class="addFirstBtn" @click="router.push('/user/activities')">
-                                <Plus :size="16" /> Browse Activities
-                            </button>
-                        </div>
-
-                        <div v-else class="reservesList">
-                            <div v-for="item in reserves" :key="item.id" class="reserveItem">
-                                <div class="reserveInfo">
-                                    <span class="reserveActivity">{{ item.activityName }}</span>
-                                    <span class="reserveDate">
-                                        {{ new Date(item.activityDate).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) }}
-                                    </span>
-                                </div>
-                                <button class="cancelBtn" @click="handleCancel(item.id)" title="Cancel reserve">
-                                    <Ban :size="16" />
-                                </button>
-                            </div>
+                        <!-- LISTA DE ACTIVIDADES -->
+                        <div class="activitiesPanel" @click="router.push('/user/activities')">
+                            <h2 class="activitiesTitle">
+                                <Dumbbell :size="22" color="#F7B176" />
+                                Activities
+                            </h2>
                         </div>
                     </div>
-
                     <!-- CALENDARIO -->
                     <div class="calendarPanel">
                         <div class="calendarHeader">
@@ -208,11 +189,12 @@ main {
     width: 100vw;
     height: 100vh;
     background-color: transparent;
+    padding: 5vh;
 }
 .main {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.6);
+    background: #00000099;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -242,7 +224,6 @@ main {
     top: 50%;
     transform: translateY(-50%);
     display: flex;
-    flex-direction: row;
     align-items: center;
     gap: 10px;
 }
@@ -250,8 +231,8 @@ main {
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    background: rgba(247, 177, 118, 0.12);
-    border: 1.5px solid rgba(247, 177, 118, 0.4);
+    background: #F7B1761F;
+    border: 1.5px solid #F7B17666;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -259,7 +240,7 @@ main {
     transition: all 0.3s ease;
 }
 .profileButton:hover {
-    background: rgba(247, 177, 118, 0.25);
+    background: #F7B17640;
     border-color: #F7B176;
     transform: scale(1.08);
 }
@@ -267,8 +248,8 @@ main {
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    background: rgba(255, 107, 107, 0.10);
-    border: 1.5px solid rgba(255, 107, 107, 0.35);
+    background: #FF6B6B1A;
+    border: 1.5px solid #FF6B6B59;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -276,7 +257,7 @@ main {
     transition: all 0.3s ease;
 }
 .logoutButton:hover {
-    background: rgba(255, 107, 107, 0.25);
+    background: #FF6B6B40;
     border-color: #ff6b6b;
     transform: scale(1.08);
 }
@@ -294,28 +275,35 @@ main {
 }
 .dashboardGrid {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 28px;
     width: 100%;
     max-width: 900px;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
-/* PANEL DE RESERVAS */
-.reservesPanel {
-    flex: 1;
-    min-width: 0;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 24px;
-    box-sizing: border-box;
+/* PANELES */
+.panelsRow {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-around;
 }
-.reservesHeader {
+.reservesPanel {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    cursor: pointer;
+    gap: 20px;
+    background-color: #FFFFFF1A;
+    padding: 18px 24px;
+    border-radius: 12px;
+    border: 1px solid #FFFFFF1A;
+    transition: all 0.2s ease;
+}
+.reservesPanel:hover {
+    background-color: #FFFFFF26;
+    border-color: #FFFFFF33;
 }
 .reservesTitle {
     display: flex;
@@ -326,128 +314,37 @@ main {
     font-weight: 700;
     margin: 0;
 }
-.addReserveBtn {
+
+.activitiesPanel {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: 12px;
-    background: rgba(247, 177, 118, 0.15);
-    border: 1px solid rgba(247, 177, 118, 0.4);
-    color: #F7B176;
-    font-size: 0.85rem;
-    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-}
-.addReserveBtn:hover {
-    background: rgba(247, 177, 118, 0.3);
-    border-color: #F7B176;
-    transform: scale(1.04);
-}
-.reservesLoading {
-    text-align: center;
-    color: rgba(255, 255, 255, 0.4);
-    padding: 30px 0;
-    font-size: 0.95rem;
-}
-.reservesEmpty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 30px 0;
-}
-.reservesEmpty p {
-    color: rgba(255, 255, 255, 0.35);
-    font-size: 0.95rem;
-    margin: 0;
-}
-.addFirstBtn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 20px;
+    gap: 20px;
+    background-color: #FFFFFF1A;
+    padding: 18px 24px;
     border-radius: 12px;
-    background: rgba(247, 177, 118, 0.12);
-    border: 1px solid rgba(247, 177, 118, 0.3);
-    color: #F7B176;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    border: 1px solid #FFFFFF1A;
+    transition: all 0.2s ease;
 }
-.addFirstBtn:hover {
-    background: rgba(247, 177, 118, 0.25);
-    border-color: #F7B176;
+.activitiesPanel:hover {
+    background-color: #FFFFFF26;
+    border-color: #FFFFFF33;
 }
-.reservesList {
+.activitiesTitle {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 10px;
-    max-height: 320px;
-    overflow-y: auto;
-}
-.reservesList::-webkit-scrollbar {
-    width: 4px;
-}
-.reservesList::-webkit-scrollbar-thumb {
-    background: rgba(247, 177, 118, 0.3);
-    border-radius: 4px;
-}
-.reserveItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.25s ease;
-}
-.reserveItem:hover {
-    background: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.18);
-}
-.reserveInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-.reserveActivity {
     color: #ffffff;
-    font-size: 1rem;
-    font-weight: 600;
-}
-.reserveDate {
-    color: rgba(255, 255, 255, 0.45);
-    font-size: 0.82rem;
-}
-.cancelBtn {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: rgba(255, 107, 107, 0.1);
-    border: 1px solid rgba(255, 107, 107, 0.25);
-    color: #ff6b6b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.cancelBtn:hover {
-    background: rgba(255, 107, 107, 0.25);
-    border-color: #ff6b6b;
-    transform: scale(1.1);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
 }
 
 /* CALENDARIO */
 .calendarPanel {
-    width: 300px;
-    min-width: 300px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    background: #FFFFFF0F;
+    border: 1px solid #FFFFFF1A;
     border-radius: 20px;
     padding: 22px;
     box-sizing: border-box;
@@ -456,7 +353,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 .calMonthTitle {
     color: #ffffff;
@@ -468,8 +365,8 @@ main {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #FFFFFF14;
+    border: 1px solid #FFFFFF1F;
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -478,7 +375,7 @@ main {
     transition: all 0.2s ease;
 }
 .calNavBtn:hover {
-    background: rgba(247, 177, 118, 0.2);
+    background: #F7B17633;
     border-color: #F7B176;
 }
 .calendarWeekdays {
@@ -491,7 +388,7 @@ main {
     text-align: center;
     font-size: 0.7rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.35);
+    color: #FFFFFF59;
     padding: 4px 0;
 }
 .calendarGrid {
@@ -500,36 +397,35 @@ main {
     gap: 3px;
 }
 .calDay {
-    aspect-ratio: 1;
+    height: 36px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: #FFFFFF99;
     transition: all 0.2s ease;
-    position: relative;
 }
 .calDay.empty {
     pointer-events: none;
 }
 .calDay.today {
-    background: rgba(255, 255, 255, 0.1);
+    background: #FFFFFF1A;
     color: #ffffff;
     font-weight: 700;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid #FFFFFF40;
 }
 .calDay.hasReserve {
-    background: rgba(247, 177, 118, 0.2);
+    background: #F7B17633;
     color: #F7B176;
     font-weight: 700;
-    border: 1px solid rgba(247, 177, 118, 0.45);
+    border: 1px solid #F7B17673;
 }
 .calDay.today.hasReserve {
-    background: rgba(247, 177, 118, 0.3);
+    background: #F7B1764C;
     color: #F7B176;
     border-color: #F7B176;
-    box-shadow: 0 0 8px rgba(247, 177, 118, 0.25);
+    box-shadow: 0 0 8px #F7B17640;
 }
 .calendarLegend {
     display: flex;
@@ -537,9 +433,9 @@ main {
     gap: 14px;
     margin-top: 16px;
     padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid #FFFFFF0F;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
+    color: #FFFFFF66;
 }
 .legendDot {
     width: 10px;
@@ -548,22 +444,11 @@ main {
     display: inline-block;
 }
 .legendDot.reserved {
-    background: rgba(247, 177, 118, 0.5);
+    background: #F7B17680;
     border: 1px solid #F7B176;
 }
 .legendDot.todayDot {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-}
-
-/* RESPONSIVE */
-@media (max-width: 700px) {
-    .dashboardGrid {
-        flex-direction: column;
-    }
-    .calendarPanel {
-        width: 100%;
-        min-width: unset;
-    }
+    background: #FFFFFF26;
+    border: 1px solid #FFFFFF59;
 }
 </style>

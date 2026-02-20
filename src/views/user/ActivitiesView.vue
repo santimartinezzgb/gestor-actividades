@@ -133,7 +133,7 @@ main {
 .main {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: #000000B2;
     padding-top: 60px;
     display: flex;
     flex-direction: column;
@@ -170,7 +170,7 @@ main {
     color: #4caf50;
     font-weight: bold;
     margin-bottom: 10px;
-    background: rgba(76,175,80,0.1);
+    background: #4CAF501A;
     padding: 10px 20px;
     border-radius: 8px;
 }
@@ -182,24 +182,24 @@ main {
 }
 .activityCard {
     width: 100%;
-    background: rgba(255, 255, 255, 0.08);
+    background: #FFFFFF14;
     border-radius: 12px;
     display: flex;
     align-items: center;
     padding: 15px 20px;
     margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #FFFFFF1A;
     transition: all 0.2s;
 }
 .activityCard:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: #FFFFFF1F;
 }
 .fullCard {
-    border-color: rgba(255, 80, 80, 0.4);
-    background: rgba(255, 40, 40, 0.12);
+    border-color: #FF505066;
+    background: #FF28281F;
 }
 .fullCard:hover {
-    background: rgba(255, 40, 40, 0.18);
+    background: #FF28282E;
 }
 .cardInfo {
     flex: 1;
@@ -226,7 +226,7 @@ main {
 }
 .reserveButton {
     background: transparent;
-    border: 1px solid rgba(247, 177, 118, 0.3);
+    border: 1px solid #F7B1764C;
     color: #F7B176;
     padding: 8px 16px;
     border-radius: 8px;
@@ -237,20 +237,20 @@ main {
     white-space: nowrap;
 }
 .reserveButton:hover:not(:disabled) {
-    background: rgba(247, 177, 118, 0.15);
+    background: #F7B17626;
 }
 .disabledButton {
     opacity: 0.5;
     cursor: not-allowed;
     color: #888;
-    border-color: rgba(255,255,255,0.1);
+    border-color: #FFFFFF1A;
 }
 .reservedButton {
     opacity: 0.7;
     cursor: not-allowed;
     color: #4caf50;
-    border-color: rgba(76, 175, 80, 0.3);
-    background: rgba(76, 175, 80, 0.08);
+    border-color: #4CAF504C;
+    background: #4CAF5014;
 }
 .emptyText {
     color: #888;

@@ -149,7 +149,7 @@ main {
 .main {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: #000000CC;
     padding-top: 60px;
     display: flex;
     flex-direction: column;
@@ -198,7 +198,7 @@ main {
     width: 120px;
     height: 120px;
     border-radius: 60px;
-    background: rgba(247, 177, 118, 0.1);
+    background: #F7B1761A;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -221,7 +221,7 @@ main {
 .infoSection {
     width: 90%;
     max-width: 500px;
-    background: rgba(255, 255, 255, 0.05);
+    background: #FFFFFF0D;
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 30px;
@@ -256,7 +256,7 @@ main {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: rgba(247, 177, 118, 0.2);
+    background: #F7B17633;
     padding: 15px 30px;
     border-radius: 12px;
     border: 1px solid #F7B176;
@@ -267,7 +267,7 @@ main {
     transition: all 0.3s;
 }
 .changePasswordBtn:hover {
-    background: rgba(247, 177, 118, 0.35);
+    background: #F7B17659;
 }
 .successText {
     color: #4caf50;
@@ -287,7 +287,7 @@ main {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.9);
+    background: #000000E6;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -299,7 +299,7 @@ main {
     background: #1e1e1e;
     border-radius: 20px;
     padding: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #FFFFFF1A;
 }
 .modalHeader {
     display: flex;
@@ -328,12 +328,12 @@ main {
 }
 .modalInput {
     width: 100%;
-    background: rgba(255, 255, 255, 0.05);
+    background: #FFFFFF0D;
     border-radius: 10px;
     padding: 12px;
     color: #fff;
     margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #FFFFFF1A;
     font-size: 0.95rem;
     box-sizing: border-box;
 }

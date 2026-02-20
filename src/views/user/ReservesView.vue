@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { ArrowLeft } from 'lucide-vue-next';
+import { ArrowLeft, Plus } from 'lucide-vue-next';
 import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
 import { userSession } from '@/services/auth/session';
 
@@ -57,7 +57,9 @@ const handleCancel = async (id: string) => {
             <div class="header">
                 <button class="backButton" @click="router.push('/user')"><ArrowLeft :size="20" /></button>
                 <h2 class="headerTitle">MY RESERVES</h2>
-                <div style="width: 28px"></div> <!-- ESPACIO PARA ALINEAR TÍTULO -->
+                <button class="newButton" @click="router.push('/user/activities')" title="New Reserve">
+                    <Plus :size="18" /> New
+                </button>
             </div>
 
             <!-- MENSAJE DE CARGA -->
@@ -97,7 +99,7 @@ main {
 .main {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: #000000B2;
     padding-top: 60px;
     display: flex;
     flex-direction: column;
@@ -119,6 +121,25 @@ main {
     cursor: pointer;
     padding: 5px;
 }
+.newButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: #F7B17626;
+    border: 1px solid #F7B17666;
+    color: #F7B176;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.newButton:hover {
+    background: #F7B1764D;
+    border-color: #F7B176;
+    transform: scale(1.04);
+}
 .headerTitle {
     font-size: 1.2rem;
     font-weight: bold;
@@ -138,17 +159,17 @@ main {
 }
 .reserveCard {
     width: 100%;
-    background: rgba(255, 255, 255, 0.08);
+    background: #FFFFFF14;
     border-radius: 12px;
     display: flex;
     align-items: center;
     padding: 15px 20px;
     margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #FFFFFF1A;
     transition: all 0.2s;
 }
 .reserveCard:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: #FFFFFF1F;
 }
 .cardInfo {
     flex: 1;
@@ -167,7 +188,7 @@ main {
 }
 .cancelButton {
     background: transparent;
-    border: 1px solid rgba(255, 107, 107, 0.3);
+    border: 1px solid #FF6B6B4C;
     color: #ff6b6b;
     padding: 8px 16px;
     border-radius: 8px;
@@ -178,7 +199,7 @@ main {
     white-space: nowrap;
 }
 .cancelButton:hover {
-    background: rgba(255, 107, 107, 0.15);
+    background: #FF6B6B26;
 }
 .emptyText {
     color: #888;

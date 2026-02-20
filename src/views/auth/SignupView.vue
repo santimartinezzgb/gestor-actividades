@@ -171,7 +171,7 @@ const goToLogin = () => router.push('/login');
         border-radius: 1rem;
         color: #FFFFFF;
         background-color: #828282;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        box-shadow: 0px 4px 4px #00000040;
         border-left: #F7B176 4px none;
     }
 
@@ -190,7 +190,7 @@ const goToLogin = () => router.push('/login');
         font-size: 1.5rem;
         width: 50%;
         background-color: #F7B176;
-        color: rgb(0, 0, 0);    
+        color: #000000;    
         border: none;
         border-radius: 1rem;
         cursor: pointer;
@@ -213,10 +213,10 @@ const goToLogin = () => router.push('/login');
         font-weight: 600;
         text-align: center;
         width: 100%;
-        background: rgba(255, 107, 107, 0.1);
+        background: #FF6B6B1A;
         padding: 10px 15px;
         border-radius: 6px;
-        border: 1px solid rgba(255, 107, 107, 0.3);
+        border: 1px solid #FF6B6B4C;
         box-sizing: border-box;
     }
     .successMsg {
@@ -225,10 +225,10 @@ const goToLogin = () => router.push('/login');
         font-weight: 600;
         text-align: center;
         width: 100%;
-        background: rgba(76, 175, 80, 0.1);
+        background: #4CAF501A;
         padding: 10px 15px;
         border-radius: 6px;
-        border: 1px solid rgba(76, 175, 80, 0.3);
+        border: 1px solid #4CAF504C;
         box-sizing: border-box;
     }
 </style>

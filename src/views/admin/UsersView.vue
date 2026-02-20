@@ -68,7 +68,7 @@ main {
 .overlay {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: #000000B2;
     padding-top: 60px;
     display: flex;
     flex-direction: column;
@@ -113,17 +113,17 @@ main {
 }
 .user-card {
     width: 50%;
-    background: rgba(255, 255, 255, 0.08);
+    background: #FFFFFF14;
     border-radius: 12px;
     display: flex;
     align-items: center;
     padding: 15px 20px;
     margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #FFFFFF1A;
     transition: all 0.2s;
 }
 .user-card:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: #FFFFFF1F;
 }
 .card-info {
     flex: 1;
@@ -146,7 +146,7 @@ main {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    border: 1px solid rgba(255, 107, 107, 0.3);
+    border: 1px solid #FF6B6B4C;
     color: #ff6b6b;
     padding: 8px 16px;
     border-radius: 8px;
@@ -157,7 +157,7 @@ main {
     white-space: nowrap;
 }
 .deleteButton:hover {
-    background: rgba(255, 107, 107, 0.15);
+    background: #FF6B6B26;
 }
 .empty-text {
     color: #888;

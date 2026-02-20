@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { ArrowLeft, X } from 'lucide-vue-next';
+import { ArrowLeft, Trash2 } from 'lucide-vue-next';
 import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
 
 const router = useRouter();
@@ -47,7 +47,7 @@ const handleCancelReserve = async (id: string) => {
 
             <div v-else class="list-container">
                 <p v-if="!reserves.length" class="empty-text">No reserves found</p>
-                <div v-for="item in reserves" :key="item.id" class="reserve-card">
+                <div v-for="item in reserves" :key="item.id" class="reserveCard">
                     <div class="card-info">
                         <span class="activity-name">{{ item.activityName }}</span>
                         <span class="username">User: {{ item.username }}</span>
@@ -56,7 +56,7 @@ const handleCancelReserve = async (id: string) => {
                         </span>
                     </div>
                     <button class="cancel-button" @click="handleCancelReserve(item.id)">
-                        <X :size="16" /> Cancel
+                        <Trash2 :size="16" />
                     </button>
                 </div>
             </div>
@@ -73,7 +73,7 @@ main {
 .overlay {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: #000000B2;
     padding-top: 60px;
     display: flex;
     flex-direction: column;
@@ -84,7 +84,7 @@ main {
     align-items: center;
     justify-content: space-between;
     width: 90%;
-    max-width: 800px;
+    max-width: 1000px;
     margin-bottom: 20px;
 }
 .back-button {
@@ -108,47 +108,55 @@ main {
 }
 .list-container {
     width: 90%;
-    max-width: 800px;
+    max-width: 1000px;
     overflow-y: auto;
     padding-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    align-content: start;
 }
-.reserve-card {
+.reserveCard {
     width: 100%;
-    background: rgba(255, 255, 255, 0.08);
+    background: #FFFFFF14;
     border-radius: 12px;
     display: flex;
     align-items: center;
     padding: 15px 20px;
-    margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 0;
+    border: 1px solid #FFFFFF1A;
     transition: all 0.2s;
 }
-.reserve-card:hover {
-    background: rgba(255, 255, 255, 0.12);
+.reserveCard:hover {
+    background: #FFFFFF1F;
 }
 .card-info {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
 }
 .activity-name {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: bold;
     color: #fff;
 }
 .username {
-    font-size: 0.9rem;
+    font-size: 1.0rem;
     color: #F7B176;
 }
 .date {
-    font-size: 0.8rem;
+    font-size: 1.0rem;
     color: #aaa;
 }
 .cancel-button {
     background: transparent;
-    border: 1px solid rgba(255, 107, 107, 0.3);
+    border: 1px solid #FF6B6B4C;
     color: #ff6b6b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     padding: 8px 16px;
     border-radius: 8px;
     cursor: pointer;
@@ -158,12 +166,13 @@ main {
     white-space: nowrap;
 }
 .cancel-button:hover {
-    background: rgba(255, 107, 107, 0.15);
+    background: #FF6B6B26;
 }
 .empty-text {
     color: #888;
     text-align: center;
     margin-top: 50px;
     font-size: 1rem;
+    grid-column: 1 / -1;
 }
 </style>
