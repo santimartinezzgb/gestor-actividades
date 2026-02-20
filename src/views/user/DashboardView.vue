@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { User, Calendar, LogOut, Plus, Ban, ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { clearSession } from '@/services/auth/session';
 import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
 import { userSession } from '@/services/auth/session';
 
@@ -100,7 +101,7 @@ onMounted(() => loadReserves());
 
 // CERRAR SESIÓN
 const logout = () => {
-    localStorage.removeItem('token');
+    clearSession();
     router.push('/login');
 };
 </script>

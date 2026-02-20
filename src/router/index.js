@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { isAuthenticated } from '@/services/auth/session';
 
 // VISTAS DE AUTENTICACIÓN
 import LoginView from '../views/auth/LoginView.vue';
@@ -40,6 +41,16 @@ const routes = [
 const router = createRouter({
     history: createWebHashHistory(), // CONFIGURAR HISTORIA DE NAVEGACIÓN
     routes, // ASIGNAR LAS RUTAS
+});
+
+// GUARD DE NAVEGACIÓN: redirigir a login si no hay JWT
+const publicRoutes = ['login', 'signup'];
+router.beforeEach((to, from, next) => {
+    if (!publicRoutes.includes(to.name) && !isAuthenticated()) {
+        next({ name: 'login' });
+    } else {
+        next();
+    }
 });
 
 export default router;

@@ -5,6 +5,7 @@ import { Users, Dumbbell, Calendar, LogOut, ArrowRight } from 'lucide-vue-next';
 import { getActivities } from '@/services/activity/activityService';
 import { getReserves } from '@/services/reserve/reserveService';
 import { getUsers } from '@/services/user/userService';
+import { clearSession } from '@/services/auth/session';
 
 const router = useRouter();
 
@@ -27,7 +28,7 @@ onMounted(async () => {
 });
 
 const logout = () => {
-    localStorage.removeItem('token');
+    clearSession();
     router.push('/login');
 };
 

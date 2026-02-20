@@ -2,7 +2,7 @@
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { login } from '@/services/auth/authService';
-import { userSession } from '@/services/auth/session';
+import { setSession } from '@/services/auth/session';
 import { z } from 'zod';
 
 // IMPLEMENTAR VALIDACIÓN CON ZOD
@@ -39,11 +39,8 @@ const handleLogin = async () => {
     try {
         const data = await login(credentials);
 
-        // GUARDAR DATOS EN SESIÓN
-        userSession.userId = data.userId;
-        userSession.username = data.username;
-        userSession.token = data.token;
-        localStorage.setItem('token', data.token);
+        // GUARDAR DATOS EN SESIÓN (reactivo + localStorage)
+        setSession(data.userId, data.username, data.token);
 
         // REDIRECCIONAR SEGÚN ROL ( ADMIN O USER )
         if (data.role?.toUpperCase() === 'ADMIN') {
