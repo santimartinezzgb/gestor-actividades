@@ -43,6 +43,8 @@ const handleCancelReserve = async (id: string) => {
                 <div style="width: 28px"></div>
             </div>
 
+            <h2 class="userLength">Total reserves: {{ reserves.length }}</h2>
+
             <div v-if="loading" class="loading">Loading...</div>
 
             <div v-else class="list-container">
@@ -105,6 +107,18 @@ main {
     color: #F7B176;
     font-size: 1.2rem;
     margin-top: 50px;
+}
+.userLength {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    width: 90%;
+    max-width: 1000px;
+    text-align: center;
+    background-color: #FFFFFF14;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #FFFFFF1A;
 }
 .list-container {
     width: 90%;

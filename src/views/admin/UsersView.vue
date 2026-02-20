@@ -41,17 +41,20 @@ const handleDeleteUser = async (id: string) => {
                 <div style="width: 28px"></div>
             </div>
 
+            <h2 class="userLength">Total users: {{ users.length }}</h2>
+
+            <!-- SI ESTÁ CARGANDO, MOSTRAR LOADING...-->
             <div v-if="loading" class="loading">Loading...</div>
 
+            <!-- SI NO HAY USUARIOS, MOSTRAR "NO USERS FOUND" -->
             <div v-else class="list-container">
                 <p v-if="!users.length" class="empty-text">No users found</p>
                 <div v-for="item in users" :key="item.id" class="user-card">
-                    <div class="card-info">
+                    <div class="cardInfo">
                         <span class="username">{{ item.username }}</span>
-                        <span class="user-details">{{ item.name }} {{ item.surname }}</span>
                     </div>
                     <button class="deleteButton" @click="handleDeleteUser(item.id)">
-                        <Trash2 :size="16" /> Delete
+                        <Trash2 :size="16" />
                     </button>
                 </div>
             </div>
@@ -102,17 +105,17 @@ main {
     margin-top: 50px;
 }
 .list-container {
-    width: 90%;
-    max-width: 800px;
+    width: 50%;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
     justify-content: center;
     align-items: center;
     padding-bottom: 20px;
 }
 .user-card {
-    width: 50%;
+    width: 100%;
     background: #FFFFFF14;
     border-radius: 12px;
     display: flex;
@@ -125,7 +128,18 @@ main {
 .user-card:hover {
     background: #FFFFFF1F;
 }
-.card-info {
+.userLength{
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    width: 50%;
+    text-align: center;
+    background-color: #FFFFFF14;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #FFFFFF1A;
+}
+.cardInfo {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -136,7 +150,7 @@ main {
     font-weight: bold;
     color: #fff;
 }
-.user-details {
+.userReserves {
     font-size: 0.85rem;
     color: #aaa;
 }
@@ -148,7 +162,7 @@ main {
     gap: 10px;
     border: 1px solid #FF6B6B4C;
     color: #ff6b6b;
-    padding: 8px 16px;
+    padding: 8px 8px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;

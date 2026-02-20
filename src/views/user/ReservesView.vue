@@ -62,6 +62,8 @@ const handleCancel = async (id: string) => {
                 </button>
             </div>
 
+            <h2 class="userLength">Total reserves: {{ reserves.length }}</h2>
+
             <!-- MENSAJE DE CARGA -->
             <div v-if="loading" class="loading">Loading...</div>
 
@@ -150,6 +152,18 @@ main {
     color: #F7B176;
     font-size: 1.2rem;
     margin-top: 50px;
+}
+.userLength {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    background-color: #FFFFFF14;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #FFFFFF1A;
 }
 .listContainer {
     width: 90%;
