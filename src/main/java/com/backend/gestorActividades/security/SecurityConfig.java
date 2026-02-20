@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,9 +25,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -60,29 +63,17 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
-                        // 1. AUTENTICACIÓN ( LOGIN ) Y REGISTRO DE USUARIOS
+                        // 1. AUTENTICACIÓN ( LOGIN ) Y REGISTRO: públicas
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
 
-                        // 2. CRUD de Actividades ( PARA ADMIN )
+                        // 2. LECTURA de actividades: pública
                         .requestMatchers(HttpMethod.GET, "/activities/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/activities/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/activities/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/activities/**").permitAll()
 
-                        // 3. CRUD DE RESERVAS ( PARA USUARIOS AUTENTICADOS )
-                        .requestMatchers(HttpMethod.GET, "/reserves/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/reserves/**").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/reserves/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/reserves/**").permitAll()
+                        // 3. CUALQUIER OTRA RUTA REQUIERE JWT VÁLIDO
+                        .anyRequest().authenticated())
 
-                        // 5. CRUD DE USUARIOS ( PARA ADMIN )
-                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/users/**").permitAll()
-
-                        // 6. CUALQUIER OTRA RUTA REQUIERE AUTENTICACIÓN
-                        .anyRequest().authenticated());
+                // REGISTRAR FILTRO JWT ANTES DEL FILTRO DE AUTENTICACIÓN POR DEFECTO
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build(); // CONSTRUYE Y DEVUELVE LA CADENA DE FILTROS DE SEGURIDAD CONFIGURADA
     }

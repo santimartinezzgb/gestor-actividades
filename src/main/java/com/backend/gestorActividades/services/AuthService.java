@@ -3,12 +3,15 @@ package com.backend.gestorActividades.services;
 import com.backend.gestorActividades.dto.AuthDTO;
 import com.backend.gestorActividades.dto.LoginDTO;
 import com.backend.gestorActividades.models.User;
+import com.backend.gestorActividades.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class AuthService {
@@ -19,9 +22,13 @@ public class AuthService {
     // SERVICIO PARA GESTIONAR USUARIOS
     private final UserService userService;
 
-    public AuthService(AuthenticationManager authenticationManager, UserService userService) {
+    // UTILIDAD JWT PARA GENERAR TOKENS
+    private final JwtUtil jwtUtil;
+
+    public AuthService(AuthenticationManager authenticationManager, UserService userService, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     // INICIO DE SESIÓN
@@ -42,8 +49,14 @@ public class AuthService {
             User user = userService.getUserByUsername(request.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found after authentication"));
 
-            // DEVOLVER RESPUESTA CON ID, USERNAME, ROL Y MENSAJE DE BIENVENIDA
-            return new AuthDTO(user.getId(), request.getUsername(), role, "¡WELCOME!");
+            // GENERAR TOKEN JWT CON CLAIMS DE USUARIO
+            String token = jwtUtil.generateToken(user.getUsername(), Map.of(
+                    "userId", user.getId(),
+                    "role", role
+            ));
+
+            // DEVOLVER RESPUESTA CON ID, USERNAME, ROL, MENSAJE Y TOKEN JWT
+            return new AuthDTO(user.getId(), request.getUsername(), role, "¡WELCOME!", token);
 
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Incorrect credentials");
