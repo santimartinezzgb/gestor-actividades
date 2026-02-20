@@ -1,8 +1,9 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import styles from './authStyles';
 import { login } from '../../services/authService';
-import { userSession } from '../../services/session';
+import { setSession } from '../../services/session';
 
 export const Login = () => {
     const router = useRouter();
@@ -23,8 +24,8 @@ export const Login = () => {
         try {
             const res = await login(username, password);
 
-            // GUARDAR INFORMACIÓN DEL USUARIO
-            Object.assign(userSession, { userId: res.userId, username: res.username, token: res.token });
+            // GUARDAR INFORMACIÓN DEL USUARIO + TOKEN JWT
+            setSession(res.userId, res.username, res.token);
 
             // REDIRECCIONAR SEGÚN ROL ( ADMIN O USER )
             router.push(res.role?.toUpperCase() === 'ADMIN' ? '/admin' : '/user');
@@ -50,116 +51,34 @@ export const Login = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>My Fitness</Text>
-
-            {/* CAMPOS DE ENTRADA PARA LOGIN */}
-            <View style={styles.containerInputs}>
-                {error && <Text style={styles.errorText}>{error}</Text>}
-                <InputField type="username" placeholder="Username" value={username} setter={setUsername} />
-                <InputField type="password" placeholder="Password" value={password} setter={setPassword} secure />
+            <View style={styles.optionsTop}>
+                <TouchableOpacity activeOpacity={1} style={styles.activeTab}>
+                    <Text style={styles.activeTabText}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.inactiveTab} onPress={() => router.push('/signup')}>
+                    <Text style={styles.inactiveTabText}>Sign up</Text>
+                </TouchableOpacity>
             </View>
 
-            {/* BOTONES DE LOGIN Y SIGNUP */}
-            <View style={styles.containerButtons}>
+            <View style={styles.sectionTitle}>
+                <Text style={styles.title}>MyFitness</Text>
+                <Text style={styles.subtitle}>Track your activities with ease</Text>
+            </View>
+
+            <View style={styles.card}>
+                {/* CAMPOS DE ENTRADA PARA LOGIN */}
+                <View style={styles.containerInputs}>
+                    {error && <Text style={styles.errorText}>{error}</Text>}
+                    <InputField type="username" placeholder="Username" value={username} setter={setUsername} />
+                    <InputField type="password" placeholder="Password" value={password} setter={setPassword} secure />
+                </View>
+
                 {/* BOTÓN DE LOGIN */}
-                <TouchableOpacity style={[styles.contenedorLogin, { opacity: loading ? 0.7 : 1 }]} onPress={handleLogin} disabled={loading}>
-                    <Text style={styles.btnLogin}>{loading ? 'loading...' : 'Login'}</Text>
-                </TouchableOpacity>
-                {/* BOTÓN DE SIGNUP */}
-                <TouchableOpacity style={styles.contenedorSignUp} onPress={() => router.push('/signup')}>
-                    <Text style={styles.btnSignUp}>Sign Up</Text>
+                <TouchableOpacity style={[styles.primaryButton, { opacity: loading ? 0.7 : 1 }]} onPress={handleLogin} disabled={loading}>
+                    <Text style={styles.primaryButtonText}>{loading ? 'Loading...' : 'Enter'}</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        gap: 54,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#222',
-        paddingTop: 60,
-    },
-    logo: {
-        width: 64,
-        height: 64,
-        marginBottom: 24,
-    },
-    title: {
-        fontSize: 52,
-        fontWeight: 'bold',
-        color: '#ffffff',
-    },
-    containerInputs: {
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-    },
-    input: {
-        width: '70%',
-        height: 60,
-        backgroundColor: '#828282',
-        borderRadius: 40,
-        paddingHorizontal: 12,
-        marginBottom: 12,
-        borderLeftWidth: 8,
-        borderLeftColor: 'transparent',
-    },
-    inputFocused: {
-        borderLeftColor: '#F7B176',
-    },
-
-
-    /* BUTTONS */
-    containerButtons: {
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 26,
-    },
-
-    /* Login */
-    contenedorLogin: {
-        backgroundColor: '#F7B176',
-        width: '30%',
-        height: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 40,
-    },
-    btnLogin: {
-        width: '70%',
-        height: 25,
-        fontSize: 20,
-        textAlign: 'center',
-        color: '#222',
-        fontWeight: 'bold',
-    },
-
-    /* Sign Up */
-    contenedorSignUp: {
-        width: '30%',
-        height: 60,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 40,
-    },
-    btnSignUp: {
-        width: '70%',
-        height: 60,
-        fontSize: 16,
-        textAlign: 'center',
-        color: '#ffffff',
-        fontWeight: 'bold',
-    },
-    errorText: {
-        color: '#ff4444',
-        marginBottom: 10,
-        fontWeight: 'bold',
-    },
-});

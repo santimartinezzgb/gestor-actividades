@@ -206,8 +206,8 @@ const styles = StyleSheet.create({
     },
     main: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        paddingTop: 60,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        paddingTop: 34,
     },
     header: {
         flexDirection: 'row',
@@ -220,10 +220,10 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     headerTitle: {
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
         color: '#fff',
-        letterSpacing: 1.5,
+        letterSpacing: 1.4,
     },
     scrollContainer: {
         paddingBottom: 40,
@@ -259,9 +259,11 @@ const styles = StyleSheet.create({
     infoSection: {
         width: '90%',
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        borderRadius: 15,
+        borderRadius: 14,
         padding: 20,
         marginBottom: 30,
+        borderWidth: 1.5,
+        borderColor: 'rgba(247, 177, 118, 0.18)',
     },
     infoRow: {
         flexDirection: 'row',

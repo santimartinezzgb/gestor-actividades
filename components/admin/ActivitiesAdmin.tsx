@@ -232,8 +232,8 @@ const styles = StyleSheet.create({
     },
     menu: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.7)',
-        paddingTop: 60,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        paddingTop: 34,
     },
     header: {
         flexDirection: 'row',
@@ -246,10 +246,10 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     headerTitle: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
         color: '#fff',
-        letterSpacing: 1,
+        letterSpacing: 1.4,
     },
     addButton: {
         padding: 5,
@@ -262,13 +262,13 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 80,
         backgroundColor: 'rgba(255, 255, 255, 0.08)',
-        borderRadius: 12,
+        borderRadius: 14,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 15,
         marginBottom: 12,
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1.5,
+        borderColor: 'rgba(247, 177, 118, 0.18)',
     },
     cardInfo: {
         flex: 1,
@@ -288,7 +288,14 @@ const styles = StyleSheet.create({
         gap: 15,
     },
     actionButton: {
-        padding: 5,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(255,255,255,0.06)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.14)',
     },
     emptyText: {
         color: '#888',

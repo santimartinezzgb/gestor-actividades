@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
     },
     main: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.7)',
-        paddingTop: 60,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        paddingTop: 34,
     },
     header: {
         flexDirection: 'row',
@@ -140,10 +140,10 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     headerTitle: {
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
         color: '#fff',
-        letterSpacing: 1,
+        letterSpacing: 1.4,
     },
     listContainer: {
         paddingHorizontal: 15,
@@ -152,13 +152,13 @@ const styles = StyleSheet.create({
     activityCard: {
         width: '100%',
         backgroundColor: 'rgba(255, 255, 255, 0.08)',
-        borderRadius: 12,
+        borderRadius: 14,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 15,
         marginBottom: 12,
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1.5,
+        borderColor: 'rgba(247, 177, 118, 0.18)',
     },
     cardInfo: {
         flex: 1,
@@ -181,7 +181,12 @@ const styles = StyleSheet.create({
     reserveButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingLeft: 10,
+        width: 52,
+        height: 52,
+        borderRadius: 26,
+        backgroundColor: 'rgba(247, 177, 118, 0.12)',
+        borderWidth: 1,
+        borderColor: 'rgba(247, 177, 118, 0.4)',
     },
     reserveText: {
         color: '#F7B176',

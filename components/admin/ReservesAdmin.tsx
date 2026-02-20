@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
     },
     overlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.7)',
-        paddingTop: 60,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        paddingTop: 34,
     },
     header: {
         flexDirection: 'row',
@@ -125,10 +125,10 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     headerTitle: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
         color: '#fff',
-        letterSpacing: 1,
+        letterSpacing: 1.4,
     },
     listContainer: {
         paddingHorizontal: 15,
@@ -137,13 +137,13 @@ const styles = StyleSheet.create({
     reserveCard: {
         width: '100%',
         backgroundColor: 'rgba(255, 255, 255, 0.08)',
-        borderRadius: 12,
+        borderRadius: 14,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 15,
         marginBottom: 12,
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1.5,
+        borderColor: 'rgba(247, 177, 118, 0.18)',
     },
     cardInfo: {
         flex: 1,
@@ -181,7 +181,14 @@ const styles = StyleSheet.create({
         color: '#ff6b6b',
     },
     actionButton: {
-        padding: 5,
+        width: 42,
+        height: 42,
+        borderRadius: 21,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(255, 107, 107, 0.12)',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 107, 107, 0.35)',
     },
     emptyText: {
         color: '#888',
