@@ -124,21 +124,21 @@ const logout = () => {
 
             <!-- CONTENIDO CENTRAL -->
             <div class="centerContent">
-                <div class="dashboardGrid">
+                <div class="content">
 
                     <!-- PANELES EN ROW -->
                     <div class="panelsRow">
                         <!-- LISTA DE RESERVAS -->
-                        <div class="reservesPanel" @click="router.push('/user/reserves')">
-                            <h2 class="reservesTitle">
+                        <div class="panel" @click="router.push('/user/reserves')">
+                            <h2 class="panelTitle">
                                 <Calendar :size="22" color="#F7B176" />
                                 My Reserves
                             </h2>
                         </div>
 
                         <!-- LISTA DE ACTIVIDADES -->
-                        <div class="activitiesPanel" @click="router.push('/user/activities')">
-                            <h2 class="activitiesTitle">
+                        <div class="panel" @click="router.push('/user/activities')">
+                            <h2 class="panelTitle">
                                 <Dumbbell :size="22" color="#F7B176" />
                                 Activities
                             </h2>
@@ -189,11 +189,11 @@ main {
     width: 100vw;
     height: 100vh;
     background-color: transparent;
-    padding: 5vh;
 }
 .main {
     width: 100%;
     height: 100%;
+    padding: 2rem;
     background: #00000099;
     display: flex;
     flex-direction: column;
@@ -207,7 +207,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 28px 36px;
+    padding: 30px 35px;
     position: relative;
     box-sizing: border-box;
 }
@@ -220,7 +220,7 @@ main {
 }
 .topBarActions {
     position: absolute;
-    right: 36px;
+    right: 40px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -228,8 +228,8 @@ main {
     gap: 10px;
 }
 .profileButton {
-    width: 46px;
-    height: 46px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background: #F7B1761F;
     border: 1.5px solid #F7B17666;
@@ -245,8 +245,8 @@ main {
     transform: scale(1.08);
 }
 .logoutButton {
-    width: 46px;
-    height: 46px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background: #FF6B6B1A;
     border: 1.5px solid #FF6B6B59;
@@ -262,21 +262,22 @@ main {
     transform: scale(1.08);
 }
 
+
 /* CONTENIDO CENTRAL */
 .centerContent {
     flex: 1;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 30px 36px 40px;
+    padding: 30px 35px 40px;
     width: 100%;
     box-sizing: border-box;
     overflow-y: auto;
 }
-.dashboardGrid {
+.content {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 30px;
     width: 100%;
     max-width: 900px;
     align-items: stretch;
@@ -286,51 +287,26 @@ main {
 .panelsRow {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 1rem;
     justify-content: space-around;
 }
-.reservesPanel {
+.panel {
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    gap: 20px;
     background-color: #FFFFFF1A;
-    padding: 18px 24px;
+    padding: 20px 25px;
     border-radius: 12px;
     border: 1px solid #FFFFFF1A;
     transition: all 0.2s ease;
 }
-.reservesPanel:hover {
+.panel:hover {
     background-color: #FFFFFF26;
     border-color: #FFFFFF33;
 }
-.reservesTitle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #ffffff;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.activitiesPanel {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    gap: 20px;
-    background-color: #FFFFFF1A;
-    padding: 18px 24px;
-    border-radius: 12px;
-    border: 1px solid #FFFFFF1A;
-    transition: all 0.2s ease;
-}
-.activitiesPanel:hover {
-    background-color: #FFFFFF26;
-    border-color: #FFFFFF33;
-}
-.activitiesTitle {
+.panelTitle  {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -346,13 +322,15 @@ main {
     background: #FFFFFF0F;
     border: 1px solid #FFFFFF1A;
     border-radius: 20px;
-    padding: 22px;
+    padding: 20px;
     box-sizing: border-box;
 }
 .calendarHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: 2rem;
     margin-bottom: 20px;
 }
 .calMonthTitle {
@@ -362,9 +340,9 @@ main {
     letter-spacing: 0.5px;
 }
 .calNavBtn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border-radius: 12px;
     background: #FFFFFF14;
     border: 1px solid #FFFFFF1F;
     color: #ffffff;
@@ -382,14 +360,14 @@ main {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
 }
 .calendarWeekdays span {
     text-align: center;
     font-size: 0.7rem;
     font-weight: 600;
     color: #FFFFFF59;
-    padding: 4px 0;
+    padding: 5px 0;
 }
 .calendarGrid {
     display: grid;
@@ -397,7 +375,7 @@ main {
     gap: 3px;
 }
 .calDay {
-    height: 36px;
+    height: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -431,7 +409,7 @@ main {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-top: 16px;
+    margin-top: 15px;
     padding-top: 12px;
     border-top: 1px solid #FFFFFF0F;
     font-size: 0.75rem;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { ArrowLeft } from 'lucide-vue-next';
 import { getActivities } from '@/services/activity/activityService';
@@ -10,8 +10,14 @@ const router = useRouter();
 const activities = ref<any[]>([]);
 const reservedActivityIds = ref<Set<string>>(new Set());
 const loading = ref(true);
-const error = ref('');
 const successMsg = ref('');
+const search = ref('');
+
+const filteredActivities = computed(() =>
+    activities.value.filter(a =>
+        a.name.toLowerCase().includes(search.value.toLowerCase())
+    )
+);
 
 // CARGAR DATOS
 onMounted(() => loadData());
@@ -30,7 +36,7 @@ const loadData = async () => {
                 .map((r: any) => r.activityId)
         );
     } catch (e: any) {
-        error.value = e.message || 'Could not load activities';
+        alert(e.message || 'Could not load activities');
     } finally {
         loading.value = false;
     }
@@ -79,16 +85,24 @@ const handleReserve = async (activityId: string) => {
                 <div style="width: 28px"></div>
             </div>
 
-            <h2 class="userLength">Total activities: {{ activities.length }}</h2>
+            <div class="statsBar">
+                <h2 :class="['userLength', { zero: filteredActivities.length === 0 }]">{{ filteredActivities.length }} activit{{ filteredActivities.length !== 1 ? 'ies' : 'y' }}</h2>
+                <input
+                    v-model="search"
+                    class="searchInput"
+                    type="text"
+                    placeholder="Search by name..."
+                />
+            </div>
 
             <p v-if="successMsg" class="successMsg">{{ successMsg }}</p>
 
             <div v-if="loading" class="loading">Loading...</div>
 
             <div v-else class="listContainer">
-                <p v-if="!activities.length" class="emptyText">No activities available</p>
+                <p v-if="!filteredActivities.length" class="emptyText">No activities available</p>
                 <div
-                    v-for="item in activities"
+                    v-for="item in filteredActivities"
                     :key="item.id"
                     class="activityCard"
                     :class="{ 'fullCard': item.reservedCount >= item.capacity }"
@@ -135,6 +149,7 @@ main {
 .main {
     width: 100%;
     height: 100%;
+    padding: 2rem;
     background: #000000B2;
     padding-top: 60px;
     display: flex;
@@ -168,17 +183,47 @@ main {
     font-size: 1.2rem;
     margin-top: 50px;
 }
-.userLength {
-    color: #fff;
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
+.statsBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     width: 90%;
     max-width: 800px;
+    margin: 0 0 2rem 0;
+}
+.userLength {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
     text-align: center;
     background-color: #FFFFFF14;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 8px;
     border: 1px solid #FFFFFF1A;
+    white-space: nowrap;
+    margin: 0;
+}
+.userLength.zero {
+    color: #ff6b6b;
+    border-color: #FF6B6B4C;
+    background-color: #FF6B6B14;
+}
+.searchInput {
+    flex: 1;
+    background: #FFFFFF14;
+    border: 1px solid #FFFFFF1A;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+.searchInput::placeholder {
+    color: #888;
+}
+.searchInput:focus {
+    border-color: #F7B176;
 }
 .successMsg {
     color: #4caf50;

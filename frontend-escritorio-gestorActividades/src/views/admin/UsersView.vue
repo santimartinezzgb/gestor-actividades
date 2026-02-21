@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { ArrowLeft, Trash2 } from 'lucide-vue-next';
 import { getUsers, deleteUser } from '@/services/user/userService';
@@ -7,6 +7,13 @@ import { getUsers, deleteUser } from '@/services/user/userService';
 const router = useRouter();
 const users = ref<any[]>([]);
 const loading = ref(true);
+const search = ref('');
+
+const filteredUsers = computed(() =>
+    users.value.filter(u =>
+        u.username.toLowerCase().includes(search.value.toLowerCase())
+    )
+);
 
 onMounted(() => loadUsers());
 
@@ -34,22 +41,34 @@ const handleDeleteUser = async (id: string) => {
 
 <template>
     <main>
-        <div class="overlay">
+        <div class="main">
             <div class="header">
-                <button class="back-button" @click="router.push('/admin')"><ArrowLeft :size="20" /></button>
-                <h2 class="header-title">MANAGE USERS</h2>
+                <button class="backButton" @click="router.push('/admin')"><ArrowLeft :size="20" /></button>
+                <h2 class="title">MANAGE USERS</h2>
                 <div style="width: 28px"></div>
             </div>
 
-            <h2 class="userLength">Total users: {{ users.length }}</h2>
+            <div class="statsBar">
+                <h2 :class="['userLength', { zero: filteredUsers.length === 0 }]">{{ filteredUsers.length }} user{{ filteredUsers.length !== 1 ? 's' : '' }}</h2>
+                <input
+                    v-model="search"
+                    class="searchInput"
+                    type="text"
+                    placeholder="Search by username..."
+                />
+            </div>
 
             <!-- SI ESTÁ CARGANDO, MOSTRAR LOADING...-->
             <div v-if="loading" class="loading">Loading...</div>
 
             <!-- SI NO HAY USUARIOS, MOSTRAR "NO USERS FOUND" -->
-            <div v-else class="list-container">
-                <p v-if="!users.length" class="empty-text">No users found</p>
-                <div v-for="item in users" :key="item.id" class="user-card">
+            <div v-else class="listContainer">
+
+                <!-- SI NO HAY USUARIOS, MOSTRAR MENSAJE -->
+                <p v-if="!filteredUsers.length" class="usersNotFound">No users found</p>
+                
+                <!-- LISTA DE USUARIOS -->
+                <div v-for="item in filteredUsers" :key="item.id" class="userCard">
                     <div class="cardInfo">
                         <span class="username">{{ item.username }}</span>
                     </div>
@@ -68,9 +87,10 @@ main {
     height: 100vh;
     background-color: transparent;
 }
-.overlay {
+.main {
     width: 100%;
     height: 100%;
+    padding: 2rem;
     background: #000000B2;
     padding-top: 60px;
     display: flex;
@@ -85,7 +105,7 @@ main {
     max-width: 800px;
     margin-bottom: 20px;
 }
-.back-button {
+.backButton {
     background: transparent;
     border: none;
     color: #fff;
@@ -93,18 +113,66 @@ main {
     cursor: pointer;
     padding: 5px;
 }
-.header-title {
+.title {
     font-size: 1.3rem;
     font-weight: bold;
     color: #fff;
     letter-spacing: 1px;
 }
+
+
+/* CONTADOR DE USUARIOS Y BARRA DE BÚSQUEDA */
+.statsBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 50%;
+    margin: 2rem 0;
+}
+
+.userLength {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #FFFFFF14;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid #FFFFFF1A;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.userLength.zero {
+    color: #ff6b6b;
+    border-color: #FF6B6B4C;
+    background-color: #FF6B6B14;
+}
+
+.searchInput {
+    flex: 1;
+    background: #FFFFFF14;
+    border: 1px solid #FFFFFF1A;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.searchInput:focus {
+    border-color: #F7B176;
+}
+
 .loading {
     color: #F7B176;
     font-size: 1.2rem;
     margin-top: 50px;
 }
-.list-container {
+
+/* LISTA DE USUARIOS */
+.listContainer {
     width: 50%;
     overflow-y: auto;
     display: grid;
@@ -114,7 +182,7 @@ main {
     align-items: center;
     padding-bottom: 20px;
 }
-.user-card {
+.userCard {
     width: 100%;
     background: #FFFFFF14;
     border-radius: 12px;
@@ -125,19 +193,8 @@ main {
     border: 1px solid #FFFFFF1A;
     transition: all 0.2s;
 }
-.user-card:hover {
+.userCard:hover {
     background: #FFFFFF1F;
-}
-.userLength{
-    color: #fff;
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    width: 50%;
-    text-align: center;
-    background-color: #FFFFFF14;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #FFFFFF1A;
 }
 .cardInfo {
     flex: 1;
@@ -149,10 +206,6 @@ main {
     font-size: 1.1rem;
     font-weight: bold;
     color: #fff;
-}
-.userReserves {
-    font-size: 0.85rem;
-    color: #aaa;
 }
 .deleteButton {
     background: transparent;
@@ -173,7 +226,7 @@ main {
 .deleteButton:hover {
     background: #FF6B6B26;
 }
-.empty-text {
+.usersNotFound {
     color: #888;
     text-align: center;
     margin-top: 50px;

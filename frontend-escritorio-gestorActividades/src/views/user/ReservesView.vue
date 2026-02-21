@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { ArrowLeft, Plus } from 'lucide-vue-next';
 import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
@@ -8,6 +8,13 @@ import { userSession } from '@/services/auth/session';
 const router = useRouter();
 const reserves = ref<any[]>([]); // ALMACENA LAS RESERVAS DEL USUARIO
 const loading = ref(true); // ESTADO DE CARGA
+const search = ref('');
+
+const filteredReserves = computed(() =>
+    reserves.value.filter(r =>
+        r.activityName.toLowerCase().includes(search.value.toLowerCase())
+    )
+);
 
 // CARGAR RESERVAS AL MONTAR EL COMPONENTE
 onMounted(() => loadReserves());
@@ -62,16 +69,24 @@ const handleCancel = async (id: string) => {
                 </button>
             </div>
 
-            <h2 class="userLength">Total reserves: {{ reserves.length }}</h2>
+            <div class="statsBar">
+                <h2 :class="['userLength', { zero: filteredReserves.length === 0 }]">{{ filteredReserves.length }} reserve{{ filteredReserves.length !== 1 ? 's' : '' }}</h2>
+                <input
+                    v-model="search"
+                    class="searchInput"
+                    type="text"
+                    placeholder="Search by activity..."
+                />
+            </div>
 
             <!-- MENSAJE DE CARGA -->
             <div v-if="loading" class="loading">Loading...</div>
 
             <div v-else class="listContainer">
-                <p v-if="!reserves.length" class="emptyText">You don't have any reserves yet</p>
+                <p v-if="!filteredReserves.length" class="emptyText">You don't have any reserves yet</p>
 
                 <!-- LISTADO DE RESERVAS -->
-                <div v-for="item in reserves" :key="item.id" class="reserveCard">
+                <div v-for="item in filteredReserves" :key="item.id" class="reserveCard">
                     
                     <!-- INFORMACIÓN DE LA RESERVA -->
                     <div class="cardInfo">
@@ -101,6 +116,7 @@ main {
 .main {
     width: 100%;
     height: 100%;
+    padding: 2rem;
     background: #000000B2;
     padding-top: 60px;
     display: flex;
@@ -153,17 +169,47 @@ main {
     font-size: 1.2rem;
     margin-top: 50px;
 }
-.userLength {
-    color: #fff;
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
+.statsBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     width: 90%;
     max-width: 800px;
+    margin: 0 0 2rem 0;
+}
+.userLength {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
     text-align: center;
     background-color: #FFFFFF14;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 8px;
     border: 1px solid #FFFFFF1A;
+    white-space: nowrap;
+    margin: 0;
+}
+.userLength.zero {
+    color: #ff6b6b;
+    border-color: #FF6B6B4C;
+    background-color: #FF6B6B14;
+}
+.searchInput {
+    flex: 1;
+    background: #FFFFFF14;
+    border: 1px solid #FFFFFF1A;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+.searchInput::placeholder {
+    color: #888;
+}
+.searchInput:focus {
+    border-color: #F7B176;
 }
 .listContainer {
     width: 90%;

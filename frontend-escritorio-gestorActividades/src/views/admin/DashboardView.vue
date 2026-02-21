@@ -93,7 +93,7 @@ const fmt = (d: string) => new Date(d).toLocaleString([], { dateStyle: 'short', 
 
 <template>
     <main>
-        <div class="overlay">
+        <div class="main">
             <div class="topBar">
                 <h1 class="header-title">ADMIN PANEL</h1>
                 <button class="logoutButton" @click="logout" title="Logout">
@@ -209,11 +209,11 @@ const fmt = (d: string) => new Date(d).toLocaleString([], { dateStyle: 'short', 
 main {
     width: 100vw;
     height: 100vh;
-    padding: 5vh;
 }
-.overlay {
+.main {
     width: 100%;
     height: 100%;
+    padding: 2rem;
     background: #00000099;
     display: flex;
     flex-direction: column;
@@ -385,31 +385,6 @@ main {
     white-space: nowrap;
 }
 .capacityFull {
-    color: #ff6b6b;
-}
-.itemBadge {
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-}
-.badgeAdmin {
-    background: #F7B17626;
-    color: #F7B176;
-}
-.badgeUser {
-    background: #FFFFFF14;
-    color: #FFFFFF80;
-}
-.badgeConfirmed {
-    background: #4CAF5026;
-    color: #4caf50;
-}
-.badgeCanceled {
-    background: #FF6B6B26;
     color: #ff6b6b;
 }
 .rightCalendar {

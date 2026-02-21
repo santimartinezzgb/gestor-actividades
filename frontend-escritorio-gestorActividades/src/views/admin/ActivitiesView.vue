@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { ArrowLeft, Plus, Pencil, Trash2 } from 'lucide-vue-next';
 import { getActivities, createActivity, updateActivity, deleteActivity } from '@/services/activity/activityService';
@@ -7,7 +7,14 @@ import { getActivities, createActivity, updateActivity, deleteActivity } from '@
 const router = useRouter();
 const activities = ref<any[]>([]);
 const loading = ref(true);
+const search = ref('');
 const modalVisible = ref(false);
+
+const filteredActivities = computed(() =>
+    activities.value.filter(a =>
+        a.name.toLowerCase().includes(search.value.toLowerCase())
+    )
+);
 const editingActivity = ref<any>(null);
 
 // CAMPOS DEL FORMULARIO
@@ -106,13 +113,21 @@ const closeModal = () => {
                 <button class="add-button" @click="handleOpenModal()"><Plus :size="24" /></button>
             </div>
 
-            <h2 class="userLength">Total activities: {{ activities.length }}</h2>
+            <div class="statsBar">
+                <h2 :class="['userLength', { zero: filteredActivities.length === 0 }]">{{ filteredActivities.length }} activit{{ filteredActivities.length !== 1 ? 'ies' : 'y' }}</h2>
+                <input
+                    v-model="search"
+                    class="searchInput"
+                    type="text"
+                    placeholder="Search by name..."
+                />
+            </div>
 
             <div v-if="loading" class="loading">Loading...</div>
 
             <div v-else class="list-container">
-                <p v-if="!activities.length" class="empty-text">No activities found</p>
-                <div v-for="item in activities" :key="item.id" class="activity-card">
+                <p v-if="!filteredActivities.length" class="empty-text">No activities found</p>
+                <div v-for="item in filteredActivities" :key="item.id" class="activity-card">
                     <div class="card-info">
                         <span class="activity-name">{{ item.name }}</span>
                         <span class="activity-details">Users registered: {{ item.reservedCount }} / {{ item.capacity }}</span>
@@ -157,6 +172,7 @@ main {
 .main {
     width: 100%;
     height: 100%;
+    padding: 2rem;
     background: #000000B2;
     padding-top: 60px;
     display: flex;
@@ -171,17 +187,52 @@ main {
     max-width: 1000px;
     margin-bottom: 20px;
 }
+.statsBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 0 2rem 0;
+}
+
 .userLength {
     color: #fff;
     font-size: 1.5rem;
-    margin-bottom: 2rem;
-    width: 90%;
-    max-width: 1000px;
+    font-weight: bold;
     text-align: center;
     background-color: #FFFFFF14;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 8px;
     border: 1px solid #FFFFFF1A;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.userLength.zero {
+    color: #ff6b6b;
+    border-color: #FF6B6B4C;
+    background-color: #FF6B6B14;
+}
+
+.searchInput {
+    flex: 1;
+    background: #FFFFFF14;
+    border: 1px solid #FFFFFF1A;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.searchInput::placeholder {
+    color: #888;
+}
+
+.searchInput:focus {
+    border-color: #F7B176;
 }
 .back-button, .add-button {
     background: transparent;

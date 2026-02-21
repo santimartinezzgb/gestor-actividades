@@ -74,8 +74,6 @@ const closeModal = () => {
         <div class="main">
             <div class="header">
                 <button class="backButton" @click="router.push('/user')"><ArrowLeft :size="20" /></button>
-                <h2 class="headerTitle">MY PROFILE</h2>
-                <div style="width: 28px"></div>
             </div>
 
             <div v-if="loading" class="loading">Loading...</div>
@@ -122,13 +120,10 @@ const closeModal = () => {
 
                 <p v-if="error" class="errorText">{{ error }}</p>
 
-                <label class="inputLabel">Current password</label>
                 <input type="password" v-model="oldPassword" placeholder="Current password" class="modalInput" />
 
-                <label class="inputLabel">New password</label>
                 <input type="password" v-model="newPassword" placeholder="New password (min 6 chars)" class="modalInput" />
 
-                <label class="inputLabel">Confirm new password</label>
                 <input type="password" v-model="confirmPassword" placeholder="Confirm new password" class="modalInput" />
 
                 <button class="submitBtn" @click="handleChangePassword" :disabled="updating">
@@ -149,8 +144,8 @@ main {
 .main {
     width: 100%;
     height: 100%;
+    padding: 60px 2rem 2rem;
     background: #000000CC;
-    padding-top: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -158,7 +153,6 @@ main {
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     width: 90%;
     max-width: 600px;
     margin-bottom: 30px;
@@ -170,12 +164,6 @@ main {
     font-size: 1.5rem;
     cursor: pointer;
     padding: 5px;
-}
-.headerTitle {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #fff;
-    letter-spacing: 1.5px;
 }
 .loading {
     color: #F7B176;
@@ -197,14 +185,14 @@ main {
 .avatarCircle {
     width: 120px;
     height: 120px;
-    border-radius: 60px;
+    border-radius: 50%;
     background: #F7B1761A;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 4rem;
     border: 2px solid #F7B176;
-    margin: 0 auto 15px auto;
+    margin: 0 auto 15px;
 }
 .userName {
     font-size: 1.5rem;
@@ -212,14 +200,14 @@ main {
     color: #fff;
 }
 .userRole {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #F7B176;
     margin-top: 5px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 3px;
 }
 .infoSection {
-    width: 90%;
+    width: 100%;
     max-width: 500px;
     background: #FFFFFF0D;
     border-radius: 15px;
@@ -235,7 +223,7 @@ main {
     margin-bottom: 0;
 }
 .infoIcon {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-right: 15px;
 }
 .infoText {

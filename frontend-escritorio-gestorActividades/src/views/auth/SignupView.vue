@@ -88,7 +88,8 @@ const goToLogin = () => router.push('/login');
                 <input v-model="user.username" class="data" type="text" placeholder="Username">
                 <div v-if="errors.username" class="fieldError">{{ errors.username }}</div>
 
-                <input v-model="user.password" class="data" type="password" placeholder="Password">
+                <input v-model="user.password" class="data" type="password" placeholder="Password (min 6 chars)">
+                 <div v-if="errors.password" class="fieldError">{{ errors.password }}</div>
                 <div v-if="errors.password" class="fieldError">{{ errors.password }}</div>
 
                 <input v-model="user.confirmPassword" class="data" type="password" placeholder="Confirm Password">
