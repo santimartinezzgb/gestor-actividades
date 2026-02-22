@@ -3,12 +3,11 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        gap: 36,
+        gap: 20,
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: '#222222',
-        paddingTop: 32,
-        paddingHorizontal: 22,
+        padding: 20,
     },
     optionsTop: {
         width: '100%',
@@ -64,7 +63,6 @@ export default StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         rowGap: 8,
-        minHeight: 260,
     },
     input: {
         width: '80%',
@@ -82,9 +80,8 @@ export default StyleSheet.create({
         borderLeftColor: '#F7B176',
     },
     primaryButton: {
-        marginVertical: 20,
-        width: '52%',
-        height: 52,
+        width: '30%',
+        height: 50,
         borderRadius: 14,
         backgroundColor: '#F7B176',
         alignItems: 'center',
@@ -99,9 +96,8 @@ export default StyleSheet.create({
     errorText: {
         width: '100%',
         color: '#ff6b6b',
-        marginBottom: 10,
-        marginTop: -2,
-        fontSize: 13,
+        marginTop: 10,
+        fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
     },

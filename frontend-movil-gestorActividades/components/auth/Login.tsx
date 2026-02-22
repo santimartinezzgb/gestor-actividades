@@ -55,9 +55,9 @@ export const Login = () => {
             <View style={styles.card}>
                 {/* CAMPOS DE ENTRADA PARA LOGIN */}
                 <View style={styles.containerInputs}>
-                    {error && <Text style={styles.errorText}>{error}</Text>}
                     <TextInput
                         placeholder="Username"
+                        placeholderTextColor="#5a5a5a"
                         value={username}
                         onChangeText={setUsername}
                         style={[styles.input, focusedInput === 'username' && styles.inputFocused]}
@@ -66,6 +66,7 @@ export const Login = () => {
                     />
                     <TextInput
                         placeholder="Password"
+                        placeholderTextColor="#5a5a5a"
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry
@@ -79,6 +80,9 @@ export const Login = () => {
                 <TouchableOpacity style={[styles.primaryButton, { opacity: loading ? 0.7 : 1 }]} onPress={handleLogin} disabled={loading}>
                     <Text style={styles.primaryButtonText}>{loading ? 'Loading...' : 'Enter'}</Text>
                 </TouchableOpacity>
+
+                {/* MENSAJE DE ERROR */}
+                {error && <Text style={styles.errorText}>{error}</Text>}
             </View>
         </View>
     );

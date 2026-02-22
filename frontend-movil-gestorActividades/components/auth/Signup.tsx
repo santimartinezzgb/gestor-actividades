@@ -63,11 +63,11 @@ export const Signup = () => {
             <View style={styles.card}>
                 {/* CAMPOS DE ENTRADA PARA REGISTRO */}
                 <View style={styles.containerInputs}>
-                    {error && <Text style={styles.errorText}>{error}</Text>}
 
                     {/* CAMPO DE USUARIO */}
                     <TextInput
                         placeholder="Username"
+                        placeholderTextColor="#5a5a5a"
                         value={username}
                         onChangeText={setUsername}
                         style={[
@@ -80,6 +80,7 @@ export const Signup = () => {
                     {/* CAMPO DE CONTRASEÑA */}
                     <TextInput
                         placeholder="Password"
+                        placeholderTextColor="#5a5a5a"
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry
@@ -93,6 +94,7 @@ export const Signup = () => {
                     {/* CAMPO DE CONFIRMAR CONTRASEÑA */}
                     <TextInput
                         placeholder="Confirm password (min 6 chars)"
+                        placeholderTextColor="#5a5a5a"
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
                         secureTextEntry
@@ -110,6 +112,9 @@ export const Signup = () => {
                     onPress={handleSignup} disabled={loading}>
                     <Text style={styles.primaryButtonText}>{loading ? 'Loading...' : 'Register'}</Text>
                 </TouchableOpacity>
+
+                {/* MENSAJE DE ERROR */}
+                {error && <Text style={styles.errorText}>{error}</Text>}
             </View>
         </View>
     );
