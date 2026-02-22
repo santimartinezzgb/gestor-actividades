@@ -27,58 +27,11 @@ API REST desarrollada con Spring Boot que gestiona usuarios, actividades deporti
 
 ### Arranque
 
+Configurar las variables de entorno en tu IDE. Las necesarias están disponibles en el archivo .env.example
+
 ```bash
 ./mvnw spring-boot:run
 ```
-
----
-
-## Estructura del proyecto
-
-```
-src/main/java/com/backend/gestorActividades/
-  GestorActividadesApplication.java       -- Punto de entrada
-  controllers/
-    AuthController.java                   -- Login y registro
-    ActivityController.java               -- CRUD de actividades
-    ReserveController.java                -- CRUD de reservas
-    UserController.java                   -- CRUD de usuarios
-  models/
-    User.java                             -- Entidad usuario
-    Activity.java                         -- Entidad actividad
-    Reserve.java                          -- Entidad reserva
-    enums/
-      Role.java                           -- ROLE_USER, ROLE_ADMIN
-      ReserveState.java                   -- CONFIRMED, CANCELLED
-  dto/
-    AuthResponseDTO.java                  -- Respuesta de login
-    LoginRequestDTO.java                  -- Body del login
-    UserDTO.java                          -- Usuario sin password
-    ReserveDTO.java                       -- Reserva aplanada
-    PasswordChangeDTO.java                -- Cambio de contrasena
-    ErrorResponseDTO.java                 -- Errores (Java record)
-  services/
-    AuthService.java                      -- Autenticacion
-    ActivityService.java                  -- Logica de actividades
-    ReserveService.java                   -- Logica de reservas
-    UserService.java                      -- Logica de usuarios
-  repositories/
-    UserRepository.java
-    ActivityRepository.java
-    ReserveRepository.java
-  security/
-    SecurityConfig.java                   -- Configuracion HTTP / CORS
-    UserDetailsServiceImpl.java           -- Carga de usuarios para Spring
-  scheduler/
-    CleanupScheduler.java                 -- Limpieza automatica cada hora
-  exception/
-    GlobalExceptionHandler.java           -- Manejo centralizado de errores
-    DuplicateReservationException.java
-    DuplicateUserException.java
-  util/
-    ValidationUtils.java                  -- Validaciones reutilizables
-```
-
 ---
 
 ## Modelo de datos (MongoDB Atlas)
@@ -204,5 +157,6 @@ Centralizado en `GlobalExceptionHandler` con respuestas uniformes (`ErrorRespons
 Además, `ActivityService.getAll()` filtra en memoria las actividades expiradas hace más de 24h como doble protección.
 
 ---
+
 
 
