@@ -32,6 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-application.properties
+
 .env
 z.capas
