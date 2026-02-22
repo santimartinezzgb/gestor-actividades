@@ -32,7 +32,7 @@ El proyecto esta dividido en tres partes:
 - **Base de datos en la nube** → Uso de MongoDB Atlas para persistencia de datos sin necesidad de infraestructura local
 
 ## Diagramas de ejemplo de casos de uso de la app
-![Diagrama](./Diagrama.png)
+![Diagrama](./DiagramasCasosUso.png)
 
 ---
 
