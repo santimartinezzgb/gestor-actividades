@@ -114,7 +114,6 @@ export const ReservesAdmin = () => {
                         data={filteredReserves}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
-                        contentContainerStyle={styles.listContainer}
                         ListEmptyComponent={<Text style={styles.emptyText}>No reserves found</Text>}
                     />
                 )}
@@ -138,8 +137,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 20,
         marginBottom: 20,
+        paddingTop: 10,
     },
     backButton: {
         padding: 5,
@@ -149,10 +148,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#fff',
         letterSpacing: 2,
-    },
-    listContainer: {
-        paddingHorizontal: 15,
-        paddingBottom: 20,
     },
     reserveCard: {
         width: '100%',
@@ -211,7 +206,6 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(255, 107, 107, 0.35)',
     },
     statsBar: {
-        paddingHorizontal: 15,
         gap: 8,
     },
     countReserves: {

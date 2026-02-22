@@ -14,8 +14,8 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        marginBottom: 100,
-        marginTop: 120,
+        marginBottom: 50,
+        marginTop: 100,
     },
     sectionTitle: {
         width: '100%',
@@ -80,7 +80,7 @@ export default StyleSheet.create({
         borderLeftColor: '#F7B176',
     },
     primaryButton: {
-        width: '30%',
+        width: '40%',
         height: 50,
         borderRadius: 14,
         backgroundColor: '#F7B176',

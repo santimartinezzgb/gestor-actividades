@@ -76,7 +76,7 @@ export const AdminDashboard = () => {
                 <View style={s.topBar}>
                     <Text style={s.headerTitle}>ADMIN PANEL</Text>
                     <TouchableOpacity style={s.logoutBtn} onPress={() => { clearSession(); router.replace('/login'); }}>
-                        <MaterialCommunityIcons name="logout" size={20} color="#ff6b6b" />
+                        <MaterialCommunityIcons name="logout" size={18} color="#ff6b6b" />
                     </TouchableOpacity>
                 </View>
 
@@ -189,6 +189,7 @@ const s = StyleSheet.create({
         justifyContent: 'center',
         position: 'relative',
         marginBottom: 20,
+        paddingTop: 10,
     },
     headerTitle: {
         fontSize: 20,
@@ -199,9 +200,10 @@ const s = StyleSheet.create({
     logoutBtn: {
         position: 'absolute',
         right: 0,
-        width: 38,
-        height: 38,
-        borderRadius: 19,
+        top: 5,
+        width: 35,
+        height: 35,
+        borderRadius: 18,
         backgroundColor: 'rgba(255,107,107,0.1)',
         borderWidth: 1.5,
         borderColor: 'rgba(255,107,107,0.35)',
@@ -224,8 +226,6 @@ const s = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 14,
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255,255,255,0.08)',
     },
     panelTitleGroup: {
         flexDirection: 'row',
@@ -338,8 +338,8 @@ const s = StyleSheet.create({
     },
     calDay: {
         width: '14.28%',
-        height: 70,
-        paddingVertical: 12,
+        height: 50,
+        paddingVertical: 10,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 8,

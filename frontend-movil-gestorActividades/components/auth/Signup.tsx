@@ -18,6 +18,10 @@ export const Signup = () => {
             setError('Please fill in all fields');
             return;
         }
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters');
+            return;
+        }
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
@@ -72,7 +76,7 @@ export const Signup = () => {
                         onBlur={() => setFocusedInput(null)}
                     />
                     <TextInput
-                        placeholder="Password"
+                        placeholder="Password (min 6 chars)"
                         placeholderTextColor="#5a5a5a"
                         value={password}
                         onChangeText={setPassword}
@@ -85,7 +89,7 @@ export const Signup = () => {
                         onBlur={() => setFocusedInput(null)}
                     />
                     <TextInput
-                        placeholder="Confirm password (min 6 chars)"
+                        placeholder="Confirm password"
                         placeholderTextColor="#5a5a5a"
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}

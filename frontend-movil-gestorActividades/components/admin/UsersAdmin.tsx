@@ -44,7 +44,6 @@ export const UsersAdmin = () => {
                         try {
                             // ELIMINAR USUARIO Y RECARGAR DATOS
                             await deleteUser(id);
-                            Alert.alert('Success', 'User deleted successfully');
                             loadUsers();
                         } catch (error: any) {
                             Alert.alert('Error', error.message || 'Delete failed');

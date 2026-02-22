@@ -149,7 +149,6 @@ export const ActivitiesAdmin = () => {
                 {loading
                     ? <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
                     : <FlatList data={filteredActivities} renderItem={renderItem} keyExtractor={i => i.id}
-                        contentContainerStyle={styles.listContainer}
                         ListEmptyComponent={<Text style={styles.emptyText}>No activities found</Text>} />
                 }
 
@@ -228,9 +227,9 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
+        justifyContent: 'center',
         marginBottom: 20,
+        gap: 10,
     },
     backButton: {
         padding: 5,
@@ -244,10 +243,6 @@ const styles = StyleSheet.create({
     addButton: {
         padding: 5,
     },
-    listContainer: {
-        paddingHorizontal: 15,
-        paddingBottom: 20,
-    },
     activityCard: {
         width: '100%',
         height: 80,
@@ -255,7 +250,7 @@ const styles = StyleSheet.create({
         borderRadius: 14,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         marginBottom: 12,
         borderWidth: 1.5,
         borderColor: 'rgba(247, 177, 118, 0.18)',
