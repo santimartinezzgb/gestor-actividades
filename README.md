@@ -31,9 +31,8 @@ El proyecto esta dividido en tres partes:
 - **Sincronización en tiempo real** → Las reservas se actualizan de forma reactiva en la interfaz
 - **Base de datos en la nube** → Uso de MongoDB Atlas para persistencia de datos sin necesidad de infraestructura local
 
-
 ## Diagramas de ejemplo de casos de uso de la app
-![Diagrama](Diagrama.png)
+![Diagrama](./Diagrama.png)
 
 ---
 
