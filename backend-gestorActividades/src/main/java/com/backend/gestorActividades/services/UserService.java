@@ -43,6 +43,9 @@ public class UserService {
         ValidationUtil.validateStringNotEmpty(user.getPassword(), "Password");
 
         if (user.getId() == null) {
+            if (user.getPassword().length() < 6) {
+                throw new IllegalArgumentException("Password must be at least 6 characters.");
+            }
 
             if (userRepository.existsByUsername(user.getUsername())) {
                 throw new com.backend.gestorActividades.exception.DuplicateUserException("Username already exists");
