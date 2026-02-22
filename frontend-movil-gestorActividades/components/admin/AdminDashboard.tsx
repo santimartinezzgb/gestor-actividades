@@ -98,17 +98,6 @@ export const AdminDashboard = () => {
                                 </View>
                                 <MaterialCommunityIcons name="arrow-right" size={18} color="#F7B176" />
                             </View>
-                            <View style={s.panelBody}>
-                                {users.length === 0 ? (
-                                    <Text style={s.emptyText}>No users found</Text>
-                                ) : (
-                                    users.slice(0, 5).map((item: any) => (
-                                        <View key={item.id} style={s.panelItem}>
-                                            <Text style={s.itemMain}>{item.username}</Text>
-                                        </View>
-                                    ))
-                                )}
-                            </View>
                         </TouchableOpacity>
 
                         {/* PANEL DE ACTIVIDADES */}
@@ -121,23 +110,6 @@ export const AdminDashboard = () => {
                                 </View>
                                 <MaterialCommunityIcons name="arrow-right" size={18} color="#F7B176" />
                             </View>
-                            <View style={s.panelBody}>
-                                {activities.length === 0 ? (
-                                    <Text style={s.emptyText}>No activities found</Text>
-                                ) : (
-                                    activities.slice(0, 5).map((item: any) => (
-                                        <View key={item.id} style={s.panelItem}>
-                                            <View style={s.itemCol}>
-                                                <Text style={s.itemMain}>{item.name}</Text>
-                                                <Text style={s.itemSub}>{fmt(item.date)}</Text>
-                                            </View>
-                                            <Text style={[s.itemCapacity, item.reservedCount >= item.capacity && s.capacityFull]}>
-                                                {item.reservedCount}/{item.capacity}
-                                            </Text>
-                                        </View>
-                                    ))
-                                )}
-                            </View>
                         </TouchableOpacity>
 
                         {/* PANEL DE RESERVAS */}
@@ -149,21 +121,6 @@ export const AdminDashboard = () => {
                                     <View style={s.badge}><Text style={s.badgeText}>{confirmedReserves.length}</Text></View>
                                 </View>
                                 <MaterialCommunityIcons name="arrow-right" size={18} color="#F7B176" />
-                            </View>
-                            <View style={s.panelBody}>
-                                {confirmedReserves.length === 0 ? (
-                                    <Text style={s.emptyText}>No reserves found</Text>
-                                ) : (
-                                    confirmedReserves.slice(0, 5).map((item: any) => (
-                                        <View key={item.id} style={s.panelItem}>
-                                            <View style={s.itemCol}>
-                                                <Text style={s.itemMain}>{item.activityName || 'Unknown'}</Text>
-                                                <Text style={s.itemSub}>{item.username || 'Unknown'}</Text>
-                                                <Text style={s.itemSub}>{item.activityDate ? fmt(item.activityDate) : '-'}</Text>
-                                            </View>
-                                        </View>
-                                    ))
-                                )}
                             </View>
                         </TouchableOpacity>
 
@@ -219,47 +176,226 @@ export const AdminDashboard = () => {
 };
 
 const s = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#121212' },
-    main: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 16, paddingTop: 40, alignItems: 'center' },
+    container: {
+        flex: 1,
+        backgroundColor: '#121212',
+    },
+    main: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        padding: 40,
+        gap: 20,
+        alignItems: 'center',
+    },
 
     // TOP BAR
-    topBar: { width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', position: 'relative', marginBottom: 20 },
-    headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff', letterSpacing: 2 },
-    logoutBtn: { position: 'absolute', right: 0, width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,107,107,0.1)', borderWidth: 1.5, borderColor: 'rgba(255,107,107,0.35)', alignItems: 'center', justifyContent: 'center' },
+    topBar: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        marginBottom: 20,
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#fff',
+        letterSpacing: 2,
+    },
+    logoutBtn: {
+        position: 'absolute',
+        right: 0,
+        width: 38,
+        height: 38,
+        borderRadius: 19,
+        backgroundColor: 'rgba(255,107,107,0.1)',
+        borderWidth: 1.5,
+        borderColor: 'rgba(255,107,107,0.35)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 
     // PANELES
-    panel: { width: '100%', backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', borderRadius: 16, marginBottom: 14, overflow: 'hidden' },
-    panelHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 14, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.08)' },
-    panelTitleGroup: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-    panelTitle: { fontSize: 15, fontWeight: '700', color: '#fff' },
-    badge: { minWidth: 28, paddingHorizontal: 8, height: 22, borderRadius: 11, backgroundColor: 'rgba(247,177,118,0.2)', alignItems: 'center', justifyContent: 'center' },
-    badgeText: { color: '#F7B176', fontSize: 12, fontWeight: '700' },
-    panelBody: { paddingVertical: 4 },
-    panelItem: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 10, paddingHorizontal: 14 },
-    itemCol: { flex: 1, gap: 2 },
-    itemMain: { color: '#fff', fontSize: 14, fontWeight: '600' },
-    itemSub: { color: 'rgba(255,255,255,0.45)', fontSize: 12 },
-    itemCapacity: { color: '#F7B176', fontSize: 13, fontWeight: '700' },
-    capacityFull: { color: '#ff6b6b' },
-    emptyText: { color: 'rgba(255,255,255,0.3)', textAlign: 'center', paddingVertical: 20, fontSize: 13 },
+    panel: {
+        width: '100%',
+        backgroundColor: 'rgba(255,255,255,0.06)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderRadius: 16,
+        marginBottom: 14,
+        overflow: 'hidden',
+    },
+    panelHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 14,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255,255,255,0.08)',
+    },
+    panelTitleGroup: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    panelTitle: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#fff',
+    },
+    badge: {
+        minWidth: 28,
+        paddingHorizontal: 8,
+        height: 22,
+        borderRadius: 11,
+        backgroundColor: 'rgba(247,177,118,0.2)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    badgeText: {
+        color: '#F7B176',
+        fontSize: 12,
+        fontWeight: '700',
+    },
+    panelBody: {
+        paddingVertical: 4,
+    },
+    panelItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        paddingHorizontal: 14,
+    },
+    itemCol: {
+        flex: 1,
+        gap: 2,
+    },
+    itemMain: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: '600',
+    },
+    itemSub: {
+        color: 'rgba(255,255,255,0.45)',
+        fontSize: 12,
+    },
+    itemCapacity: {
+        color: '#F7B176',
+        fontSize: 13,
+        fontWeight: '700',
+    },
+    capacityFull: {
+        color: '#ff6b6b',
+    },
+    emptyText: {
+        color: 'rgba(255,255,255,0.3)',
+        textAlign: 'center',
+        paddingVertical: 20,
+        fontSize: 13,
+    },
 
     // CALENDARIO
-    calPanel: { width: '100%', backgroundColor: 'rgba(255,255,255,0.04)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', borderRadius: 16, padding: 16, marginBottom: 14, height: 460 },
-    calHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 12 },
-    calMonthTitle: { color: '#F7B176', fontWeight: '700', fontSize: 15 },
-    calNavBtn: { width: 30, height: 30, borderRadius: 15, backgroundColor: 'rgba(255,255,255,0.08)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center' },
-    calWeekdays: { flexDirection: 'row', marginBottom: 4 },
-    calWeekday: { flex: 1, textAlign: 'center', fontSize: 11, fontWeight: '600', color: 'rgba(255,255,255,0.35)' },
-    calGrid: { flexDirection: 'row', flexWrap: 'wrap' },
-    calDay: { width: '14.28%', paddingVertical: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 8 },
+    calPanel: {
+        width: '100%',
+        backgroundColor: 'rgba(255,255,255,0.04)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.08)',
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 14,
+    },
+    calHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 14,
+        marginBottom: 12,
+    },
+    calMonthTitle: {
+        color: '#F7B176',
+        fontWeight: '700',
+        fontSize: 15,
+    },
+    calNavBtn: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.12)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    calWeekdays: {
+        flexDirection: 'row',
+        marginBottom: 4,
+    },
+    calWeekday: {
+        flex: 1,
+        textAlign: 'center',
+        fontSize: 11,
+        fontWeight: '600',
+        color: 'rgba(255,255,255,0.35)',
+    },
+    calGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    },
+    calDay: {
+        width: '14.28%',
+        height: 70,
+        paddingVertical: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 8,
+    },
     calDayEmpty: {},
-    calDayToday: { backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
-    calDayActivity: { backgroundColor: 'rgba(247,177,118,0.2)', borderWidth: 1, borderColor: 'rgba(247,177,118,0.45)' },
-    calDayTodayActivity: { backgroundColor: 'rgba(247,177,118,0.3)', borderColor: '#F7B176' },
-    calDayText: { fontSize: 13, color: 'rgba(255,255,255,0.6)' },
-    calDayTextToday: { color: '#fff', fontWeight: '700' },
-    calDayTextActivity: { color: '#F7B176', fontWeight: '700' },
-    calLegend: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 12, paddingTop: 10, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.06)' },
-    legendDot: { width: 10, height: 10, borderRadius: 5, borderWidth: 1 },
-    legendLabel: { color: 'rgba(255,255,255,0.4)', fontSize: 11, marginRight: 6 },
+    calDayToday: {
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.25)',
+    },
+    calDayActivity: {
+        backgroundColor: 'rgba(247,177,118,0.2)',
+        borderWidth: 1,
+        borderColor: 'rgba(247,177,118,0.45)',
+    },
+    calDayTodayActivity: {
+        backgroundColor: 'rgba(247,177,118,0.3)',
+        borderColor: '#F7B176',
+    },
+    calDayText: {
+        fontSize: 13,
+        color: 'rgba(255,255,255,0.6)',
+    },
+    calDayTextToday: {
+        color: '#fff',
+        fontWeight: '700',
+    },
+    calDayTextActivity: {
+        color: '#F7B176',
+        fontWeight: '700',
+    },
+    calLegend: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        marginTop: 12,
+        paddingTop: 10,
+        borderTopWidth: 1,
+        borderTopColor: 'rgba(255,255,255,0.06)',
+    },
+    legendDot: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        borderWidth: 1,
+    },
+    legendLabel: {
+        color: 'rgba(255,255,255,0.4)',
+        fontSize: 11,
+        marginRight: 6,
+    },
 });

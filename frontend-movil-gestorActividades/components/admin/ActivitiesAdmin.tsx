@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
@@ -29,6 +29,13 @@ export const ActivitiesAdmin = () => {
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
+    const [search, setSearch] = useState('');
+
+    // FILTRAR ACTIVIDADES POR NOMBRE
+    const filteredActivities = useMemo(() =>
+        activities.filter(a => a.name.toLowerCase().includes(search.toLowerCase())),
+        [activities, search]
+    );
 
     // PARA CARGAR DATOS
     useEffect(() => {
@@ -150,10 +157,24 @@ export const ActivitiesAdmin = () => {
                     </TouchableOpacity>
                 </View>
 
+                {/* BARRA DE FILTROS */}
+                <View style={styles.statsBar}>
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search by name..."
+                        placeholderTextColor="#888"
+                        value={search}
+                        onChangeText={setSearch}
+                    />
+                    <Text style={[styles.countText, filteredActivities.length === 0 && styles.countZero]}>
+                        {filteredActivities.length} activit{filteredActivities.length !== 1 ? 'ies' : 'y'}
+                    </Text>
+                </View>
+
                 {/* MIENTRAS CARGA: MUESTRA LOADING, SINO MUESTRA LA LISTA DE ACTIVIDADES */}
                 {loading
                     ? <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
-                    : <FlatList data={activities} renderItem={renderItem} keyExtractor={i => i.id}
+                    : <FlatList data={filteredActivities} renderItem={renderItem} keyExtractor={i => i.id}
                         contentContainerStyle={styles.listContainer}
                         ListEmptyComponent={<Text style={styles.emptyText}>No activities found</Text>} />
                 }
@@ -233,7 +254,8 @@ const styles = StyleSheet.create({
     menu: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.6)',
-        paddingTop: 34,
+        padding: 40,
+        gap: 20,
     },
     header: {
         flexDirection: 'row',
@@ -246,10 +268,10 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     headerTitle: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#fff',
-        letterSpacing: 1.4,
+        letterSpacing: 2,
     },
     addButton: {
         padding: 5,
@@ -296,6 +318,30 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255,255,255,0.06)',
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,0.14)',
+    },
+    statsBar: {
+        paddingHorizontal: 15,
+        gap: 8,
+    },
+    countText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#F7B176',
+        margin: 15,
+        textAlign: 'center',
+    },
+    countZero: {
+        color: '#ff6b6b',
+    },
+    searchInput: {
+        height: 40,
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        borderRadius: 10,
+        paddingHorizontal: 12,
+        color: '#fff',
+        borderWidth: 1,
+        borderColor: 'rgba(247, 177, 118, 0.25)',
+        fontSize: 14,
     },
     emptyText: {
         color: '#888',

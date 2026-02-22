@@ -1,14 +1,25 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { cancelReserve, getReserves } from '../../services/reserveService';
 
 export const ReservesAdmin = () => {
     // ESTADOS
     const [reserves, setReserves] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchUser, setSearchUser] = useState('');
+    const [searchActivity, setSearchActivity] = useState('');
     const router = useRouter();
+
+    // FILTRAR RESERVAS POR USUARIO Y ACTIVIDAD
+    const filteredReserves = useMemo(() =>
+        reserves.filter(r =>
+            r.username.toLowerCase().includes(searchUser.toLowerCase()) &&
+            r.activityName.toLowerCase().includes(searchActivity.toLowerCase())
+        ),
+        [reserves, searchUser, searchActivity]
+    );
 
     // PARA CARGAR DATOS
     useEffect(() => {
@@ -76,7 +87,7 @@ export const ReservesAdmin = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.overlay}>
+            <View style={styles.main}>
 
                 {/* CABECERA */}
                 <View style={styles.header}>
@@ -87,12 +98,35 @@ export const ReservesAdmin = () => {
                     <View style={{ width: 28 }} />
                 </View>
 
+                {/* BARRA DE FILTROS */}
+                <View style={styles.statsBar}>
+                    <View style={styles.searchRow}>
+                        <TextInput
+                            style={styles.searchInput}
+                            placeholder="Search by username..."
+                            placeholderTextColor="#888"
+                            value={searchUser}
+                            onChangeText={setSearchUser}
+                        />
+                        <TextInput
+                            style={styles.searchInput}
+                            placeholder="Search by activity..."
+                            placeholderTextColor="#888"
+                            value={searchActivity}
+                            onChangeText={setSearchActivity}
+                        />
+                    </View>
+                    <Text style={[styles.countReserves, filteredReserves.length === 0 && styles.countZero]}>
+                        {filteredReserves.length} reserve{filteredReserves.length !== 1 ? 's' : ''}
+                    </Text>
+                </View>
+
                 {/* MIENTRAS CARGA: MUESTRA LOADING, SINO MUESTRA LA LISTA DE RESERVAS */}
                 {loading ? (
                     <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
                 ) : (
                     <FlatList
-                        data={reserves}
+                        data={filteredReserves}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         contentContainerStyle={styles.listContainer}
@@ -109,10 +143,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121212',
     },
-    overlay: {
+    main: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.6)',
-        paddingTop: 34,
+        padding: 40,
+        gap: 20,
     },
     header: {
         flexDirection: 'row',
@@ -125,10 +160,10 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     headerTitle: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#fff',
-        letterSpacing: 1.4,
+        letterSpacing: 2,
     },
     listContainer: {
         paddingHorizontal: 15,
@@ -190,6 +225,37 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'rgba(255, 107, 107, 0.35)',
     },
+    statsBar: {
+        paddingHorizontal: 15,
+        gap: 8,
+    },
+    countReserves: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#F7B176',
+        margin: 15,
+        textAlign: 'center',
+    },
+    countZero: {
+        color: '#ff6b6b',
+    },
+    searchRow: {
+        flexDirection: 'column',
+        gap: 8,
+        height: 100,
+    },
+    searchInput: {
+        flex: 1,
+        height: 40,
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        borderRadius: 10,
+        paddingHorizontal: 12,
+        color: '#fff',
+        borderWidth: 1,
+        borderColor: 'rgba(247, 177, 118, 0.25)',
+        fontSize: 14,
+    },
+
     emptyText: {
         color: '#888',
         textAlign: 'center',

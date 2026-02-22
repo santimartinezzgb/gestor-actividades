@@ -4,8 +4,6 @@ import { useRouter } from 'vue-router';
 import { signup as signupService } from '@/services/auth/authService';
 import { z } from 'zod';
 
-// IMPLEMENTAR VALIDACIÓN CON ZOD
-// ESQUEMA ZOD PARA VALIDAR REGISTRO
 const signupSchema = z.object({
     username: z.string().min(1, 'Username is required'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
@@ -17,8 +15,7 @@ const signupSchema = z.object({
 
 const router = useRouter();
 const styleBorder = '2px solid #F7B176';
-const errors = ref({});
-const serverError = ref('');
+const authError = ref('');
 const successMsg = ref('');
 
 const user = ref({
@@ -29,23 +26,14 @@ const user = ref({
 
 const signup = async () => {
     
-    // LIMPIAR MENSAJES ANTERIORES
-    serverError.value = '';
+    authError.value = '';
     successMsg.value = '';
 
-    // VALIDAR CON ZOD
     const result = signupSchema.safeParse(user.value);
-
     if (!result.success) {
-        errors.value = {};
-        result.error.errors.forEach(err => {
-            errors.value[err.path[0]] = err.message;
-        });
+        authError.value = result.error.issues[0]?.message ?? 'Please fill the form correctly.';
         return;
     }
-
-    // LIMPIAR ERRORES DE VALIDACIÓN
-    errors.value = {};
 
     const userToSend = {
         username: user.value.username,
@@ -55,10 +43,10 @@ const signup = async () => {
     };
     try {
         await signupService(userToSend);
-        successMsg.value = 'Registration successful! Redirecting to login...';
+        successMsg.value = 'Registration successful!';
         setTimeout(() => router.push('/login'), 2000);
     } catch (error) {
-        serverError.value = error.message || 'Registration failed. Please try again.';
+        authError.value = error?.message ?? 'Registration failed. Please try again.';
     }
 };
 
@@ -86,20 +74,15 @@ const goToLogin = () => router.push('/login');
 
             <section class="inputs">
                 <input v-model="user.username" class="data" type="text" placeholder="Username">
-                <div v-if="errors.username" class="fieldError">{{ errors.username }}</div>
 
                 <input v-model="user.password" class="data" type="password" placeholder="Password (min 6 chars)">
-                 <div v-if="errors.password" class="fieldError">{{ errors.password }}</div>
-                <div v-if="errors.password" class="fieldError">{{ errors.password }}</div>
 
                 <input v-model="user.confirmPassword" class="data" type="password" placeholder="Confirm Password">
-                <div v-if="errors.confirmPassword" class="fieldError">{{ errors.confirmPassword }}</div>
 
-                <div v-if="serverError" class="serverError">{{ serverError }}</div>
+                <button id="btn_signup" class="btn_enter" @click="signup">Register</button>
+                <div v-if="authError" class="authError" role="alert" aria-live="assertive">{{ authError }}</div>
                 <div v-if="successMsg" class="successMsg">{{ successMsg }}</div>
             </section>
-
-            <button id="btn_signup" class="btn_enter" @click="signup">Register</button>
         </div>
     </main>
 </template>
@@ -160,9 +143,10 @@ const goToLogin = () => router.push('/login');
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: flex-end;
+        align-items: stretch;
         gap: 1rem;
         width: 100%;
+        box-sizing: border-box;
     }
     .inputs .data {
         padding: 1rem;
@@ -208,28 +192,26 @@ const goToLogin = () => router.push('/login');
         margin-top: -0.5rem;
         display: block;
     }
-    .serverError {
+    .authError {
+        position: absolute;
+        top: 70%;
+        border-radius: 5px;
         color: #ff6b6b;
-        font-size: 0.95rem;
+        font-size: 1rem;
         font-weight: 600;
         text-align: center;
-        width: 100%;
         background: #FF6B6B1A;
         padding: 10px 15px;
-        border-radius: 6px;
-        border: 1px solid #FF6B6B4C;
-        box-sizing: border-box;
     }
     .successMsg {
         color: #4caf50;
-        font-size: 0.95rem;
+        background: #4CAF501A;
+        position: absolute;
+        top: 70%;
+        border-radius: 5px;
+        font-size: 1rem;
         font-weight: 600;
         text-align: center;
-        width: 100%;
-        background: #4CAF501A;
         padding: 10px 15px;
-        border-radius: 6px;
-        border: 1px solid #4CAF504C;
-        box-sizing: border-box;
     }
 </style>

@@ -5,8 +5,6 @@ import { login } from '@/services/auth/authService';
 import { setSession } from '@/services/auth/session';
 import { z } from 'zod';
 
-// IMPLEMENTAR VALIDACIÓN CON ZOD
-// ESQUEMA DE VALIDACIÓN PARA LOGIN
 const loginSchema = z.object({
     username: z.string().min(1, 'Username is required'),
     password: z.string().min(1, 'Password is required'),
@@ -14,8 +12,7 @@ const loginSchema = z.object({
 
 const styleBorder = '2px solid #F7B176';
 const router = useRouter();
-const errors = ref({});
-const errorMessage = ref('');
+const authError = ref('');
 const loading = ref(false);
 const credentials = reactive({
     username: '',
@@ -25,16 +22,11 @@ const credentials = reactive({
 const handleLogin = async () => {
     const result = loginSchema.safeParse(credentials);
     if (!result.success) {
-        errors.value = {};
-        result.error.errors.forEach(err => {
-            errors.value[err.path[0]] = err.message;
-        });
+        authError.value = result.error.issues[0]?.message ?? 'Please fill the form correctly.';
         return;
     }
-
-    errors.value = {};
+    authError.value = '';
     loading.value = true;
-    errorMessage.value = '';
 
     try {
         const data = await login(credentials);
@@ -49,7 +41,7 @@ const handleLogin = async () => {
             router.push('/user');
         }
     } catch (error) {
-        errorMessage.value = error.message || "Incorrect username or password";
+        authError.value = error?.message ?? 'Login failed. Please try again.';
     } finally {
         loading.value = false;
     }
@@ -73,16 +65,14 @@ const goToSignup = () => router.push('/signup');
                 </section>
 
                 <section class="inputs">
-                    <input v-model="credentials.username" class="data" type="text" placeholder="Username">
-                    <span v-if="errors.username" class="field-error">{{ errors.username }}</span>
+                    <input v-model="credentials.username" class="data" type="text" placeholder="Username" @keydown.enter.prevent="handleLogin">
 
-                    <input v-model="credentials.password" class="data" type="password" placeholder="Password">
-                    <span v-if="errors.password" class="field-error">{{ errors.password }}</span>
+                    <input v-model="credentials.password" class="data" type="password" placeholder="Password" @keydown.enter.prevent="handleLogin">
 
                     <button class="btn_enter" type="submit" :disabled="loading">
                         {{ loading ? 'Loading...' : 'Enter' }}
                     </button>
-                    <span v-if="errorMessage" class="loginError">{{ errorMessage }}</span>
+                    <div v-if="authError" class="authError" role="alert" aria-live="assertive">{{ authError }}</div>
                 </section>
             </form>
         </div>
@@ -146,10 +136,11 @@ const goToSignup = () => router.push('/signup');
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: flex-end;
+        align-items: stretch;
         gap: 1rem;
         width: 100%;
         position: relative;
+        box-sizing: border-box;
     }
     .inputs .data {
         padding: 1rem;
@@ -197,15 +188,16 @@ const goToSignup = () => router.push('/signup');
         align-self: flex-start;
         margin-top: -0.5rem;
     }
-    .loginError {
-        position: relative;
-        top: 240px;
-        left: 30%;
+    .authError {
+        position: absolute;
+        top: 110%;
+        border-radius: 5px;
         color: #ff6b6b;
         font-size: 1rem;
-        font-weight: 700;
-        width: 100%;
+        font-weight: 600;
         text-align: center;
-        position: absolute;
+        background: #FF6B6B1A;
+        padding: 10px 15px;
     }
+
 </style>

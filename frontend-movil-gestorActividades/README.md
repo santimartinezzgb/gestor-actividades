@@ -171,7 +171,7 @@ La app usa **Expo Router** con enrutamiento basado en archivos. Los grupos de ru
 | Calendario           | Integrado en dashboard              | No disponible                      |
 | Enrutamiento         | Vue Router (hash mode)              | Expo Router (file-based)           |
 | Validacion           | Zod (schemas tipados)               | Validacion manual                  |
-| Modales              | Div overlay con click-fuera         | Modal nativo con animacion slide   |
+| Modales              | Div main con click-fuera         | Modal nativo con animacion slide   |
 | Confirmaciones       | confirm() del navegador             | Alert nativo con estilo destructive|
 | Mensajes de exito    | Toast inline (3s auto-dismiss)      | Alert nativo                       |
 | Iconos               | Lucide Vue Next                     | MaterialCommunityIcons             |

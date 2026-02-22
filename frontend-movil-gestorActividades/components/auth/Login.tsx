@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import styles from './authStyles';
 import { login } from '../../services/authService';
 import { setSession } from '../../services/session';
+import styles from './authStyles';
 
 export const Login = () => {
     const router = useRouter();
@@ -36,19 +36,6 @@ export const Login = () => {
         }
     };
 
-    // PARA EL CAMPO DE ENTRADA
-    const InputField = ({ type, placeholder, value, setter, secure }: any) => (
-        <TextInput
-            placeholder={placeholder}
-            value={value}
-            onChangeText={setter}
-            secureTextEntry={secure}
-            style={[styles.input, focusedInput === type && styles.inputFocused]}
-            onFocus={() => setFocusedInput(type)}
-            onBlur={() => setFocusedInput(null)}
-        />
-    );
-
     return (
         <View style={styles.container}>
             <View style={styles.optionsTop}>
@@ -69,8 +56,23 @@ export const Login = () => {
                 {/* CAMPOS DE ENTRADA PARA LOGIN */}
                 <View style={styles.containerInputs}>
                     {error && <Text style={styles.errorText}>{error}</Text>}
-                    <InputField type="username" placeholder="Username" value={username} setter={setUsername} />
-                    <InputField type="password" placeholder="Password" value={password} setter={setPassword} secure />
+                    <TextInput
+                        placeholder="Username"
+                        value={username}
+                        onChangeText={setUsername}
+                        style={[styles.input, focusedInput === 'username' && styles.inputFocused]}
+                        onFocus={() => setFocusedInput('username')}
+                        onBlur={() => setFocusedInput(null)}
+                    />
+                    <TextInput
+                        placeholder="Password"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
+                        onFocus={() => setFocusedInput('password')}
+                        onBlur={() => setFocusedInput(null)}
+                    />
                 </View>
 
                 {/* BOTÓN DE LOGIN */}

@@ -145,7 +145,6 @@ export const Profile = () => {
                         </View>
 
                         {/* CAMPOS PARA CAMBIAR CONTRASEÑA */}
-                        <Text style={styles.inputLabel}>Current password</Text>
                         <TextInput
                             style={styles.input}
                             secureTextEntry
@@ -155,7 +154,6 @@ export const Profile = () => {
                             onChangeText={setOldPassword}
                         />
 
-                        <Text style={styles.inputLabel}>New password</Text>
                         <TextInput
                             style={styles.input}
                             secureTextEntry
@@ -165,7 +163,6 @@ export const Profile = () => {
                             onChangeText={setNewPassword}
                         />
 
-                        <Text style={styles.inputLabel}>Confirm new password</Text>
                         <TextInput
                             style={styles.input}
                             secureTextEntry
@@ -206,8 +203,10 @@ const styles = StyleSheet.create({
     },
     main: {
         flex: 1,
+        gap: 20,
         backgroundColor: 'rgba(0,0,0,0.6)',
-        paddingTop: 34,
+        padding: 30,
+        alignItems: 'center',
     },
     header: {
         flexDirection: 'row',
@@ -215,15 +214,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         marginBottom: 30,
+        gap: 40,
     },
     backButton: {
         padding: 5,
     },
     headerTitle: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#fff',
-        letterSpacing: 1.4,
+        letterSpacing: 2,
     },
     scrollContainer: {
         paddingBottom: 40,

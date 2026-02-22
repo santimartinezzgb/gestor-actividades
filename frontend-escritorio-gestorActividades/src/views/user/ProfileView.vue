@@ -102,8 +102,6 @@ const closeModal = () => {
                     </div>
                 </div>
 
-                <p v-if="successMsg" class="successText">{{ successMsg }}</p>
-
                 <button class="changePasswordBtn" @click="modalVisible = true">
                     <Lock :size="18" /> Change password
                 </button>

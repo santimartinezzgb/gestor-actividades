@@ -92,7 +92,7 @@ export const Signup = () => {
                     />
                     {/* CAMPO DE CONFIRMAR CONTRASEÑA */}
                     <TextInput
-                        placeholder="Confirm password"
+                        placeholder="Confirm password (min 6 chars)"
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
                         secureTextEntry
