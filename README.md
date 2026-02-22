@@ -15,9 +15,7 @@ gestor-actividades/
 
 ## Roles
 
-| Rol   | Capacidades                                                              |
-|-------|--------------------------------------------------------------------------|
-| Admin | Crear/editar/eliminar actividades, ver todas las reservas, gestionar usuarios |
-| User  | Explorar actividades, hacer y cancelar reservas, editar su perfil        |
+- Admin: Crear/editar/eliminar actividades, ver todas las reservas, gestionar usuarios
+- User: Explorar actividades, hacer y cancelar reservas, editar su perfil
 
 ---

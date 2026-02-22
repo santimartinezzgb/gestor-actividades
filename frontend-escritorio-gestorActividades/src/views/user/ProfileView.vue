@@ -6,19 +6,16 @@ import { getUserById, updatePassword } from '@/services/user/userService';
 import { userSession } from '@/services/auth/session';
 
 const router = useRouter();
-const user = ref<any>(null); // GUARDA LOS DATOS DEL USUARIO
-const loading = ref(true); // ESTADO DE CARGA
+const user = ref<any>(null);
+const loading = ref(true);
 
-// CONTROLADORES PARA EL MODAL DE CAMBIO DE CONTRASEÑA
-const modalVisible = ref(false); // VISIBILIDAD DEL MODAL
-const oldPassword = ref(''); // CONTRASEÑA ACTUAL
-const newPassword = ref(''); // NUEVA CONTRASEÑA
-const confirmPassword = ref(''); // CONFIRMACIÓN
-const updating = ref(false); // ESTADO DE ACTUALIZACIÓN
-const error = ref(''); // MENSAJE DE ERROR
-const successMsg = ref(''); // MENSAJE DE ÉXITO
+const modalVisible = ref(false);
+const oldPassword = ref('');
+const newPassword = ref('');
+const confirmPassword = ref('');
+const updating = ref(false);
+const error = ref('');
 
-// CARGAR DATOS DEL USUARIO AL MONTAR EL COMPONENTE
 onMounted(async () => {
     try {
         loading.value = true;
@@ -31,7 +28,6 @@ onMounted(async () => {
     }
 });
 
-// MANEJAR CAMBIO DE CONTRASEÑA
 const handleChangePassword = async () => {
     if (!oldPassword.value || !newPassword.value || !confirmPassword.value) {
         error.value = 'Please fill in all fields';
@@ -43,11 +39,9 @@ const handleChangePassword = async () => {
     }
 
     try {
-        // ACTUALIZAR CONTRASEÑA
         updating.value = true;
         error.value = '';
         await updatePassword(userSession.userId, oldPassword.value, newPassword.value);
-        successMsg.value = 'Password updated successfully';
         modalVisible.value = false;
         oldPassword.value = '';
         newPassword.value = '';
@@ -59,7 +53,6 @@ const handleChangePassword = async () => {
     }
 };
 
-// CERRAR MODAL Y RESETEAR ESTADOS
 const closeModal = () => {
     modalVisible.value = false;
     error.value = '';
@@ -255,11 +248,6 @@ main {
 .changePasswordBtn:hover {
     background: #F7B17659;
 }
-.successText {
-    color: #4caf50;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
 .errorText {
     color: #ff6b6b;
     font-weight: bold;
@@ -304,13 +292,6 @@ main {
     color: #fff;
     font-size: 1.3rem;
     cursor: pointer;
-}
-.inputLabel {
-    color: #F7B176;
-    font-size: 0.85rem;
-    margin-bottom: 8px;
-    margin-left: 5px;
-    display: block;
 }
 .modalInput {
     width: 100%;

@@ -16,7 +16,6 @@ export const AdminDashboard = () => {
     const [activities, setActivities] = useState<any[]>([]);
     const [reserves, setReserves] = useState<any[]>([]);
 
-    // CALENDARIO
     const [calMonth, setCalMonth] = useState(new Date().getMonth());
     const [calYear, setCalYear] = useState(new Date().getFullYear());
 
@@ -39,7 +38,6 @@ export const AdminDashboard = () => {
     const confirmedReserves = useMemo(() => reserves.filter((r: any) => r.state === 'CONFIRMED'), [reserves]);
     const fmt = (d: string) => new Date(d).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' });
 
-    // DATOS DEL CALENDARIO
     const monthName = new Date(calYear, calMonth).toLocaleString('en', { month: 'long', year: 'numeric' });
 
     const activityDays = useMemo(() => {
@@ -75,7 +73,6 @@ export const AdminDashboard = () => {
     return (
         <View style={s.container}>
             <View style={s.main}>
-                {/* TOP BAR */}
                 <View style={s.topBar}>
                     <Text style={s.headerTitle}>ADMIN PANEL</Text>
                     <TouchableOpacity style={s.logoutBtn} onPress={() => { clearSession(); router.replace('/login'); }}>
@@ -88,7 +85,6 @@ export const AdminDashboard = () => {
                 ) : (
                     <ScrollView style={{ flex: 1, width: '100%' }} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
 
-                        {/* PANEL DE USUARIOS */}
                         <TouchableOpacity style={s.panel} onPress={() => router.push('/admin/users')} activeOpacity={0.8}>
                             <View style={s.panelHeader}>
                                 <View style={s.panelTitleGroup}>
@@ -100,7 +96,6 @@ export const AdminDashboard = () => {
                             </View>
                         </TouchableOpacity>
 
-                        {/* PANEL DE ACTIVIDADES */}
                         <TouchableOpacity style={s.panel} onPress={() => router.push('/admin/activities')} activeOpacity={0.8}>
                             <View style={s.panelHeader}>
                                 <View style={s.panelTitleGroup}>
@@ -112,7 +107,6 @@ export const AdminDashboard = () => {
                             </View>
                         </TouchableOpacity>
 
-                        {/* PANEL DE RESERVAS */}
                         <TouchableOpacity style={s.panel} onPress={() => router.push('/admin/reserves')} activeOpacity={0.8}>
                             <View style={s.panelHeader}>
                                 <View style={s.panelTitleGroup}>
@@ -124,7 +118,6 @@ export const AdminDashboard = () => {
                             </View>
                         </TouchableOpacity>
 
-                        {/* CALENDARIO */}
                         <View style={s.calPanel}>
                             <View style={s.calHeader}>
                                 <TouchableOpacity onPress={prevMonth} style={s.calNavBtn}>

@@ -1,12 +1,10 @@
 package com.backend.gestorActividades.dto;
 
-import com.backend.gestorActividades.models.enums.RolUser;
-import lombok.Data;
 import java.time.LocalDateTime;
 
-/**
- * DTO PARA RESPUESTA DE USUARIOS, SIN CONTRASEÑA Y CON ESTADÍSTICAS DE RESERVAS
- */
+import com.backend.gestorActividades.models.enums.RolUser;
+
+import lombok.Data;
 
 @Data
 public class UserDTO {

@@ -1,16 +1,26 @@
 package com.backend.gestorActividades.controllers;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.backend.gestorActividades.dto.PasswordUpdateRequest;
 import com.backend.gestorActividades.dto.UserDTO;
 import com.backend.gestorActividades.models.User;
+import com.backend.gestorActividades.models.enums.RolUser;
 import com.backend.gestorActividades.repositories.ReserveRepository;
 import com.backend.gestorActividades.services.UserService;
-import com.backend.gestorActividades.models.enums.RolUser;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -24,10 +34,8 @@ public class UserController {
         this.reserveRepository = reserveRepository;
     }
 
-    // CONVERTIR UN USUARIO A DTO (OCULTANDO CONTRASEÑA Y AÑADIENDO ESTADÍSTICAS DE RESERVAS)
     private UserDTO convertToDTO(User user) {
 
-        // CREAR UN NUEVO DTO Y COPIAR LOS CAMPOS NECESARIOS
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
         dto.setName(user.getName());
@@ -37,30 +45,20 @@ public class UserController {
         dto.setCreatedAt(user.getCreatedAt());
         dto.setActive(user.isActive());
 
-        // AÑADIR ESTADÍSTICAS DE USUARIO
         dto.setTotalReserves(reserveRepository.countByUserIdAndState(user.getId(),
                 com.backend.gestorActividades.models.enums.ReserveState.CONFIRMED));
 
         return dto;
     }
 
-
-    /**
-     * OBTENER TODOS LOS USUARIOS ( CON DTO )
-     */
-
-    // OBTENER TODOS LOS USUARIOS ( Usando DTO )
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAll(
-            @RequestParam(required = false) String role // PARÁMETRO OPCIONAL PARA FILTRAR POR ROL
+            @RequestParam(required = false) String role
     ) {
         List<User> users;
         if (role != null && !role.isEmpty()) {
 
-            // CONTROL DE ERRORES PARA ROL NO VÁLIDO
-
             try {
-                // LIMPIAR LA CADENA DEL ROL EN CASO DE QUE TENGA "ROLE_"
                 String cleanRole = role.toUpperCase().replace("ROLE_", "");
                 RolUser rolEnum = RolUser.valueOf(cleanRole);
                 users = userService.getUsersByRole(rolEnum);
@@ -74,25 +72,21 @@ public class UserController {
         }
 
         return ResponseEntity.ok(users.stream()
-                // CONVERTIR CADA USUARIO A DTO ANTES DE DEVOLVER LA LISTA
                 .map(this::convertToDTO).toList());
     }
 
-    // OBTENER USUARIO POR ID ( Usando DTO )
     @GetMapping("/username/{id}")
     public ResponseEntity<UserDTO> getUserById(
             @PathVariable String id
     ) {
         return userService.getUserById(id)
 
-                // CONVERTIR EL USUARIO A DTO
                 .map(this::convertToDTO)
 
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // OBTENER USUARIO POR NOMBRE DE USUARIO ( Usando DTO )
     @GetMapping("/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(
             @PathVariable String username
@@ -103,44 +97,34 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // CREAR NUEVO USUARIO ( Usando DTO )
     @PostMapping
     public ResponseEntity<UserDTO> create(
             @RequestBody User user
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-
-                // CONVERTIR EL USUARIO CREADO A DTO ANTES DE DEVOLVERLO
                 .body(convertToDTO(userService.saveUser(user)));
     }
 
-    // ACTUALIZAR USUARIO EXISTENTE ( Usando DTO )
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> update(
             @PathVariable String id,
             @RequestBody User user
     ) {
-        // ESTABLECER ID
         user.setId(id);
-        // GUARDAR EL USUARIO ACTUALIZADO Y CONVERTIRLO A DTO ANTES DE DEVOLVERLO
         return ResponseEntity.ok(convertToDTO(userService.saveUser(user)));
     }
 
-    // DESACTIVAR USUARIO POR ID ( Usando DTO )
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<UserDTO> deactivate(
             @PathVariable String id
     ) {
 
         return userService.deactivateUser(id)
-
-                // CONVERTIR A DTO
                 .map(this::convertToDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // ELIMINAR USUARIO POR ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable String id
@@ -150,11 +134,10 @@ public class UserController {
                 : ResponseEntity.notFound().build();
     }
 
-    // ACTUALIZAR CONTRASEÑA
     @PutMapping("/{id}/password")
     public ResponseEntity<String> updatePassword(
             @PathVariable String id,
-            @RequestBody PasswordUpdateRequest request // DTO PARA ACTUALIZAR CONTRASEÑA, CONTIENE OLD Y NEW PASSWORD
+            @RequestBody PasswordUpdateRequest request
     ) {
         try {
             userService.updatePassword(id, request.getOldPassword(), request.getNewPassword());

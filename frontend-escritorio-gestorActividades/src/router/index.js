@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { isAuthenticated } from '@/services/auth/session';
+import { isAuthenticated, isAdmin } from '@/services/auth/session';
 
 // VISTAS DE AUTENTICACIÓN
 import LoginView from '../views/auth/LoginView.vue';
@@ -37,17 +37,18 @@ const routes = [
     { path: '/admin/users', name: 'admin-users', component: AdminUsersView },
 ];
 
-// CREAR EL ROUTER
 const router = createRouter({
-    history: createWebHashHistory(), // CONFIGURAR HISTORIA DE NAVEGACIÓN
-    routes, // ASIGNAR LAS RUTAS
+    history: createWebHashHistory(),
+    routes,
 });
 
-// GUARD DE NAVEGACIÓN: redirigir a login si no hay JWT
+// GUARD DE NAVEGACIÓN: redirigir a login si no hay JWT, y proteger rutas admin
 const publicRoutes = ['login', 'signup'];
 router.beforeEach((to, from, next) => {
     if (!publicRoutes.includes(to.name) && !isAuthenticated()) {
         next({ name: 'login' });
+    } else if (to.path.startsWith('/admin') && !isAdmin()) {
+        next({ name: 'user' });
     } else {
         next();
     }

@@ -11,13 +11,12 @@ export const User = () => {
     const router = useRouter();
     const [reserves, setReserves] = useState<any[]>([]);
 
-    // CALENDARIO
     const [calMonth, setCalMonth] = useState(new Date().getMonth());
     const [calYear, setCalYear] = useState(new Date().getFullYear());
 
     useEffect(() => { loadReserves(); }, []);
 
-    // CARGAR RESERVAS DEL USUARIO (solo para el calendario)
+    // Solo para el calendario
     const loadReserves = async () => {
         try {
             const data = await getReserves();
@@ -33,7 +32,6 @@ export const User = () => {
         }
     };
 
-    // DATOS DEL CALENDARIO
     const monthName = new Date(calYear, calMonth).toLocaleString('en', { month: 'long', year: 'numeric' });
 
     const reserveDays = useMemo(() => {
@@ -68,7 +66,6 @@ export const User = () => {
     return (
         <View style={s.container}>
             <View style={s.main}>
-                {/* TOP BAR */}
                 <View style={s.topBar}>
                     <Text style={s.headerTitle}>MY DASHBOARD</Text>
                     <View style={s.topBarActions}>
@@ -82,7 +79,6 @@ export const User = () => {
                 </View>
 
                 <ScrollView style={{ flex: 1, width: '100%' }} contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
-                    {/* TARJETAS DE NAVEGACIÓN */}
                     <View style={s.navCards}>
                         <TouchableOpacity style={s.navCard} onPress={() => router.push('/user/reserves')} activeOpacity={0.8}>
                             <View style={s.navCardIcon}>
@@ -107,7 +103,6 @@ export const User = () => {
                         </TouchableOpacity>
                     </View>
 
-                    {/* CALENDARIO */}
                     <View style={s.calPanel}>
                         <View style={s.calHeader}>
                             <TouchableOpacity onPress={prevMonth} style={s.calNavBtn}>

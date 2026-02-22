@@ -5,24 +5,20 @@ import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TextInput, Toucha
 import { deleteUser, getUsers } from '../../services/userService';
 
 export const UsersAdmin = () => {
-    // ESTADOS
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const router = useRouter();
 
-    // FILTRAR USUARIOS POR NOMBRE
     const filteredUsers = useMemo(() =>
         users.filter(u => u.username.toLowerCase().includes(search.toLowerCase())),
         [users, search]
     );
 
-    // PARA CARGAR DATOS
     useEffect(() => {
         loadUsers();
     }, []);
 
-    // PARA CARGAR LOS USUARIOS
     const loadUsers = async () => {
         try {
             setLoading(true);
@@ -35,10 +31,7 @@ export const UsersAdmin = () => {
         }
     };
 
-    // PARA MANEJAR EL BOTÓN DE ELIMINAR EL USUARIO
     const handleDeleteUser = (id: string) => {
-
-        // CONFIRMAR ANTES DE ELIMINAR
         Alert.alert(
             'Confirm Delete',
             'Are you sure you want to delete this user?',
@@ -62,18 +55,14 @@ export const UsersAdmin = () => {
         );
     };
 
-    // PARA RENDERIZAR LOS USUARIOS EN LA FLATLIST
     const renderItem = ({ item }: { item: any }) => (
-        // TARJETA DE CADA USUARIO
         <View style={styles.userCard}>
 
-            {/* INFORMACIÓN DEL USUARIO */}
             <View style={styles.cardInfo}>
                 <Text style={styles.username}>{item.username}</Text>
                 <Text style={styles.userDetails}>{item.name} {item.surname}</Text>
             </View>
 
-            {/* ACCIÓN DE ELIMINAR */}
             <TouchableOpacity onPress={() => handleDeleteUser(item.id)} style={styles.deleteButton}>
                 <MaterialCommunityIcons name="account-remove" size={24} color="#ff6b6b" />
             </TouchableOpacity>
@@ -84,7 +73,6 @@ export const UsersAdmin = () => {
         <View style={styles.container}>
             <View style={styles.menu}>
 
-                {/* CABECERA */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
@@ -93,7 +81,6 @@ export const UsersAdmin = () => {
                     <View style={{ width: 28 }} />
                 </View>
 
-                {/* BARRA DE FILTROS */}
                 <View style={styles.statsBar}>
                     <TextInput
                         style={styles.searchInput}
@@ -107,7 +94,6 @@ export const UsersAdmin = () => {
                     </Text>
                 </View>
 
-                {/* MIENTRAS CARGA: MUESTRA LOADING, SINO MUESTRA LA LISTA DE USUARIOS */}
                 {loading ? (
                     <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
                 ) : (

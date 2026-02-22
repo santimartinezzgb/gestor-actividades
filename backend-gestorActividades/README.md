@@ -6,16 +6,14 @@ API REST desarrollada con Spring Boot que gestiona usuarios, actividades deporti
 
 ## Tecnologias
 
-| Componente     | Tecnologia                  | Version  |
-| -------------- | --------------------------- | -------- |
-| Lenguaje       | Java                        | 21       |
-| Framework      | Spring Boot                 | 3.4.2    |
-| Base de datos  | MongoDB (Spring Data Mongo) | ---      |
-| Seguridad      | Spring Security + BCrypt    | ---      |
-| Validacion     | Spring Validation (Jakarta) | ---      |
-| Monitorizacion | Spring Actuator             | ---      |
-| Build          | Maven (wrapper incluido)    | ---      |
-| Utilidades     | Lombok 1.18, Jackson JSR310 | ---      |
+- **Lenguaje:** Java 21
+- **Framework:** Spring Boot 3.4.2
+- **Base de datos:** MongoDB (Spring Data Mongo)
+- **Seguridad:** Spring Security + BCrypt
+- **Validacion:** Spring Validation (Jakarta)
+- **Monitorizacion:** Spring Actuator
+- **Build:** Maven (wrapper incluido)
+- **Utilidades:** Lombok 1.18, Jackson JSR310
 
 ---
 
@@ -31,24 +29,6 @@ API REST desarrollada con Spring Boot que gestiona usuarios, actividades deporti
 
 ```bash
 ./mvnw spring-boot:run
-```
-
----
-
-## Arquitectura
-
-El proyecto sigue el patron clásico **MVC + Servicios + Repositorios**:
-
-```
-                  Request
-                     |
-              [Controllers]     Endpoints REST, conversion a DTO
-                     |
-               [Services]       Logica de negocio y validaciones
-                     |
-             [Repositories]     Spring Data MongoDB (CRUD automatico)
-                     |
-                 [MongoDB]
 ```
 
 ---
@@ -105,38 +85,32 @@ src/main/java/com/backend/gestorActividades/
 
 ### User
 
-| Campo       | Tipo          | Notas                             |
-| ----------- | ------------- | --------------------------------- |
-| id          | String        | ObjectId generado por Mongo       |
-| name        | String        |                                   |
-| surname     | String        |                                   |
-| username    | String        | Unico (validado en servicio)      |
-| password    | String        | Hash BCrypt                       |
-| rol         | Role (enum)   | ROLE_USER / ROLE_ADMIN            |
-| createdAt   | LocalDateTime | Asignado automaticamente          |
-| isActive    | boolean       | Default true (para soft delete)   |
+- `id` (String) — ObjectId generado por Mongo
+- `name` (String)
+- `surname` (String)
+- `username` (String) — Unico (validado en servicio)
+- `password` (String) — Hash BCrypt
+- `rol` (Role enum) — ROLE_USER / ROLE_ADMIN
+- `createdAt` (LocalDateTime) — Asignado automaticamente
+- `isActive` (boolean) — Default true (para soft delete)
 
 ### Activity
 
-| Campo        | Tipo          | Notas                               |
-| ------------ | ------------- | ----------------------------------- |
-| id           | String        | ObjectId                            |
-| name         | String        |                                     |
-| description  | String        |                                     |
-| dateTime     | LocalDateTime | Debe ser >= 24h en el futuro        |
-| maxCapacity  | int           | Aforo maximo                        |
-| numUsers     | int           | Plazas ocupadas (default 0)         |
-| isActive     | boolean       | Default true                        |
+- `id` (String) — ObjectId
+- `name` (String)
+- `description` (String)
+- `dateTime` (LocalDateTime) — Debe ser >= 24h en el futuro
+- `maxCapacity` (int) — Aforo maximo
+- `numUsers` (int) — Plazas ocupadas (default 0)
+- `isActive` (boolean) — Default true
 
 ### Reserve
 
-| Campo      | Tipo           | Notas                                |
-| ---------- | -------------- | ------------------------------------ |
-| id         | String         | ObjectId                             |
-| user       | User           | Referencia (DBRef, lazy)             |
-| activity   | Activity       | Referencia (DBRef, lazy)             |
-| reservedAt | LocalDateTime  | Fecha de creacion                    |
-| state      | ReserveState   | CONFIRMED / CANCELLED                |
+- `id` (String) — ObjectId
+- `user` (User) — Referencia (DBRef, lazy)
+- `activity` (Activity) — Referencia (DBRef, lazy)
+- `reservedAt` (LocalDateTime) — Fecha de creacion
+- `state` (ReserveState) — CONFIRMED / CANCELLED
 
 ---
 
@@ -144,43 +118,35 @@ src/main/java/com/backend/gestorActividades/
 
 ### Autenticación — `/api/auth`
 
-| Metodo | Ruta      | Body              | Respuesta        |
-| ------ | --------- | ----------------- | ---------------- |
-| POST   | `/login`  | LoginRequestDTO   | AuthResponseDTO  |
-| POST   | `/signup` | User              | User             |
+- **POST `/login`** — Body: LoginRequestDTO → Respuesta: AuthResponseDTO
+- **POST `/signup`** — Body: User → Respuesta: User
 
 ### Actividades — `/api/activities`
 
-| Metodo | Ruta       | Descripcion                                |
-| ------ | ---------- | ------------------------------------------ |
-| GET    | `/`        | Listar todas (filtra expiradas >24h)       |
-| POST   | `/`        | Crear (valida nombre, fecha >= 24h futuro) |
-| PUT    | `/{id}`    | Actualizar (revalida fecha si cambio)      |
-| DELETE | `/{id}`    | Eliminar                                   |
+- **GET `/`** — Listar todas (filtra expiradas >24h)
+- **POST `/`** — Crear (valida nombre, fecha >= 24h futuro)
+- **PUT `/{id}`** — Actualizar (revalida fecha si cambio)
+- **DELETE `/{id}`** — Eliminar
 
 ### Reservas — `/api/reserves`
 
-| Metodo | Ruta       | Descripcion                          |
-| ------ | ---------- | ------------------------------------ |
-| GET    | `/`        | Listar todas                         |
-| GET    | `/{id}`    | Obtener por ID                       |
-| POST   | `/`        | Crear (3 validaciones, ver abajo)    |
-| PUT    | `/{id}`    | Actualizar (transfiere contadores)   |
-| PATCH  | `/{id}`    | Cancelar (libera plaza si > 15 min)  |
-| DELETE | `/{id}`    | Eliminar (libera plaza y borra)      |
+- **GET `/`** — Listar todas
+- **GET `/{id}`** — Obtener por ID
+- **POST `/`** — Crear (3 validaciones, ver abajo)
+- **PUT `/{id}`** — Actualizar (transfiere contadores)
+- **PATCH `/{id}`** — Cancelar (libera plaza si > 15 min)
+- **DELETE `/{id}`** — Eliminar (libera plaza y borra)
 
 ### Usuarios — `/api/users`
 
-| Metodo | Ruta                   | Descripcion                          |
-| ------ | ---------------------- | ------------------------------------ |
-| GET    | `/`                    | Listar todos (filtro por rol)        |
-| GET    | `/{id}`                | Obtener por ID                       |
-| GET    | `/username/{username}` | Obtener por username                 |
-| POST   | `/`                    | Crear (valida duplicados, BCrypt)    |
-| PUT    | `/{id}`                | Actualizar                           |
-| PATCH  | `/{id}`                | Desactivar (soft delete)             |
-| DELETE | `/{id}`                | Eliminar definitivo                  |
-| PUT    | `/{id}/password`       | Cambiar contrasena                   |
+- **GET `/`** — Listar todos (filtro por rol)
+- **GET `/{id}`** — Obtener por ID
+- **GET `/username/{username}`** — Obtener por username
+- **POST `/`** — Crear (valida duplicados, BCrypt)
+- **PUT `/{id}`** — Actualizar
+- **PATCH `/{id}`** — Desactivar (soft delete)
+- **DELETE `/{id}`** — Eliminar definitivo
+- **PUT `/{id}/password`** — Cambiar contrasena
 
 ---
 
@@ -213,29 +179,16 @@ src/main/java/com/backend/gestorActividades/
 
 ## Seguridad
 
-| Aspecto                   | Detalle                                                     |
-| ------------------------- | ----------------------------------------------------------- |
-| Autenticacion             | HTTP Basic con DaoAuthenticationProvider                    |
-| Sesiones                  | Stateless (sin cookies de sesion)                           |
-| Hash de contrasenas       | BCrypt con salt automatico                                  |
-| CSRF                      | Desactivado                                                 |
-| CORS                      | Abierto a todos los origenes, metodos GET/POST/PUT/PATCH/DELETE/OPTIONS |
-| Proteccion de contrasenas | El UserDTO no expone el campo password en respuestas        |
+- **Autenticacion:** HTTP Basic con DaoAuthenticationProvider
+- **Sesiones:** Stateless (sin cookies de sesion)
+- **Hash de contrasenas:** BCrypt
+- **Proteccion de contrasenas:** El UserDTO no expone el campo password en respuestas
 
 ---
 
 ## Manejo de errores
 
-Centralizado en `GlobalExceptionHandler` con respuestas uniformes (`ErrorResponseDTO`):
-
-| Excepcion                    | HTTP Status | Codigo                 |
-| ---------------------------- | ----------- | ---------------------- |
-| DuplicateReservationException | 409         | DUPLICATE_RESERVATION  |
-| DuplicateUserException        | 409         | DUPLICATE_USER         |
-| IllegalStateException         | 400         | INVALID_STATE          |
-| IllegalArgumentException      | 400         | INVALID_DATA           |
-| RuntimeException              | 500         | INTERNAL_ERROR         |
-| AccessDeniedException          | 403         | DENIED_ACCESS          |
+Centralizado en `GlobalExceptionHandler` con respuestas uniformes (`ErrorResponseDTO`)
 
 ---
 

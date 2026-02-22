@@ -26,7 +26,6 @@ public class ActivityService {
                 .toList();
     }
 
-    // GUARDAR ACTIVIDAD
     public Activity saveActivity(Activity activity) {
         // Validar campos básicos
         ValidationUtil.validateStringNotEmpty(activity.getName(), "Activity name");
@@ -38,20 +37,15 @@ public class ActivityService {
         return activityRepository.save(activity);
     }
 
-    // ACTUALIZAR ACTIVIDAD POR ID
     public Activity updateActivity(String id, Activity activityDetails) {
         return activityRepository.findById(id).map(a -> {
 
-            // ¿HA CAMBIADO LA FECHA?
             if (activityDetails.getDate() != null && !activityDetails.getDate().equals(a.getDate())) {
 
-                // VALIDAR NUEVA FECHA
                 ValidationUtil.validateActivityDate(activityDetails.getDate());
-                // ACTUALIZAR FECHA
                 a.setDate(activityDetails.getDate());
             }
 
-            // ACTUALIZAR LOS DEMÁS CAMPOS
             a.setName(activityDetails.getName());
             a.setDescription(activityDetails.getDescription());
             a.setCapacity(activityDetails.getCapacity());
@@ -61,14 +55,12 @@ public class ActivityService {
         }).orElseThrow(() -> new RuntimeException("Activity with ID " + id + " not found"));
     }
 
-    // ELIMINAR ACTIVIDAD POR ID
     public boolean deleteActivity(String id) {
 
-        // VERIFICAR SI LA ACTIVIDAD EXISTE ANTES DE ELIMINAR
         if (activityRepository.existsById(id)) {
-            activityRepository.deleteById(id); // ELIMINAR ACTIVIDAD
+            activityRepository.deleteById(id);
             return true;
         }
-        return false; // FALSE SI LA ACTIVIDAD NO EXISTE
+        return false;
     }
 }

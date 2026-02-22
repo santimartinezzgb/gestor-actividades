@@ -11,6 +11,5 @@ import com.backend.gestorActividades.models.Activity;
 @Repository
 public interface ActivityRepository extends MongoRepository<Activity, String> {
 
-    // BUSCAR ACTIVIDADES CUYA FECHA SEA ANTERIOR A LA INDICADA
     List<Activity> findByDateBefore(LocalDateTime date);
 }

@@ -5,11 +5,11 @@ function createWindow() {
         width: 1200,
         height: 800,
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
+            nodeIntegration: false,
+            contextIsolation: true
         }
     });
-    win.maximize(); // WINDOW STARTS MAXIMIZED
+    win.maximize();
     win.loadURL('http://localhost:5173');
 }
 

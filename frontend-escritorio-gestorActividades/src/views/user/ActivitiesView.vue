@@ -10,7 +10,6 @@ const router = useRouter();
 const activities = ref<any[]>([]);
 const reservedActivityIds = ref<Set<string>>(new Set());
 const loading = ref(true);
-const successMsg = ref('');
 const search = ref('');
 
 const filteredActivities = computed(() =>
@@ -19,17 +18,14 @@ const filteredActivities = computed(() =>
     )
 );
 
-// CARGAR DATOS
 onMounted(() => loadData());
 
-// CARGAR ACTIVIDADES Y RESERVAS DEL USUARIO
 const loadData = async () => {
     try {
         loading.value = true;
         const [acts, allReserves] = await Promise.all([getActivities(), getReserves()]);
         activities.value = acts;
 
-        // FILTRAR RESERVAS CONFIRMADAS DEL USUARIO ACTUAL
         reservedActivityIds.value = new Set(
             allReserves
                 .filter((r: any) => r.userId === userSession.userId && r.state === 'CONFIRMED')
@@ -42,34 +38,25 @@ const loadData = async () => {
     }
 };
 
-// COMPROBAR SI EL USUARIO YA RESERVÓ ESTA ACTIVIDAD
 const isAlreadyReserved = (activityId: string) => reservedActivityIds.value.has(activityId);
-
-// COMPROBAR SI EL BOTÓN DEBE ESTAR DESHABILITADO
 const isButtonDisabled = (item: any) => item.reservedCount >= item.capacity || isAlreadyReserved(item.id);
 
-// TEXTO DEL BOTÓN
 const buttonText = (item: any) => {
-    if (item.reservedCount >= item.capacity) return 'Full';
     if (isAlreadyReserved(item.id)) return 'Reserved';
     return 'Reserve';
 };
 
-// MANEJAR RESERVA
 const handleReserve = async (activityId: string) => {
    
-    // VERIFICAR SESIÓN DEL USUARIO ( SI NO HAY ID DE USUARIO, REDIRIGIR A LOGIN )
     if (!userSession.userId) {
         alert('Session not found. Please log in again.');
         router.replace('/login');
         return;
     }
 
-    try { // CREAR RESERVA
+    try {
         await createReserve(userSession.userId, activityId);
-        successMsg.value = 'Activity reserved successfully! Check "My Reserves" section.';
-        setTimeout(() => successMsg.value = '', 3000);
-        await loadData(); // RECARGAR PARA ACTUALIZAR ESTADO DE BOTONES
+        await loadData();
     } catch (e: any) {
         alert(e.message || 'Reservation failed');
     }
@@ -94,8 +81,6 @@ const handleReserve = async (activityId: string) => {
                     placeholder="Search by name..."
                 />
             </div>
-
-            <p v-if="successMsg" class="successMsg">{{ successMsg }}</p>
 
             <div v-if="loading" class="loading">Loading...</div>
 
@@ -123,7 +108,6 @@ const handleReserve = async (activityId: string) => {
                         </span>
                     </div>
 
-                    <!-- BOTÓN DE RESERVA ( LLENA O YA RESERVADA == DESHABILITADO ) -->
                     <button class="reserveButton"
                         :class="{
                             'disabledButton': isButtonDisabled(item),

@@ -1,24 +1,31 @@
 package com.backend.gestorActividades.controllers;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.backend.gestorActividades.models.Activity;
 import com.backend.gestorActividades.services.ActivityService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/activities")
 public class ActivityController {
 
-    // SERVICIO PARA MANEJAR CADA ACTIVIDAD
     private final ActivityService activityService;
 
     public ActivityController(ActivityService activityService) {
         this.activityService = activityService;
     }
 
-    @GetMapping // ENDPOINT PARA OBTENER TODAS LAS ACTIVIDADES
+    @GetMapping
     public ResponseEntity<List<Activity>> getAll() {
         return ResponseEntity.ok(activityService.getActivities());
     }
@@ -27,31 +34,28 @@ public class ActivityController {
      * SOLO EL ADMIN PUEDE USAR ESTOS ENDPOINTS
      */
 
-    @PostMapping("/addActivity") // ENDPOINT PARA AÑADIR UNA ACTIVIDAD
+    @PostMapping("/addActivity")
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
         return ResponseEntity.ok(activityService.saveActivity(activity));
     }
 
-    @PutMapping("/{id}") // ACTUALIZAR ACTIVIDAD POR ID
+    @PutMapping("/{id}")
     public ResponseEntity<Activity> updateActivity(@PathVariable String id, @RequestBody Activity activity) {
-        // INSTANCIA DE LA ACTIVIDAD ACTUALIZADA
         Activity updated = activityService.updateActivity(id, activity);
 
-        if (updated == null) {// 404 SI LA ACTIVIDAD NO FUE ENCONTRADA
+        if (updated == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{id}") // ELIMINAR ACTIVIDAD POR ID
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteActivity(@PathVariable String id) {
-        // INSTANCIA DE LA ACTIVIDAD ELIMINADA
         boolean deleted = activityService.deleteActivity(id);
 
-        // 404 SI LA ACTIVIDAD NO FUE ENCONTRADA
         if (!deleted) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.noContent().build(); // SIN CONTENIDO SI SE ELIMINÓ CORRECTAMENTE
+        return ResponseEntity.noContent().build();
     }
 }

@@ -100,16 +100,17 @@ const goToLogin = () => router.push('/login');
     #signup {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: flex-end;
         gap: 2rem;
         width: 100%;
+        height: 60vh;
     }
    .options {
         display: flex;
         justify-content: space-evenly;
         width: 100%;
         gap: 2rem;
+        margin-bottom: 5rem;
     }
     .btn_signin, .btn_signup {
         padding: 0.3rem;
@@ -179,22 +180,13 @@ const goToLogin = () => router.push('/login');
         border: none;
         border-radius: 1rem;
         cursor: pointer;
+        margin-top: 2rem;
+        align-self: flex-end;
     }
     .btn_enter:hover {
         opacity: 0.9;
     }
-    .fieldError {
-        color: #ff6b6b;
-        font-size: 0.85rem;
-        font-weight: 600;
-        width: 100%;
-        text-align: left;
-        margin-top: -0.5rem;
-        display: block;
-    }
     .authError {
-        position: absolute;
-        top: 70%;
         border-radius: 5px;
         color: #ff6b6b;
         font-size: 1rem;
@@ -202,16 +194,18 @@ const goToLogin = () => router.push('/login');
         text-align: center;
         background: #FF6B6B1A;
         padding: 10px 15px;
+        width: 50%;
+        align-self: flex-end;
     }
     .successMsg {
         color: #4caf50;
         background: #4CAF501A;
-        position: absolute;
-        top: 70%;
         border-radius: 5px;
         font-size: 1rem;
         font-weight: 600;
         text-align: center;
         padding: 10px 15px;
+        width: 50%;
+        align-self: flex-end;
     }
 </style>

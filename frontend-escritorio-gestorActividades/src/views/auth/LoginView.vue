@@ -30,11 +30,8 @@ const handleLogin = async () => {
 
     try {
         const data = await login(credentials);
+        setSession(data.userId, data.username, data.token, data.role || '');
 
-        // GUARDAR DATOS EN SESIÓN (reactivo + localStorage)
-        setSession(data.userId, data.username, data.token);
-
-        // REDIRECCIONAR SEGÚN ROL ( ADMIN O USER )
         if (data.role?.toUpperCase() === 'ADMIN') {
             router.push('/admin');
         } else {
@@ -92,17 +89,17 @@ const goToSignup = () => router.push('/signup');
     #login {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: flex-end;
         gap: 2rem;
         width: 100%;
+        height: 60vh;
     }
     .options {
         display: flex;
         justify-content: space-evenly;
         width: 100%;
         gap: 2rem;
-        margin-bottom: 2rem;
+        margin-bottom: 8rem;
     }
     .btn_signin, .btn_signup {
         padding: 0.3rem;
@@ -175,22 +172,14 @@ const goToSignup = () => router.push('/signup');
         border-radius: 1rem;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-top: 1rem;
+        margin-top: 2rem;
+        align-self: flex-end;
     }
     .btn_enter:hover {
         opacity: 0.9;
         transform: translateY(5px);
     }
-    .field-error {
-        color: #ff6b6b;
-        font-size: 0.85rem;
-        font-weight: 500;
-        align-self: flex-start;
-        margin-top: -0.5rem;
-    }
     .authError {
-        position: absolute;
-        top: 110%;
         border-radius: 5px;
         color: #ff6b6b;
         font-size: 1rem;
@@ -198,6 +187,8 @@ const goToSignup = () => router.push('/signup');
         text-align: center;
         background: #FF6B6B1A;
         padding: 10px 15px;
+        width: 50%;
+        align-self: flex-end;
     }
 
 </style>

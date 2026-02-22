@@ -58,16 +58,10 @@ const handleDeleteUser = async (id: string) => {
                 />
             </div>
 
-            <!-- SI ESTÁ CARGANDO, MOSTRAR LOADING...-->
             <div v-if="loading" class="loading">Loading...</div>
 
-            <!-- SI NO HAY USUARIOS, MOSTRAR "NO USERS FOUND" -->
             <div v-else class="listContainer">
-
-                <!-- SI NO HAY USUARIOS, MOSTRAR MENSAJE -->
                 <p v-if="!filteredUsers.length" class="usersNotFound">No users found</p>
-                
-                <!-- LISTA DE USUARIOS -->
                 <div v-for="item in filteredUsers" :key="item.id" class="userCard">
                     <div class="cardInfo">
                         <span class="username">{{ item.username }}</span>

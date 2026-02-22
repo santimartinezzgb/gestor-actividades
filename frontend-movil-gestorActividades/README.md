@@ -6,14 +6,12 @@ Aplicacion movil multiplataforma para gestionar actividades deportivas, reservas
 
 ## Tecnologias
 
-| Componente        | Tecnologia                     |
-| ----------------- | ------------------------------ |
-| Framework         | React Native 0.81 + Expo 54   |
-| Lenguaje          | TypeScript 5.9                 |
-| Navegacion        | Expo Router 6 (file-based)     |
-| Navegacion nativa | React Navigation 7             |
-| Animaciones       | Reanimated 4                   |
-| Linting           | ESLint (expo config)           |
+- **Framework:** React Native 0.81 + Expo 54
+- **Lenguaje:** TypeScript 5.9
+- **Navegacion:** Expo Router 6 (file-based)
+- **Navegacion nativa:** React Navigation 7
+- **Animaciones:** Reanimated 4
+- **Linting:** ESLint (expo config)
 
 ---
 
@@ -27,12 +25,7 @@ Aplicacion movil multiplataforma para gestionar actividades deportivas, reservas
 
 ### Configuracion de red
 
-Como la app movil no puede acceder a `localhost` del ordenador, hay que configurar la IP de la maquina que ejecuta el backend. Editar `constants/apiConfig.ts`:
-
-```typescript
-export const BACKEND_IP = '192.168.1.XXX';   // Tu IP local
-export const BACKEND_PORT = '8080';
-```
+Como la app movil no puede acceder a `localhost` del ordenador, hay que configurar la IP de la maquina que ejecuta el backend. Editar `constants/apiConfig.ts`.
 
 ### Arranque
 
@@ -53,49 +46,28 @@ Desde ahi puedes abrir la app en:
 
 ### Autenticacion
 
-Pantallas centradas con titulo "My Fitness" en grande, inputs redondeados (pill-shaped) con fondo gris y boton naranja. Al hacer focus en un input aparece un borde izquierdo naranja.
-
 - **Login:** Campos de username y password. Redireccion automatica segun rol tras login exitoso.
 - **Signup:** Campos de username, password y confirmacion. Alerta nativa de exito y redireccion al login.
 
 ### Panel de usuario
 
-El dashboard del usuario es un **menu de navegacion con tarjetas** (estilo hub) que da acceso a las tres secciones:
+El dashboard del usuario es un **menu de navegacion con tarjetas** que da acceso a las tres secciones:
 
-| Pantalla        | Que puede hacer el usuario                                                         |
-| --------------- | ---------------------------------------------------------------------------------- |
-| **Dashboard**   | Navegar a Perfil, Reservas o Actividades mediante tarjetas con iconos. Boton de logout en la parte inferior. |
-| **Actividades** | Explorar actividades disponibles en una lista con scroll. Reservar con un toque en el icono de calendario. Las actividades con aforo completo se marcan con borde rojo, texto "FULL" e icono gris deshabilitado. Alerta nativa de exito al reservar. |
-| **Reservas**    | Lista de reservas confirmadas con opcion de cancelar. Confirmacion con alerta nativa de dos opciones ("No" / "Yes, Cancel" en rojo). |
-| **Perfil**      | Avatar grande con borde naranja, nombre, username y total de reservas. Cambio de contrasena desde un modal nativo con animacion slide-in. Spinner de carga dentro del boton durante la peticion. |
+- **Dashboard:**
+- **Actividades:**
+- **Reservas:**
+- **Perfil:**
+- **Calendario**
 
 ### Panel de administrador
 
-El dashboard de admin tambien usa el formato hub con 3 tarjetas grandes en vertical:
+El dashboard de admin usa el formato con 3 tarjetas grandes en vertical:
 
-| Pantalla        | Que puede hacer el admin                                                           |
-| --------------- | ---------------------------------------------------------------------------------- |
-| **Dashboard**   | Acceder a Usuarios, Actividades o Reservas mediante tarjetas con iconos grandes.   |
-| **Actividades** | Crear, editar y eliminar actividades. Modal nativo para el formulario con campos de nombre, capacidad, descripcion, fecha y hora. Confirmacion destructiva antes de eliminar. |
-| **Reservas**    | Ver todas las reservas del sistema. Cancelar cualquier reserva con confirmacion.    |
-| **Usuarios**    | Lista de usuarios con rol USER. Eliminar con alerta de confirmacion destructiva.   |
-
----
-
-## Diseno visual
-
-| Elemento            | Detalle                                               |
-| ------------------- | ----------------------------------------------------- |
-| Tema                | Oscuro (#121212 / #222)                               |
-| Color de acento     | Naranja calido (#F7B176)                              |
-| Tarjetas            | Fondo semitransparente con bordes redondeados (20px)  |
-| Iconos              | MaterialCommunityIcons                                |
-| Focus en inputs     | Borde izquierdo naranja (controlado por state)        |
-| Confirmaciones      | Alert nativo con opciones (estilo destructive en iOS)  |
-| Mensajes de exito   | Alert nativo del sistema                              |
-| Estados de carga    | ActivityIndicator (spinner nativo)                    |
-| Modales             | Modal nativo de React Native (animacion slide)        |
-| Listas              | FlatList con contentContainerStyle                    |
+- **Dashboard:**
+- **Actividades:**
+- **Reservas:**
+- **Usuarios:**
+- **Calendario**
 
 ---
 
@@ -153,34 +125,9 @@ frontend-mobile-gestorActividades/
 
 La app usa **Expo Router** con enrutamiento basado en archivos. Los grupos de rutas se definen con parentesis y no aparecen en la URL:
 
-| Grupo      | Pantallas                                  | Rol     |
-| ---------- | ------------------------------------------ | ------- |
-| `(auth)`   | Login, Signup                              | Publico |
-| `(user)`   | Dashboard, Actividades, Reservas, Perfil   | User    |
-| `(admin)`  | Dashboard, Actividades, Reservas, Usuarios | Admin   |
+- **`(auth)`** — Login, Signup (Publico)
+- **`(user)`** — Dashboard, Actividades, Reservas, Perfil (User)
+- **`(admin)`** — Dashboard, Actividades, Reservas, Usuarios (Admin)
 
 ---
 
-## Diferencias con la version de escritorio
-
-| Aspecto              | Desktop (Vue + Electron)            | Mobile (React Native + Expo)       |
-| -------------------- | ----------------------------------- | ---------------------------------- |
-| Plataforma           | Windows, Linux, macOS               | Android, iOS                       |
-| Interfaz             | HTML/CSS en Chromium                | Componentes nativos                |
-| Dashboard            | Datos en vivo (reservas+calendario) | Menu tipo hub con tarjetas         |
-| Calendario           | Integrado en dashboard              | No disponible                      |
-| Enrutamiento         | Vue Router (hash mode)              | Expo Router (file-based)           |
-| Validacion           | Zod (schemas tipados)               | Validacion manual                  |
-| Modales              | Div main con click-fuera         | Modal nativo con animacion slide   |
-| Confirmaciones       | confirm() del navegador             | Alert nativo con estilo destructive|
-| Mensajes de exito    | Toast inline (3s auto-dismiss)      | Alert nativo                       |
-| Iconos               | Lucide Vue Next                     | MaterialCommunityIcons             |
-| Carga                | Texto "Loading..." en botones       | ActivityIndicator (spinner)        |
-| Conexion al backend  | localhost                           | IP de red local                    |
-| Sesion               | ref reactivo + localStorage         | Objeto JS mutable (sin persistir)  |
-
----
-
-## Sesion
-
-La sesion se gestiona con un objeto JavaScript plano exportado que almacena `userId`, `username` y `role`. A diferencia del frontend desktop, no se persiste en almacenamiento local, por lo que se pierde al cerrar la app.

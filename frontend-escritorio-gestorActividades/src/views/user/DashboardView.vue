@@ -3,14 +3,13 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { User, Calendar, LogOut, Dumbbell, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { clearSession } from '@/services/auth/session';
-import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
+import { getReserves } from '@/services/reserve/reserveService';
 import { userSession } from '@/services/auth/session';
 
 const router = useRouter();
 const reserves = ref<any[]>([]);
 const loadingReserves = ref(true);
 
-// CALENDARIO
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
 
@@ -66,7 +65,6 @@ const calendarDays = computed(() => {
     return cells;
 });
 
-// CARGAR RESERVAS DEL USUARIO
 const loadReserves = async () => {
     try {
         loadingReserves.value = true;
@@ -85,21 +83,8 @@ const loadReserves = async () => {
     }
 };
 
-// CANCELAR RESERVA
-const handleCancel = async (id: string) => {
-    if (!confirm('Are you sure you want to cancel this reservation?')) return;
-    try {
-        await cancelReserve(id);
-        await loadReserves();
-    } catch (e: any) {
-        alert(e.message || 'Error cancelling reservation');
-        await loadReserves();
-    }
-};
-
 onMounted(() => loadReserves());
 
-// CERRAR SESIÓN
 const logout = () => {
     clearSession();
     router.push('/login');
@@ -122,13 +107,11 @@ const logout = () => {
                 </div>
             </div>
 
-            <!-- CONTENIDO CENTRAL -->
             <div class="centerContent">
                 <div class="content">
 
                     <!-- PANELES EN ROW -->
                     <div class="panelsRow">
-                        <!-- LISTA DE RESERVAS -->
                         <div class="panel" @click="router.push('/user/reserves')">
                             <h2 class="panelTitle">
                                 <Calendar :size="22" color="#F7B176" />
@@ -136,7 +119,6 @@ const logout = () => {
                             </h2>
                         </div>
 
-                        <!-- LISTA DE ACTIVIDADES -->
                         <div class="panel" @click="router.push('/user/activities')">
                             <h2 class="panelTitle">
                                 <Dumbbell :size="22" color="#F7B176" />

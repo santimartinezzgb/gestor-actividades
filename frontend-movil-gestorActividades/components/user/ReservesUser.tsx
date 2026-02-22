@@ -6,29 +6,24 @@ import { cancelReserve, getReserves } from '../../services/reserveService';
 import { userSession } from '../../services/session';
 
 export const ReservesUser = () => {
-    // ESTADOS
     const [reserves, setReserves] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const router = useRouter();
 
-    // FILTRAR RESERVAS POR NOMBRE DE ACTIVIDAD
     const filteredReserves = useMemo(() =>
         reserves.filter(r => r.activityName.toLowerCase().includes(search.toLowerCase())),
         [reserves, search]
     );
 
-    // PARA CARGAR DATOS AL INICIAR EL COMPONENTE
     useEffect(() => {
         loadReserves();
     }, []);
 
-    // CARGAR LAS RESERVAS DEL USUARIO ACTUAL
     const loadReserves = async () => {
         try {
             setLoading(true);
             const data = await getReserves();
-            // FILTRO PARA RESERVAS NO CANCELADAS
             const userReserves = data.filter((r: any) =>
                 r.userId === userSession.userId &&
                 r.state !== 'CANCELED' &&
@@ -42,10 +37,7 @@ export const ReservesUser = () => {
         }
     };
 
-    // MANEJAR CANCELACIÓN DE RESERVA
     const handleCancel = (id: string) => {
-
-        // CONFIRMAR ANTES DE CANCELAR
         Alert.alert(
             'Cancel Reservation',
             'Are you sure you want to cancel this reservation?',
@@ -69,11 +61,7 @@ export const ReservesUser = () => {
     };
 
     const renderItem = ({ item }: { item: any }) => (
-
-        // TARJETA DE CADA RESERVA
         <View style={styles.reserveCard}>
-
-            {/* INFORMACIÓN DE LA RESERVA */}
             <View style={styles.cardInfo}>
                 <Text style={styles.activityName}>{item.activityName}</Text>
                 <Text style={styles.activityDetails}>
@@ -81,7 +69,6 @@ export const ReservesUser = () => {
                 </Text>
             </View>
 
-            {/* BOTÓN DE CANCELAR RESERVA */}
             <TouchableOpacity onPress={() => handleCancel(item.id)} style={styles.cancelButton}>
                 <MaterialCommunityIcons name="calendar-remove" size={20} color="#ff6b6b" />
                 <Text style={styles.cancelText}>Cancel</Text>
@@ -100,7 +87,6 @@ export const ReservesUser = () => {
                     <View style={{ width: 28 }} />
                 </View>
 
-                {/* BARRA DE FILTROS */}
                 <View style={styles.statsBar}>
                     <TextInput
                         style={styles.searchInput}
@@ -114,7 +100,6 @@ export const ReservesUser = () => {
                     </Text>
                 </View>
 
-                {/* LISTA DE RESERVAS O INDICADOR DE CARGA */}
                 {loading ? (
                     <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
                 ) : (
@@ -122,7 +107,7 @@ export const ReservesUser = () => {
                         contentContainerStyle={styles.listContainer}
                         ListEmptyComponent={
                             <Text style={styles.emptyText}>You dont have any reserves yet</Text>
-                        } /* SI NO HAY RESERVAS, MUESTRA ESTE MENSAJE */
+                        }
                     />
                 )}
             </View>
@@ -184,19 +169,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#F7B176',
         marginTop: 4,
-    },
-    statusBadge: {
-        alignSelf: 'flex-start',
-        backgroundColor: 'rgba(76, 175, 80, 0.2)',
-        paddingHorizontal: 8,
-        paddingVertical: 2,
-        borderRadius: 4,
-        marginTop: 8,
-    },
-    statusText: {
-        color: '#fff',
-        fontSize: 10,
-        fontWeight: 'bold',
     },
     cancelButton: {
         alignItems: 'center',

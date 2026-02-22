@@ -17,17 +17,14 @@ const filteredActivities = computed(() =>
 );
 const editingActivity = ref<any>(null);
 
-// CAMPOS DEL FORMULARIO
 const name = ref('');
 const capacity = ref('');
 const description = ref('');
 const date = ref('');
 const time = ref('');
 
-// CARGAR ACTIVIDADES AL INICIAR
 onMounted(() => loadActivities());
 
-// CARGAR ACTIVIDADES
 const loadActivities = async () => {
     try {
         loading.value = true;
@@ -39,11 +36,7 @@ const loadActivities = async () => {
     }
 };
 
-// ABRIR MODAL PARA CREAR O EDITAR ACTIVIDAD
 const handleOpenModal = (activity?: any) => {
-
-    // SI SE PASA UNA ACTIVIDAD, LLENAR LOS CAMPOS CON SUS DATOS PARA EDITAR
-    // SI NO, DEJAR LOS CAMPOS VACÍOS PARA CREAR UNA NUEVA ACTIVIDAD
     const [d, t] = (activity?.date || '').split('T');
     editingActivity.value = activity || null;
     name.value = activity?.name || '';
@@ -55,14 +48,11 @@ const handleOpenModal = (activity?: any) => {
 };
 
 const handleSave = async () => {
-
-    // VALIDAR CAMPOS OBLIGATORIOS
     if (!name.value || !capacity.value || !date.value || !time.value) {
         alert('Please fill name, capacity, date and time');
         return;
     }
 
-    // PREPARAR DATOS PARA ENVIAR AL BACKEND
     const activityData = {
         name: name.value,
         capacity: parseInt(capacity.value),
@@ -83,7 +73,6 @@ const handleSave = async () => {
     }
 };
 
-// ELIMINAR ACTIVIDAD
 const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this activity?')) return;
     try {
@@ -94,7 +83,6 @@ const handleDelete = async (id: string) => {
     }
 };
 
-// CERRAR MODAL Y LIMPIAR CAMPOS
 const closeModal = () => {
     modalVisible.value = false;
     editingActivity.value = null;
@@ -105,7 +93,6 @@ const closeModal = () => {
 <template>
     <main>
 
-        <!-- CABECERA -->
         <div class="main">
             <div class="header">
                 <button class="back-button" @click="router.push('/admin')"><ArrowLeft :size="20" /></button>
@@ -140,7 +127,6 @@ const closeModal = () => {
             </div>
         </div>
 
-        <!-- MODAL PARA CREAR O EDITAR ACTIVIDAD -->
         <div v-if="modalVisible" class="modal-main" @click.self="closeModal">
             <div class="modal-content">
                 <h3 class="modal-title">{{ editingActivity ? 'Edit Activity' : 'Add New Activity' }}</h3>

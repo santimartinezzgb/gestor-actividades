@@ -16,14 +16,12 @@ import { createActivity, deleteActivity, getActivities, updateActivity } from '.
 
 
 export const ActivitiesAdmin = () => {
-    // ESTADOS
     const [activities, setActivities] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [editingActivity, setEditingActivity] = useState<any | null>(null);
     const router = useRouter();
 
-    // ESTADOS DEL FORMULARIO
     const [name, setName] = useState('');
     const [capacity, setCapacity] = useState('');
     const [description, setDescription] = useState('');
@@ -31,18 +29,15 @@ export const ActivitiesAdmin = () => {
     const [time, setTime] = useState('');
     const [search, setSearch] = useState('');
 
-    // FILTRAR ACTIVIDADES POR NOMBRE
     const filteredActivities = useMemo(() =>
         activities.filter(a => a.name.toLowerCase().includes(search.toLowerCase())),
         [activities, search]
     );
 
-    // PARA CARGAR DATOS
     useEffect(() => {
         loadActivities();
     }, []);
 
-    // PARA CARGAR ACTIVIDADES
     const loadActivities = async () => {
         try {
             setLoading(true);
@@ -55,11 +50,8 @@ export const ActivitiesAdmin = () => {
         }
     };
 
-    // CREAR O ACTUALIZAR ACTIVIDAD
     const createOrUpdateActivity = (activity?: any) => {
         const [d, t] = (activity?.date || '').split('T');
-
-        // SETEAR CAMPOS DEL FORMULARIO
         setEditingActivity(activity || null);
         setName(activity?.name || '');
         setCapacity(activity?.capacity?.toString() || '');
@@ -69,26 +61,19 @@ export const ActivitiesAdmin = () => {
         setModalVisible(true);
     };
 
-    // PARA MANEJAR EL BOTÓN DE GUARDAR
     const handleSave = async () => {
-        // VALIDACIÓN BÁSICA
         if (!name || !capacity || !date || !time) return Alert.alert('Validation Error', 'Please fill name, capacity, date and time');
 
-        // CREAR OBJETO DE ACTIVIDAD
         const activityData = {
             name,
             capacity: parseInt(capacity),
             description,
-            // Parseando la fecha y hora a formato ISO
             date: `${date}T${time.length === 5 ? time + ':00' : (time || '12:00:00')}`,
             isActive: true
         };
 
         try {
-            // SI EDITA RECIBE EL ID, SINO CREA NUEVO
             await (editingActivity ? updateActivity(editingActivity.id, activityData) : createActivity(activityData));
-
-            // MENSAJE DE ÉXITO Y RECARGAR DATOS
             Alert.alert('Success', `Activity ${editingActivity ? 'updated' : 'created'} successfully`);
             setModalVisible(false);
             loadActivities();
@@ -97,10 +82,7 @@ export const ActivitiesAdmin = () => {
         }
     };
 
-    // PARA MANEJAR EL BOTÓN DE ELIMINAR LA ACTIVIDAD
     const handleDelete = (id: string) => {
-
-        // CONFIRMAR ANTES DE ELIMINAR
         Alert.alert('Confirm Delete', 'Are you sure you want to delete this activity?', [
             { text: 'Cancel', style: 'cancel' },
             {
@@ -108,7 +90,6 @@ export const ActivitiesAdmin = () => {
                 style: 'destructive',
                 onPress: async () => {
                     try {
-                        // ELIMINAR ACTIVIDAD Y RECARGAR DATOS
                         await deleteActivity(id);
                         loadActivities();
                     } catch (error: any) {
@@ -119,18 +100,14 @@ export const ActivitiesAdmin = () => {
         ]);
     };
 
-    // PARA RENDERIZAR LAS ACTIVIDADES EN LA FLATLIST
     const renderItem = ({ item }: { item: any }) => (
-        // TARJETA DE CADA ACTIVIDAD
         <View style={styles.activityCard}>
 
-            {/* INFORMACIÓN DE LA ACTIVIDAD */}
             <View style={styles.cardInfo}>
                 <Text style={styles.activityName}>{item.name}</Text>
                 <Text style={styles.activityDetails}>Users registered: {item.reservedCount} / {item.capacity}</Text>
             </View>
 
-            {/* ACCIONES DE CREAR/EDITAR Y ELIMINAR */}
             <View style={styles.cardActions}>
                 <TouchableOpacity onPress={() => createOrUpdateActivity(item)} style={styles.actionButton}>
                     <MaterialCommunityIcons name="pencil" size={24} color="#F7B176" />
@@ -146,7 +123,6 @@ export const ActivitiesAdmin = () => {
         <View style={styles.container}>
             <View style={styles.menu}>
 
-                {/* CABECERA */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
@@ -157,7 +133,6 @@ export const ActivitiesAdmin = () => {
                     </TouchableOpacity>
                 </View>
 
-                {/* BARRA DE FILTROS */}
                 <View style={styles.statsBar}>
                     <TextInput
                         style={styles.searchInput}
@@ -171,7 +146,6 @@ export const ActivitiesAdmin = () => {
                     </Text>
                 </View>
 
-                {/* MIENTRAS CARGA: MUESTRA LOADING, SINO MUESTRA LA LISTA DE ACTIVIDADES */}
                 {loading
                     ? <ActivityIndicator size="large" color="#F7B176" style={{ marginTop: 50 }} />
                     : <FlatList data={filteredActivities} renderItem={renderItem} keyExtractor={i => i.id}
@@ -179,15 +153,10 @@ export const ActivitiesAdmin = () => {
                         ListEmptyComponent={<Text style={styles.emptyText}>No activities found</Text>} />
                 }
 
-                {/* MODAL PARA CREAR O EDITAR ACTIVIDAD */}
                 <Modal animationType="slide" transparent={true} visible={modalVisible}
                     onRequestClose={() => setModalVisible(false)}>
-
-                    {/* CONTENIDO DEL MODAL */}
                     <View style={styles.modalmenu}>
                         <View style={styles.modalContent}>
-
-                            {/* CAMPOS DEL FORMULARIO */}
                             <Text style={styles.modalTitle}>{editingActivity ? 'Edit Activity' : 'Add New Activity'}</Text>
                             <TextInput
                                 style={styles.input}
@@ -229,7 +198,6 @@ export const ActivitiesAdmin = () => {
                                 />
                             </View>
 
-                            {/* ACCIONES ( CANCELAR Y GUARDAR ) */}
                             <View style={styles.modalActions}>
                                 <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setModalVisible(false)}>
                                     <Text style={styles.buttonText}>Cancel</Text>

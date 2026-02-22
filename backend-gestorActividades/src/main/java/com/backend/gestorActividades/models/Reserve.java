@@ -9,8 +9,8 @@ import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
 @Document(collection = "reserves")
-@Data // GENERA GETTERS, SETTERS, TO STRING, EQUALS Y HASHCODE
-@NoArgsConstructor // GENERA UN CONSTRUCTOR SIN ARGUMENTOS
+@Data
+@NoArgsConstructor
 public class Reserve {
     @Id
     private String id;

@@ -6,8 +6,8 @@ import { getReserves, cancelReserve } from '@/services/reserve/reserveService';
 import { userSession } from '@/services/auth/session';
 
 const router = useRouter();
-const reserves = ref<any[]>([]); // ALMACENA LAS RESERVAS DEL USUARIO
-const loading = ref(true); // ESTADO DE CARGA
+const reserves = ref<any[]>([]);
+const loading = ref(true);
 const search = ref('');
 
 const filteredReserves = computed(() =>
@@ -16,16 +16,13 @@ const filteredReserves = computed(() =>
     )
 );
 
-// CARGAR RESERVAS AL MONTAR EL COMPONENTE
 onMounted(() => loadReserves());
 
-// CARGAR RESERVAS DEL USUSARIO
 const loadReserves = async () => {
     try {
         loading.value = true;
         const data = await getReserves();
         
-        // FILTRO PARA RESERVAS DEL USUARIO ACTUAL NO CANCELADAS
         reserves.value = data.filter((r: any) =>
             r.userId === userSession.userId &&
             r.state !== 'CANCELED' &&
@@ -36,21 +33,16 @@ const loadReserves = async () => {
     } catch (e: any) {
         alert(e.message);
     } finally {
-        // DESACTIVAR ESTADO DE CARGA
         loading.value = false;
     }
 };
 
-// MANEJAR CANCELACIÓN DE RESERVA
 const handleCancel = async (id: string) => {
-    
-    // CONFIRMAR CANCELACIÓN
-    if (!confirm('Are you sure you want to cancel this reservation?')) return;
+    if (!confirm('Cancel this reservation?')) return;
     
     try {
         await cancelReserve(id);
-        alert('Reservation cancelled successfully');
-        await loadReserves(); // RECARGAR RESERVAS DESPUÉS DE CANCELAR
+        await loadReserves();
     } catch (e: any) {
         alert(e.message || 'Error cancelling reservation');
         await loadReserves();
@@ -79,25 +71,18 @@ const handleCancel = async (id: string) => {
                 />
             </div>
 
-            <!-- MENSAJE DE CARGA -->
             <div v-if="loading" class="loading">Loading...</div>
 
             <div v-else class="listContainer">
                 <p v-if="!filteredReserves.length" class="emptyText">You don't have any reserves yet</p>
 
-                <!-- LISTADO DE RESERVAS -->
                 <div v-for="item in filteredReserves" :key="item.id" class="reserveCard">
-                    
-                    <!-- INFORMACIÓN DE LA RESERVA -->
                     <div class="cardInfo">
-                        <!-- NOMBRE DE LA ACTIVIDAD -->
                         <span class="activityName">{{ item.activityName }}</span>
-                        <!-- FECHA DE LA ACTIVIDAD -->
                         <span class="activityDetails">
                             {{ new Date(item.activityDate).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) }}
                         </span>
                     </div>
-                    <!-- BOTÓN DE CANCELAR RESERVA -->
                     <button class="cancelButton" @click="handleCancel(item.id)">
                         Cancel
                     </button>

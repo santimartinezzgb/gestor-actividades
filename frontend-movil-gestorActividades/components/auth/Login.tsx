@@ -13,21 +13,14 @@ export const Login = () => {
     const [error, setError] = useState<string | null>(null);
     const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password'>(null);
 
-    // PARA INICIAR SESIÓN
     const handleLogin = async () => {
-
-        // VALIDACIONES PARA EL LOGIN
         if (!username || !password) return setError('Please fill in all fields');
         setLoading(true);
         setError(null);
 
         try {
             const res = await login(username, password);
-
-            // GUARDAR INFORMACIÓN DEL USUARIO + TOKEN JWT
-            setSession(res.userId, res.username, res.token);
-
-            // REDIRECCIONAR SEGÚN ROL ( ADMIN O USER )
+            setSession(res.userId, res.username, res.token, res.role || '');
             router.push(res.role?.toUpperCase() === 'ADMIN' ? '/admin' : '/user');
         } catch (err: any) {
             setError(err.message || 'Error logging in');
@@ -53,7 +46,6 @@ export const Login = () => {
             </View>
 
             <View style={styles.card}>
-                {/* CAMPOS DE ENTRADA PARA LOGIN */}
                 <View style={styles.containerInputs}>
                     <TextInput
                         placeholder="Username"
@@ -76,12 +68,10 @@ export const Login = () => {
                     />
                 </View>
 
-                {/* BOTÓN DE LOGIN */}
                 <TouchableOpacity style={[styles.primaryButton, { opacity: loading ? 0.7 : 1 }]} onPress={handleLogin} disabled={loading}>
                     <Text style={styles.primaryButtonText}>{loading ? 'Loading...' : 'Enter'}</Text>
                 </TouchableOpacity>
 
-                {/* MENSAJE DE ERROR */}
                 {error && <Text style={styles.errorText}>{error}</Text>}
             </View>
         </View>

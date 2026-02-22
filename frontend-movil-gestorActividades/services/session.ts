@@ -3,16 +3,18 @@
 export let userSession = {
     userId: '',
     username: '',
-    token: ''
+    token: '',
+    role: ''
 };
 
 /**
  * Guarda los datos de sesión en el objeto mutable.
  */
-export function setSession(userId: string, username: string, token: string) {
+export function setSession(userId: string, username: string, token: string, role: string) {
     userSession.userId = userId;
     userSession.username = username;
     userSession.token = token;
+    userSession.role = role;
 }
 
 /**
@@ -22,6 +24,7 @@ export function clearSession() {
     userSession.userId = '';
     userSession.username = '';
     userSession.token = '';
+    userSession.role = '';
 }
 
 /**
@@ -29,4 +32,11 @@ export function clearSession() {
  */
 export function isAuthenticated(): boolean {
     return !!userSession.token;
+}
+
+/**
+ * Devuelve true si el usuario tiene rol ADMIN.
+ */
+export function isAdmin(): boolean {
+    return userSession.role?.toUpperCase() === 'ADMIN';
 }

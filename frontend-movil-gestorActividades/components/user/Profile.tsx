@@ -6,7 +6,6 @@ import { userSession } from '../../services/session';
 import { getUserById, updatePassword } from '../../services/userService';
 
 export const Profile = () => {
-    // ESTADOS
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
@@ -16,12 +15,10 @@ export const Profile = () => {
     const [updating, setUpdating] = useState(false);
     const router = useRouter();
 
-    // CARGAR PERFIL AL INICIAR EL COMPONENTE
     useEffect(() => {
         loadUserProfile();
     }, []);
 
-    // CARGAR DATOS DEL USUARIO ACTUAL
     const loadUserProfile = async () => {
         try {
             setLoading(true);
@@ -34,10 +31,7 @@ export const Profile = () => {
         }
     };
 
-    // MANEJAR CAMBIO DE CONTRASEÑA
     const handleChangePassword = async () => {
-
-        // VALIDACIONES PARA LOS CAMPOS DE CONTRASEÑA
         if (!oldPassword || !newPassword || !confirmPassword) {
             Alert.alert('Error', 'Please fill in all fields');
             return;
@@ -48,12 +42,9 @@ export const Profile = () => {
         }
 
         try {
-            // LLAMADA AL MÉTODO PARA ACTUALIZAR CONTRASEÑA 
             setUpdating(true);
             await updatePassword(userSession.userId, oldPassword, newPassword);
             Alert.alert('Success', 'Password updated successfully');
-
-            // LIMPIAR CAMPOS Y CERRAR MODAL
             setModalVisible(false);
             setOldPassword('');
             setNewPassword('');
@@ -65,7 +56,6 @@ export const Profile = () => {
         }
     };
 
-    // SI ESTÁ CARGANDO, MOSTRAR INDICADOR DE CARGA
     if (loading) {
         return (
             <View style={styles.loadingContainer}>
@@ -78,19 +68,15 @@ export const Profile = () => {
         <View style={styles.container}>
             <View style={styles.main}>
 
-                {/* CABECERA*/}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>MY PROFILE</Text>
-                    <View style={{ width: 28 }} /> {/* ESPACIADOR */}
+                    <View style={{ width: 28 }} />
                 </View>
 
-                {/* PERFIL DEL USUARIO */}
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-
-                    {/* INFORMACIÓN PRINCIPAL DEL USUARIO */}
                     <View style={styles.profileHeader}>
                         <View style={styles.avatarCircle}>
                             <MaterialCommunityIcons name="account" size={80} color="#F7B176" />
@@ -99,10 +85,7 @@ export const Profile = () => {
                         <Text style={styles.userRole}>@{user?.username}</Text>
                     </View>
 
-                    {/* INFORMACIÓN ADICIONAL DEL USUARIO */}
                     <View style={styles.infoSection}>
-
-                        {/* USUARIO */}
                         <View style={styles.infoRow}>
                             <MaterialCommunityIcons name="email-outline" size={24} color="#F7B176" />
                             <View style={styles.infoTextContainer}>
@@ -111,7 +94,6 @@ export const Profile = () => {
                             </View>
                         </View>
 
-                        {/* TOTAL DE RESERVAS */}
                         <View style={styles.infoRow}>
                             <MaterialCommunityIcons name="book-check-outline" size={24} color="#F7B176" />
                             <View style={styles.infoTextContainer}>
@@ -122,7 +104,6 @@ export const Profile = () => {
 
                     </View>
 
-                    {/* BOTÓN PARA CAMBIAR CONTRASEÑA */}
                     <TouchableOpacity style={styles.changePasswordButton} onPress={() => setModalVisible(true)}>
                         <MaterialCommunityIcons name="lock-reset" size={24} color="#fff" />
                         <Text style={styles.buttonText}>Change password</Text>
@@ -130,13 +111,10 @@ export const Profile = () => {
                 </ScrollView>
             </View>
 
-            {/* MODAL PARA CAMBIAR CONTRASEÑA */}
             <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
 
                 <View style={styles.modalmain}>
                     <View style={styles.modalContent}>
-
-                        {/* CABECERA DEL MODAL */}
                         <View style={styles.modalHeader}>
                             <Text style={styles.modalTitle}>Change password</Text>
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
@@ -144,7 +122,6 @@ export const Profile = () => {
                             </TouchableOpacity>
                         </View>
 
-                        {/* CAMPOS PARA CAMBIAR CONTRASEÑA */}
                         <TextInput
                             style={styles.input}
                             secureTextEntry
@@ -172,11 +149,8 @@ export const Profile = () => {
                             onChangeText={setConfirmPassword}
                         />
 
-                        {/* BOTÓN PARA ACTUALIZAR CONTRASEÑA */}
                         <TouchableOpacity style={[styles.submitButton, updating && styles.disabledButton]}
                             onPress={handleChangePassword} disabled={updating}>
-
-                            {/* SI ESTÁ ACTUALIZANDO, MOSTRAR INDICADOR DE CARGA, SINO MOSTRAR TEXTO DEL BOTÓN */}
                             {updating ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
@@ -323,12 +297,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: '#fff',
-    },
-    inputLabel: {
-        color: '#F7B176',
-        fontSize: 14,
-        marginBottom: 8,
-        marginLeft: 5,
     },
     input: {
         backgroundColor: 'rgba(255, 255, 255, 0.05)',

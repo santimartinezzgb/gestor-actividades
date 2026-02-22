@@ -14,8 +14,6 @@ export const Signup = () => {
     const [focusedInput, setFocusedInput] = useState<null | 'username' | 'password' | 'confirm'>(null);
 
     const handleSignup = async () => {
-
-        // VALIDACIONES PARA EL REGISTRO
         if (!username || !password || !confirmPassword) {
             setError('Please fill in all fields');
             return;
@@ -25,7 +23,6 @@ export const Signup = () => {
             return;
         }
 
-        // INICIAR PROCESO DE REGISTRO
         setLoading(true);
         setError(null);
 
@@ -61,10 +58,7 @@ export const Signup = () => {
             </View>
 
             <View style={styles.card}>
-                {/* CAMPOS DE ENTRADA PARA REGISTRO */}
                 <View style={styles.containerInputs}>
-
-                    {/* CAMPO DE USUARIO */}
                     <TextInput
                         placeholder="Username"
                         placeholderTextColor="#5a5a5a"
@@ -77,7 +71,6 @@ export const Signup = () => {
                         onFocus={() => setFocusedInput('username')}
                         onBlur={() => setFocusedInput(null)}
                     />
-                    {/* CAMPO DE CONTRASEÑA */}
                     <TextInput
                         placeholder="Password"
                         placeholderTextColor="#5a5a5a"
@@ -91,7 +84,6 @@ export const Signup = () => {
                         onFocus={() => setFocusedInput('password')}
                         onBlur={() => setFocusedInput(null)}
                     />
-                    {/* CAMPO DE CONFIRMAR CONTRASEÑA */}
                     <TextInput
                         placeholder="Confirm password (min 6 chars)"
                         placeholderTextColor="#5a5a5a"
@@ -107,13 +99,11 @@ export const Signup = () => {
                     />
                 </View>
 
-                {/* BOTÓN DE REGISTRO */}
                 <TouchableOpacity style={[styles.primaryButton, loading && { opacity: 0.7 }]}
                     onPress={handleSignup} disabled={loading}>
                     <Text style={styles.primaryButtonText}>{loading ? 'Loading...' : 'Register'}</Text>
                 </TouchableOpacity>
 
-                {/* MENSAJE DE ERROR */}
                 {error && <Text style={styles.errorText}>{error}</Text>}
             </View>
         </View>
